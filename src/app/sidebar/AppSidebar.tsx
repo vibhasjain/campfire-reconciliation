@@ -28,13 +28,20 @@ export const AppSidebar = memo(function AppSidebar() {
   return (
     <SidebarFrame resizable={desktop}>
       <div className="flex h-[66px] shrink-0 items-center gap-2.5 px-5">
-        <img
-          src="/campfire-logo.png"
-          alt="Campfire"
-          width={128}
-          height={26}
-          className="h-[26px] w-auto"
-        />
+        {/* The one live control in the inert shell: home to version control. */}
+        <a
+          href="/version-control"
+          title="Version control"
+          className="rounded outline-none focus-visible:ring-2 focus-visible:ring-focus"
+        >
+          <img
+            src="/campfire-logo.png"
+            alt="Campfire · back to version control"
+            width={128}
+            height={26}
+            className="h-[26px] w-auto"
+          />
+        </a>
         <span className="flex-1" />
         <button
           type="button"
