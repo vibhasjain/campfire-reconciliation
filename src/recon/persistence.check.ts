@@ -19,10 +19,10 @@ if (!mode) {
   let raw = process.env.DEMO_SNAPSHOT || null
   let accesses = 0
   Object.assign(globalThis, { window: {
-    location: { pathname: mode === "other" ? "/campfire2" : "/campfire1", search: mode === "fast" ? "?fast" : "", reload() {} },
+    location: { pathname: mode === "other" ? "/v2" : "/v1", search: mode === "fast" ? "?fast" : "", reload() {} },
     addEventListener() {},
     localStorage: {
-      getItem(key: string) { accesses++; if (mode === "denied") throw Error("denied"); return key === "campfire:/campfire1" ? raw : null },
+      getItem(key: string) { accesses++; if (mode === "denied") throw Error("denied"); return key === "campfire:/v1" ? raw : null },
       setItem(_key: string, value: string) { accesses++; if (mode === "denied") throw Error("denied"); raw = value },
       removeItem() { accesses++; raw = null },
     },

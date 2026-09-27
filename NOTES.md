@@ -3,9 +3,11 @@
 > Draft for Vibhas to edit before sending.
 
 ## Links
-- **Prototypes:** vibhasjain.com/campfire1 (Workbench) · /campfire2 (Paired ledger) · /campfire3 (Flow). There's a chooser at /campfire/.
-- **Storyboard (the opener):** vibhasjain.com/campfire-story
-- **Source with commit history:** github.com/vibhasjain/campfire-reconciliation. This is split out of my site repo with `git subtree`, so every commit is the real one. The session transcript is in `transcript/`.
+- **Everything, versioned:** https://campfire-reconciliation.netlify.app/version-control
+- **Prototypes:** https://campfire-reconciliation.netlify.app/v1 (Workbench) · /v2 (Paired ledger) · /v3 (Flow).
+- **Storyboard (the opener):** https://campfire-reconciliation.netlify.app/story
+- **Vector concepts:** the full Brilliant and Paper canvases under /concepts, and references at /references.
+- **Source with commit history:** github.com/vibhasjain/campfire-reconciliation. It began inside my site repo and was split out with `git subtree`, so every commit is the real one. All later work happens here. The session transcript is in `transcript/`.
 - **How I tested:** `UX-TEST.md` has automated flows plus usability rounds, with scores for each version.
 
 ## What I built, in one paragraph

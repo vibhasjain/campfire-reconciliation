@@ -29,7 +29,7 @@ export const AppSidebar = memo(function AppSidebar() {
     <SidebarFrame resizable={desktop}>
       <div className="flex h-[66px] shrink-0 items-center gap-2.5 px-5">
         <img
-          src="/campfire/campfire-logo.png"
+          src="/campfire-logo.png"
           alt="Campfire"
           width={128}
           height={26}

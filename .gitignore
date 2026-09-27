@@ -26,3 +26,6 @@ dist-ssr
 .env*
 .netlify
 _work/
+
+# Local-only source material (voice notes, raw captures with personal info). Never commit.
+private/

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Drives every version through Maya's core flows with dev-browser (Playwright page API).
-// Usage: node tests/flows.mjs [--base http://localhost:4801] [--versions 1,2,3] [--flows keyboard,mouse,...] [--out results.json]
+// Usage: node tests/flows.mjs [--base http://localhost:4173] [--versions 1,2,3] [--flows keyboard,mouse,...] [--out results.json]
 // Each flow runs on a fresh load with ?fast (simulated delays ≤150ms) and prints one JSON line per run.
 import { spawnSync } from "node:child_process"
 import { writeFileSync } from "node:fs"
@@ -9,7 +9,7 @@ const arg = (name, fallback) => {
   const i = process.argv.indexOf(`--${name}`)
   return i > -1 ? process.argv[i + 1] : fallback
 }
-const BASE = arg("base", "http://localhost:4801")
+const BASE = arg("base", "http://localhost:4173")
 const VERSIONS = arg("versions", "1,2,3").split(",")
 const FLOWS = arg("flows", "keyboard,mouse,thread,many,unreconcile,revert").split(",")
 
@@ -20,7 +20,7 @@ const errors = [];
 page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()) });
 page.on("pageerror", (e) => errors.push(String(e)));
 await page.setViewportSize({ width: ${width}, height: ${width > 600 ? 900 : 844} });
-await page.goto("${BASE}/campfire${v}?fast", { waitUntil: "networkidle" });
+await page.goto("${BASE}/v${v}?fast", { waitUntil: "networkidle" });
 await page.waitForFunction(() => window.__recon);
 let keys = 0, clicks = 0;
 const t0 = Date.now();
