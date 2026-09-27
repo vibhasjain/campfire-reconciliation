@@ -138,6 +138,7 @@ const withHome = (html) =>
 
 // Both exporters own their raw HTML; normalize behavior only in the built pages.
 const CANVAS_STYLE = `<style id="canvas-fixes">
+html,body{touch-action:pan-x pan-y}
 body{width:auto}
 #canvas-viewport{position:relative;overflow:clip}
 #canvas{position:absolute;left:0;top:0;transform-origin:0 0}
@@ -163,14 +164,15 @@ const CANVAS_CONTROLS = `<nav id="zoom-controls" aria-label="Canvas zoom"><butto
   canvas.before(viewport);
   viewport.append(canvas);
   let z = 1;
-  function setZoom(next, fit = false) {
-    const x = scrollX / z, y = scrollY / z;
+  // Zoom around a focal point (viewport coords): the canvas point under it stays put.
+  function setZoom(next, fit = false, fx = innerWidth / 2, fy = innerHeight / 2) {
+    const cx = (scrollX + fx) / z, cy = (scrollY + fy) / z;
     z = Math.max(.02, Math.min(4, next));
     canvas.style.transform = 'scale(' + z + ')';
     viewport.style.width = width * z + 'px';
     viewport.style.height = height * z + 'px';
     level.textContent = Math.round(z * 100) + '%';
-    scrollTo(fit ? 0 : x * z, fit ? 0 : y * z);
+    scrollTo(fit ? 0 : cx * z - fx, fit ? 0 : cy * z - fy);
   }
   function zoom(action) {
     setZoom(action === 'fit' ? Math.min(innerWidth / width, innerHeight / height)
@@ -180,11 +182,42 @@ const CANVAS_CONTROLS = `<nav id="zoom-controls" aria-label="Canvas zoom"><butto
     const action = event.target.closest('button')?.dataset.zoom;
     if (action) zoom(action);
   });
+  // - = 0, and ⌘/ctrl + - = 0 (the browser-zoom shortcuts) all drive the canvas zoom instead.
   addEventListener('keydown', event => {
-    if (event.metaKey || event.ctrlKey || event.altKey || event.target.closest('input,textarea,select,[contenteditable]')) return;
-    const action = {'-':'out', '=':'in', '+':'in', '0':'reset'}[event.key];
+    if (event.altKey || event.target.closest('input,textarea,select,[contenteditable]')) return;
+    const action = {'-':'out', '_':'out', '=':'in', '+':'in', '0':'reset'}[event.key];
     if (action) { event.preventDefault(); zoom(action); }
   });
+  // Pinch anywhere zooms the canvas, never the page (so the home pill and controls stay put).
+  const opts = { passive: false };
+  // Chrome/Firefox/Edge deliver trackpad pinch as ctrl+wheel; ⌘+wheel for mouse users.
+  addEventListener('wheel', event => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    // Trackpads send small deltas; a mouse notch (~100) is capped to a ~22% step.
+    setZoom(z * Math.exp(-Math.max(-25, Math.min(25, event.deltaY)) * .01), false, event.clientX, event.clientY);
+  }, opts);
+  // Touch pinch (phones, tablets): scale by finger distance around the midpoint.
+  let pinch = null;
+  const span = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  addEventListener('touchstart', event => { if (event.touches.length === 2) pinch = { d: span(event.touches), z }; }, opts);
+  addEventListener('touchmove', event => {
+    if (event.touches.length < 2) return;
+    event.preventDefault();
+    if (!pinch) pinch = { d: span(event.touches), z };
+    const [a, b] = event.touches;
+    setZoom(pinch.z * span(event.touches) / pinch.d, false, (a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2);
+  }, opts);
+  addEventListener('touchend', event => { if (event.touches.length < 2) pinch = null; });
+  // Safari's gesture events: always suppress page zoom; drive the zoom from them only for the
+  // macOS trackpad (on iOS the touch handler above already did).
+  let gestureStart = 1;
+  addEventListener('gesturestart', event => { event.preventDefault(); gestureStart = z; }, opts);
+  addEventListener('gesturechange', event => {
+    event.preventDefault();
+    if (!pinch) setZoom(gestureStart * event.scale, false, event.clientX ?? innerWidth / 2, event.clientY ?? innerHeight / 2);
+  }, opts);
+  addEventListener('gestureend', event => event.preventDefault(), opts);
   // Brilliant exposes labels; Paper exposes named frame sections. Ignore note cards.
   const roundTwo = [...canvas.querySelectorAll('.canvas-label,.frame[aria-label]')]
     .filter(node => /\\b(r2|round\\s*2)\\b/i.test(node.getAttribute('aria-label') || node.textContent)
@@ -202,11 +235,20 @@ const CANVAS_CONTROLS = `<nav id="zoom-controls" aria-label="Canvas zoom"><butto
 })();
 </script>`
 
+const VIEWPORT =
+  '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">'
 function withCanvas(html) {
+  html = html
+    .replace(/<meta name="viewport"[^>]*>\s*/g, "")
+    .replace("<head>", `<head>${VIEWPORT}`)
   // Strip only the exporter zoom nav and its associated inline behavior.
-  html = html.replace(/<nav\b[^>]*id="(?:zoom-controls|zoom)"[^>]*>[\s\S]*?<\/nav>\s*<script\b[^>]*>[\s\S]*?<\/script>/g, '')
-  return html.replace('</head>', `${CANVAS_STYLE}</head>`)
-    .replace('</body>', `${CANVAS_CONTROLS}</body>`)
+  html = html.replace(
+    /<nav\b[^>]*id="(?:zoom-controls|zoom)"[^>]*>[\s\S]*?<\/nav>\s*<script\b[^>]*>[\s\S]*?<\/script>/g,
+    ""
+  )
+  return html
+    .replace("</head>", `${CANVAS_STYLE}</head>`)
+    .replace("</body>", `${CANVAS_CONTROLS}</body>`)
 }
 
 const shell = readFileSync("dist/index.html", "utf8")
