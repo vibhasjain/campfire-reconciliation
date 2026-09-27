@@ -35,7 +35,7 @@ export const AppSidebar = memo(function AppSidebar() {
           className="rounded outline-none focus-visible:ring-2 focus-visible:ring-focus"
         >
           <img
-            src="/campfire-logo.png"
+            src="/campfire-logo.svg"
             alt="Campfire · back to version control"
             width={128}
             height={26}
