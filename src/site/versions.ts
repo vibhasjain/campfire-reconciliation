@@ -33,7 +33,7 @@ export const VERSIONS: Version[] = [
       "The done state says “Balanced · ready to submit” until Maya submits to Daniel.",
       "Phones show one toast at a time, so it can't cover progress.",
     ],
-    commit: "dfbf8e4",
+    commit: "8b4078f",
   },
   {
     id: "code-1.4",
@@ -47,7 +47,7 @@ export const VERSIONS: Version[] = [
       "Phone toasts moved to the top, clear of Accept and Reject.",
       "Item amounts are signed the same way everywhere, chat included.",
     ],
-    commit: "ffe639c",
+    commit: "76e05d1",
   },
   {
     id: "code-1.3",
@@ -62,7 +62,7 @@ export const VERSIONS: Version[] = [
       "Ember's find becomes the item's suggestion, not a second card in the thread.",
       "Timing items come first, so the difference closes toward $0.00 as she works.",
     ],
-    commit: "90a86fe",
+    commit: "607aca0",
   },
   {
     id: "code-1.2",
@@ -76,7 +76,7 @@ export const VERSIONS: Version[] = [
       "Each suggestion shows what it does to the difference.",
       "Undo brings back the restored item; the composer never steals the A key.",
     ],
-    commit: "fcc2de6",
+    commit: "7caae13",
   },
   {
     id: "code-1.1",
@@ -90,7 +90,7 @@ export const VERSIONS: Version[] = [
       "v1 rows gain triage phrases (Match, Create JE, In transit).",
       "v2's connectors go quiet; v3's toast no longer covers the thumb-reach Accept.",
     ],
-    commit: "5f53d24",
+    commit: "40c7aee",
   },
   {
     id: "code-1.0",
@@ -103,7 +103,7 @@ export const VERSIONS: Version[] = [
       "v1 Workbench: a queue plus a side sheet. v2 Paired ledger: books and bank aligned. v3 Flow: one decision at a time.",
       "Shared core: suggestions with confidence and why, evidence, per-transaction threads with Ember, keyboard-first.",
     ],
-    commit: "b7b0600",
+    commit: "e5b3dc0",
   },
   {
     id: "story-1.0",
@@ -116,7 +116,7 @@ export const VERSIONS: Version[] = [
       "Twelve illustrated frames: how Maya should feel before, during and after the close.",
       "Written from the voice notes; illustrations generated with Codex.",
     ],
-    commit: "31e44b9",
+    commit: "e84779e",
   },
   {
     id: "a-1.1",
