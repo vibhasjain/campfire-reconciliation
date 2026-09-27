@@ -416,7 +416,7 @@ export default function V3() {
       <div className="flow-strip border-b-hair border-line">
         <div className="flow-navigation">
           <div className="flow-rail" aria-label="Exceptions">
-            {exceptions.map((item) => (
+            {queue.map((item) => (
               <button
                 key={item.id}
                 title={item.title}

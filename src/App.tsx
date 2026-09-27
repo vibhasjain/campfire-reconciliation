@@ -1,29 +1,18 @@
-import { lazy, Suspense } from "react"
-import { Skeleton } from "@/components/ui/skeleton"
 import { loadPrototype, loadReferences, loadVersions } from "@/site/loaders"
 
-const PrototypePage = lazy(loadPrototype)
-const VersionControlPage = lazy(loadVersions)
-const ReferencesPage = lazy(loadReferences)
-
-export default function App() {
+// Resolve the entry route before rendering so React never mounts a throttled fallback.
+export async function loadApp() {
   const route = location.pathname.match(/^\/v([123])(\/|$)/)
-  return (
-    <Suspense
-      fallback={
-        <main className="mx-auto max-w-7xl p-6" aria-label="Loading">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="mt-8 h-64 w-full" />
-        </main>
-      }
-    >
-      {route ? (
-        <PrototypePage version={Number(route[1]) as 1 | 2 | 3} />
-      ) : location.pathname.replace(/\/$/, "") === "/references" ? (
-        <ReferencesPage />
-      ) : (
-        <VersionControlPage />
-      )}
-    </Suspense>
-  )
+  if (route) {
+    const { default: Page } = await loadPrototype()
+    const version = Number(route[1]) as 1 | 2 | 3
+    return function App() {
+      return <Page version={version} />
+    }
+  }
+  const { default: Page } = await (location.pathname.replace(/\/$/, "") ===
+  "/references"
+    ? loadReferences()
+    : loadVersions())
+  return Page
 }

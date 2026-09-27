@@ -48,7 +48,8 @@ export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
     return (
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>{children}</SheetTrigger>
-        <SheetContent onCloseAutoFocus={restorePageFocus}
+        <SheetContent
+          onCloseAutoFocus={restorePageFocus}
           onOpenAutoFocus={(event) => event.preventDefault()}
           side="bottom"
           showCloseButton={false}
@@ -71,7 +72,8 @@ export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent onCloseAutoFocus={restorePageFocus}
+      <PopoverContent
+        onCloseAutoFocus={restorePageFocus}
         align="end"
         side="bottom"
         sideOffset={8}

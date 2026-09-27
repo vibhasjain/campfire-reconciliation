@@ -14,11 +14,11 @@ export interface Version {
 
 export const REPO = "https://github.com/vibhasjain/campfire-reconciliation"
 
-const PROTOTYPES = [
-  { label: "v1 Workbench", href: "/v1" },
-  { label: "v2 Paired ledger", href: "/v2" },
-  { label: "v3 Flow", href: "/v3" },
-]
+const prototypes = (version: string) =>
+  ["Workbench", "Paired ledger", "Flow"].map((name, index) => ({
+    label: `v${index + 1} ${name}`,
+    href: `https://code-${version.replace(".", "-")}--campfire-reconciliation.netlify.app/campfire${index + 1}`,
+  }))
 
 export const VERSIONS: Version[] = [
   {
@@ -27,7 +27,7 @@ export const VERSIONS: Version[] = [
     title: "Prototypes: round 4 polish",
     medium: "Code",
     at: "2026-09-27T16:24:00-04:00",
-    links: PROTOTYPES,
+    links: prototypes("1.5"),
     changes: [
       "The why shows calibration: how often suggestions at that confidence were accepted.",
       "The done state says “Balanced · ready to submit” until Maya submits to Daniel.",
@@ -41,7 +41,7 @@ export const VERSIONS: Version[] = [
     title: "Prototypes: round 3 fixes",
     medium: "Code",
     at: "2026-09-27T16:09:00-04:00",
-    links: PROTOTYPES,
+    links: prototypes("1.4"),
     changes: [
       "A compact done state replaces the CSS overrides that blanked v1 and v2's finish.",
       "Phone toasts moved to the top, clear of Accept and Reject.",
@@ -55,7 +55,7 @@ export const VERSIONS: Version[] = [
     title: "Prototypes: usability round 2 fixes",
     medium: "Code",
     at: "2026-09-27T15:48:00-04:00",
-    links: PROTOTYPES,
+    links: prototypes("1.3"),
     changes: [
       "Work survives a reload; ⌘K → Reset demo starts over.",
       "One vocabulary: Send to Daniel, then Submit to Daniel, then “Submitted · waiting on Daniel”.",
@@ -70,7 +70,7 @@ export const VERSIONS: Version[] = [
     title: "Prototypes: usability round 1 fixes",
     medium: "Code",
     at: "2026-09-27T15:28:00-04:00",
-    links: PROTOTYPES,
+    links: prototypes("1.2"),
     changes: [
       "The why leads with facts (“Payee · alias seen 11×”); the formula becomes a footnote.",
       "Each suggestion shows what it does to the difference.",
@@ -84,7 +84,7 @@ export const VERSIONS: Version[] = [
     title: "Prototypes: first test fixes",
     medium: "Code",
     at: "2026-09-27T15:10:00-04:00",
-    links: PROTOTYPES,
+    links: prototypes("1.1"),
     changes: [
       "Ember's changes stay on screen with their Revert when it resolves an item.",
       "v1 rows gain triage phrases (Match, Create JE, In transit).",
@@ -98,7 +98,7 @@ export const VERSIONS: Version[] = [
     title: "Prototypes: three UX bets on one core",
     medium: "Code",
     at: "2026-09-27T15:00:00-04:00",
-    links: PROTOTYPES,
+    links: prototypes("1.0"),
     changes: [
       "v1 Workbench: a queue plus a side sheet. v2 Paired ledger: books and bank aligned. v3 Flow: one decision at a time.",
       "Shared core: suggestions with confidence and why, evidence, per-transaction threads with Ember, keyboard-first.",
@@ -124,7 +124,7 @@ export const VERSIONS: Version[] = [
     title: "Concept A: Workpaper, restraint pass",
     medium: "Brilliant",
     at: "2026-09-27T16:30:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper/" }],
+    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper/#r2" }],
     changes: [
       "About two-thirds fewer words; routine items signed in one batch; the bridge carries the numbers.",
     ],
@@ -135,7 +135,9 @@ export const VERSIONS: Version[] = [
     title: "Concept B: Balance bridge, restraint pass",
     medium: "Brilliant",
     at: "2026-09-27T15:52:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/b-balance-bridge/" }],
+    links: [
+      { label: "Open the canvas", href: "/concepts/b-balance-bridge/#r2" },
+    ],
     changes: [
       "54% fewer words; confidence only on the open suggestion; the keystone holds the difference.",
     ],
@@ -146,7 +148,7 @@ export const VERSIONS: Version[] = [
     title: "Concept D: Timeline, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:55:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/d-timeline/" }],
+    links: [{ label: "Open the canvas", href: "/concepts/d-timeline/#r2" }],
     changes: [
       "Labels only on the selected mark; the difference becomes the headline; timing called out once at the cutoff.",
     ],
@@ -157,7 +159,7 @@ export const VERSIONS: Version[] = [
     title: "Concept C: Thread inbox, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:51:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox/" }],
+    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox/#r2" }],
     changes: [
       "Half the text; one-line inbox rows; the proposal's ledger lines behind a “3 lines” disclosure.",
     ],

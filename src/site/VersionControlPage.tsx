@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react"
+import { flushSync } from "react-dom"
 import { Code2, Diamond, FileText, Images, Presentation } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +10,14 @@ import { REPO, VERSIONS, type Medium } from "./versions"
 import { CARD_COPY } from "./cardCopy"
 import { prefetch } from "./loaders"
 
-const MEDIA = ["All", "Code", "Brilliant", "Paper", "Story"] as const
+const MEDIA = [
+  "All",
+  "Code",
+  "Brilliant",
+  "Paper",
+  "Story",
+  "References",
+] as const
 const APPEARANCE: Record<Medium, { icon: typeof Code2; tone: ChipTone }> = {
   Code: { icon: Code2, tone: "green" },
   Brilliant: { icon: Diamond, tone: "blue" },
@@ -24,10 +32,29 @@ const time = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/New_York",
 })
 
+function restoredState() {
+  const saved = history.state?.versions
+  return {
+    medium: MEDIA.includes(saved?.medium)
+      ? (saved.medium as (typeof MEDIA)[number])
+      : ("All" as const),
+    query: typeof saved?.query === "string" ? saved.query : "",
+    active: sorted.some((v) => v.id === saved?.active)
+      ? (saved.active as string)
+      : sorted[0].id,
+  }
+}
+
+function openLink(href: string, event: { metaKey: boolean; ctrlKey: boolean }) {
+  if (event.metaKey || event.ctrlKey) window.open(href, "_blank", "noopener")
+  else location.assign(href)
+}
+
 export default function VersionControlPage() {
-  const [medium, setMedium] = useState<(typeof MEDIA)[number]>("All")
-  const [query, setQuery] = useState("")
-  const [active, setActive] = useState(sorted[0].id)
+  const [initial] = useState(restoredState)
+  const [medium, setMedium] = useState<(typeof MEDIA)[number]>(initial.medium)
+  const [query, setQuery] = useState(initial.query)
+  const [active, setActive] = useState(initial.active)
   const input = useRef<HTMLInputElement>(null)
   const grid = useRef<HTMLDivElement>(null)
   const cards = useRef(new Map<string, HTMLDivElement>())
@@ -43,7 +70,9 @@ export default function VersionControlPage() {
     : visible[0]?.id
 
   useEffect(() => {
-    cards.current.get(sorted[0].id)?.focus({ preventScroll: true })
+    ;(
+      cards.current.get(initial.active) ?? cards.current.values().next().value
+    )?.focus({ preventScroll: true })
     const shortcut = (event: globalThis.KeyboardEvent) => {
       if (
         event.key !== "/" ||
@@ -59,10 +88,17 @@ export default function VersionControlPage() {
     }
     window.addEventListener("keydown", shortcut)
     return () => window.removeEventListener("keydown", shortcut)
-  }, [])
+  }, [initial])
+
+  useEffect(() => {
+    history.replaceState(
+      { ...history.state, versions: { medium, query, active } },
+      ""
+    )
+  }, [medium, query, active])
 
   function navigate(event: KeyboardEvent<HTMLDivElement>, index: number) {
-    if (event.metaKey || event.ctrlKey || event.altKey) return
+    if (event.altKey) return
     const columns = grid.current
       ? getComputedStyle(grid.current).gridTemplateColumns.split(" ").length
       : 1
@@ -75,8 +111,11 @@ export default function VersionControlPage() {
     )
       next++
     if (event.key === "ArrowUp" && index >= columns) next -= columns
-    if (event.key === "ArrowDown" && index + columns < visible.length)
-      next += columns
+    if (
+      event.key === "ArrowDown" &&
+      Math.floor(index / columns) < Math.floor((visible.length - 1) / columns)
+    )
+      next = Math.min(index + columns, visible.length - 1)
     if (event.key.startsWith("Arrow")) {
       event.preventDefault()
       cards.current.get(visible[next].id)?.focus()
@@ -89,7 +128,7 @@ export default function VersionControlPage() {
           : undefined
     if (link) {
       event.preventDefault()
-      location.assign(link.href)
+      openLink(link.href, event)
     }
   }
 
@@ -99,18 +138,45 @@ export default function VersionControlPage() {
         <div
           role="group"
           aria-label="Medium"
-          className="flex max-w-full flex-wrap gap-0.5 rounded-lg bg-segment p-1"
+          className="flex max-w-full flex-wrap gap-0.5 rounded-md border-hair border-line bg-segment p-1"
+          onKeyDown={(e) => {
+            if (e.key === "ArrowDown") {
+              e.preventDefault()
+              if (visible[0]) cards.current.get(visible[0].id)?.focus()
+            }
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+              e.preventDefault()
+              const buttons = Array.from(
+                e.currentTarget.querySelectorAll("button")
+              )
+              const index = buttons.indexOf(e.target as HTMLButtonElement)
+              buttons[
+                (index + (e.key === "ArrowRight" ? 1 : -1) + buttons.length) %
+                  buttons.length
+              ]?.focus()
+            }
+          }}
         >
           {MEDIA.map((value) => (
-            <Button
+            <button
               key={value}
-              variant={medium === value ? "selected" : "ghost"}
-              size="sm"
+              type="button"
+              className={`cursor-pointer rounded px-3 py-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus ${medium === value ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`}
               aria-pressed={medium === value}
-              onClick={() => setMedium(value)}
+              onClick={() => {
+                flushSync(() => setMedium(value))
+                const first = sorted.find(
+                  (v) =>
+                    (value === "All" || value === v.medium) &&
+                    `${v.medium} ${v.title} ${v.version} ${v.changes.join(" ")}`
+                      .toLowerCase()
+                      .includes(query.toLowerCase().trim())
+                )
+                if (first) cards.current.get(first.id)?.focus()
+              }}
             >
               {value}
-            </Button>
+            </button>
           ))}
         </div>
         <Input
@@ -122,8 +188,15 @@ export default function VersionControlPage() {
           className="w-44"
           onKeyDown={(e) => {
             if (e.key === "Escape") {
-              setQuery("")
-              input.current?.blur()
+              e.preventDefault()
+              flushSync(() => setQuery(""))
+              const fallback = sorted.find(
+                (v) => medium === "All" || medium === v.medium
+              )
+              ;(
+                cards.current.get(active) ??
+                cards.current.get(fallback?.id ?? "")
+              )?.focus()
             }
             if (e.key === "ArrowDown" || e.key === "Enter") {
               e.preventDefault()
@@ -163,7 +236,7 @@ export default function VersionControlPage() {
               onKeyDown={(e) => navigate(e, index)}
               onClick={(e) => {
                 if (!(e.target as HTMLElement).closest("a, button"))
-                  location.assign(version.links[0].href)
+                  openLink(version.links[0].href, e)
               }}
               className="flex min-h-60 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
             >
@@ -219,6 +292,20 @@ export default function VersionControlPage() {
                     </a>
                   </Button>
                 ))}
+                {version.id === "code-1.5" && (
+                  <span className="flex items-center gap-1 text-xs text-fg-3">
+                    Live
+                    {[1, 2, 3].map((number) => (
+                      <a
+                        key={number}
+                        href={`/v${number}`}
+                        className="rounded px-1 hover:text-brand focus-visible:outline-2 focus-visible:outline-focus"
+                      >
+                        v{number}
+                      </a>
+                    ))}
+                  </span>
+                )}
                 {version.commit && (
                   <a
                     href={`${REPO}/commit/${version.commit}`}

@@ -31,7 +31,7 @@
   <main class="deck" id="deck">
 
     <section class="slide is-active">
-      <figure class="frame" data-label="01-the-wait"><picture><source media="(max-width:700px)" srcset="assets/m/01-the-wait.jpg"><img src="assets/01-the-wait.jpg" alt="Maya at her desk with two unpaired paper tapes, while Daniel waits beside an empty review tray"></picture></figure>
+      <figure class="frame" data-label="01-the-wait"><picture><source media="(max-width:700px)" srcset="assets/m/01-the-wait.jpg"><img fetchpriority="high" src="assets/01-the-wait.jpg" alt="Maya at her desk with two unpaired paper tapes, while Daniel waits beside an empty review tray"></picture></figure>
       <div class="copy">
         <p class="eyebrow">01 · Close</p>
         <h1>Daniel is waiting for the numbers.</h1>
@@ -48,7 +48,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="03-two-tapes"><picture><source media="(max-width:700px)" srcset="assets/m/03-two-tapes.jpg"><img src="assets/03-two-tapes.jpg" alt="Two long paper tapes lie side by side on a lightbox, with the first unmatched gap marked" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">03 · Bearings</p>
@@ -57,7 +57,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="04-the-evidence"><picture><source media="(max-width:700px)" srcset="assets/m/04-the-evidence.jpg"><img src="assets/04-the-evidence.jpg" alt="Ember lays out a payment, ledger entry and receipt so Maya can trace the proposed match" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">04 · Evidence</p>
@@ -66,7 +66,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="05-the-pen"><picture><source media="(max-width:700px)" srcset="assets/m/05-the-pen.jpg"><img src="assets/05-the-pen.jpg" alt="Maya holds the pen above a pair of papers while Ember offers another possible match" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">05 · Her call</p>
@@ -75,7 +75,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="06-pull-up-a-chair"><picture><source media="(max-width:700px)" srcset="assets/m/06-pull-up-a-chair.jpg"><img src="assets/06-pull-up-a-chair.jpg" alt="Priya joins Maya and Ember around the same payment and its supporting papers" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">06 · Together</p>
@@ -84,7 +84,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="07-the-paperclip"><picture><source media="(max-width:700px)" srcset="assets/m/07-the-paperclip.jpg"><img src="assets/07-the-paperclip.jpg" alt="Maya removes a paperclip from two papers and separates them without damaging either" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">07 · Room to rethink</p>
@@ -93,7 +93,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="08-the-shrinking-pile"><picture><source media="(max-width:700px)" srcset="assets/m/08-the-shrinking-pile.jpg"><img src="assets/08-the-shrinking-pile.jpg" alt="Maya moves another pair into a completed stack as the remaining pile shrinks" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">08 · The work</p>
@@ -102,7 +102,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="09-the-whole-story"><picture><source media="(max-width:700px)" srcset="assets/m/09-the-whole-story.jpg"><img src="assets/09-the-whole-story.jpg" alt="One resolved payment keeps its receipt and conversation beside it as Ember studies the complete story" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">09 · What stays</p>
@@ -111,7 +111,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="10-the-level-scale"><picture><source media="(max-width:700px)" srcset="assets/m/10-the-level-scale.jpg"><img src="assets/10-the-level-scale.jpg" alt="A balance scale settles level beside paired tapes and a completely empty exception tray" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">10 · Done</p>
@@ -120,7 +120,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="11-the-handoff"><picture><source media="(max-width:700px)" srcset="assets/m/11-the-handoff.jpg"><img src="assets/11-the-handoff.jpg" alt="Maya confidently hands Daniel the complete folder with its supporting evidence attached" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">11 · Ready for review</p>
@@ -129,7 +129,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="slide" hidden>
       <figure class="frame" data-label="12-laptop-shut"><picture><source media="(max-width:700px)" srcset="assets/m/12-laptop-shut.jpg"><img src="assets/12-laptop-shut.jpg" alt="Maya enjoys the evening on her balcony while her laptop stays shut on the dining table" loading="lazy" decoding="async"></picture></figure>
       <div class="copy">
         <p class="eyebrow">12 · After</p>
@@ -145,6 +145,5 @@
     <button type="button" id="next" aria-label="Next">→</button>
   </nav>
   <script src="deck.js?v=12"></script>
-<script src="https://agent-keyboard.fly.dev/widget.js" data-site="cv" data-summon defer></script>
 </body>
 </html>

@@ -55,7 +55,11 @@ export function ThreadMessage({
                   }
                 />
               ) : part.type === "text" ? (
-                <SnapshotAnswer key={index} part={part} chatId={message.chatId} />
+                <SnapshotAnswer
+                  key={index}
+                  part={part}
+                  chatId={message.chatId}
+                />
               ) : (
                 <ChatCard key={part.id} card={part.card} />
               )

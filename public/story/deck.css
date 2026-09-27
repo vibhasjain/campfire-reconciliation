@@ -18,6 +18,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 
 .deck { position: relative; width: 100%; height: 100%; }
 .slide { position: absolute; inset: 0; display: flex; flex-direction: column; opacity: 0; visibility: hidden; transition: opacity .35s ease; }
+.slide[hidden] { display: none; }
 .slide.is-active { opacity: 1; visibility: visible; }
 
 /* frame: 16:9 storyboard panel, letterboxed above the caption band */
@@ -47,6 +48,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 /* phone: no slides — one continuous scroll */
 @media (max-width: 700px) {
   html, body { overflow: auto; }
+  .slide[hidden] { display: flex; }
   .slide { position: relative; opacity: 1; visibility: visible; }
   .counter, .nav { display: none; }
   .chrome { position: absolute; } /* logo sits on the first frame only, not over every frame while scrolling */

@@ -28,3 +28,5 @@ Append `?fast` to a URL to skip the simulated delays. Work persists in localStor
 - `src/app/`, `src/components/`: an inert Campfire shell on top of my own design system.
 
 Built with Claude Code and Codex. See the transcript.
+
+Storyboard source docs and image-generation briefs live in `story-src/`.

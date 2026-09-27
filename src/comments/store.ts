@@ -8,12 +8,14 @@ import { waitFor } from "@/recon/speed"
 import { toast } from "@/components/common/toast"
 import type { CommentsState } from "./types"
 
-export const comments = createStore<CommentsState>(restoreSlice("comments", {
-  threads: {},
-  reactions: {},
-  unread: {},
-  emberUnread: {},
-}))
+export const comments = createStore<CommentsState>(
+  restoreSlice("comments", {
+    threads: {},
+    reactions: {},
+    unread: {},
+    emberUnread: {},
+  })
+)
 persistSlice("comments", comments.get, comments.subscribe)
 const viewing = new Set<string>()
 const observed = new Set<string>(Object.keys(db.get().messages))
@@ -163,7 +165,22 @@ export function viewThread(itemId: string) {
     viewing.delete(id)
   }
 }
+let requestedThreadFocus: string | null = null
+
+export function focusRequestedThread(itemId: string) {
+  if (requestedThreadFocus !== itemId || reconUi.get().threadFor !== itemId)
+    return
+  const editor = document.querySelector<HTMLElement>(
+    `[data-thread-item="${itemId}"] [contenteditable="true"]`
+  )
+  if (editor) {
+    requestedThreadFocus = null
+    editor.focus()
+  }
+}
+
 export function focusThread(itemId: string, draft?: string) {
+  requestedThreadFocus = itemId
   ensureThread(itemId)
   reconUi.set((state) => ({
     ...state,
@@ -175,13 +192,7 @@ export function focusThread(itemId: string, draft?: string) {
   }))
   markThreadRead(itemId)
   if (typeof document !== "undefined")
-    requestAnimationFrame(() =>
-      document
-        .querySelector<HTMLElement>(
-          `[data-thread-item="${itemId}"] [contenteditable="true"]`
-        )
-        ?.focus()
-    )
+    requestAnimationFrame(() => focusRequestedThread(itemId))
 }
 export function toggleInbox() {
   reconUi.set((state) => ({ ...state, inboxOpen: !state.inboxOpen }))

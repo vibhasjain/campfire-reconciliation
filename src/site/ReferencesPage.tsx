@@ -35,7 +35,7 @@ export default function ReferencesPage() {
           </div>
           <div className="grid grid-cols-1 gap-x-5 gap-y-8 min-[700px]:grid-cols-2">
             {REFERENCES.filter((item) => item.software === software).map(
-              (item) => (
+              (item, index) => (
                 <figure key={item.src} className="min-w-0">
                   <Dialog>
                     <DialogTrigger asChild>
@@ -48,7 +48,16 @@ export default function ReferencesPage() {
                           alt={item.title}
                           width={item.width}
                           height={item.height}
-                          loading="lazy"
+                          loading={
+                            software === "Campfire" && index < 2
+                              ? "eager"
+                              : "lazy"
+                          }
+                          fetchPriority={
+                            software === "Campfire" && index < 2
+                              ? "high"
+                              : "auto"
+                          }
                           decoding="async"
                           className="max-h-full w-full object-contain"
                         />
