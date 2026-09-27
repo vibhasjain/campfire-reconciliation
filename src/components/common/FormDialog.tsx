@@ -1,3 +1,4 @@
+import { restorePageFocus } from "@/recon/focus"
 import type { CSSProperties, FormEvent, ReactNode } from "react"
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
@@ -40,7 +41,7 @@ export function FormDialog({
     </>
   )
   return (
-    <DialogContent placement={placement} style={{ "--dialog-w": `${width}px` } as CSSProperties}>
+    <DialogContent onCloseAutoFocus={restorePageFocus} placement={placement} style={{ "--dialog-w": `${width}px` } as CSSProperties}>
       {onSubmit ? (
         <form
           className="flex min-h-0 flex-col"

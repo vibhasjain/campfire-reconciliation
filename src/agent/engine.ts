@@ -517,7 +517,7 @@ function makeCtx(
     },
     async say(markdown, opts) {
       autoCollapse()
-      setParts((p) => [...p, { type: "text", markdown: "", streaming: true }])
+      setParts((p) => [...p, { type: "text", markdown: "", streaming: true, snapshot: opts?.snapshot }])
       const i = parts().length - 1
       const write = (acc: string) =>
         setParts((ps) =>

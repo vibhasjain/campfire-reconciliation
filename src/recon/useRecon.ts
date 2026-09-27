@@ -1,9 +1,17 @@
+import { restoreSlice, persistSlice } from "@/data/persistence"
 import { useRef, useSyncExternalStore } from "react"
 import { createStore, shallowEqual } from "@/data/store"
 import type { ReconItem, ReconState } from "./data"
 import { createReconStore, summarize } from "./store"
 
 export const recon = createReconStore()
+recon.restore(restoreSlice("recon", recon.getState(), value =>
+  Object.values(value.items).every(item =>
+    [...item.suggestions, ...item.hidden].every(s => typeof s.id === "string" && Array.isArray(s.factors) && Array.isArray(s.bankIds) && Array.isArray(s.bookIds)) &&
+    [...item.bankIds].every(id => !!value.bankLines[id]) && item.bookIds.every(id => !!value.bookLines[id])
+  ) && value.actions.every(a => !!a.before?.items && Array.isArray(a.touches))
+))
+persistSlice("recon", recon.getState, recon.subscribe)
 
 export interface ReconUIState {
   selectedItemId: string | null
@@ -27,8 +35,10 @@ export const reconUi = createStore<ReconUIState>({
   pageChatOpen: false,
   inboxOpen: false,
   shortcutsOpen: false,
-  completed: false,
+  completed: restoreSlice("completed", false),
 })
+
+persistSlice("completed", () => reconUi.get().completed, reconUi.subscribe)
 
 // Submission covers the current revision; any committed change or reset reopens review.
 recon.subscribe(() => {
@@ -85,6 +95,7 @@ export function queueItems(state: ReconState): ReconItem[] {
   )
   const gated = (item: ReconItem) =>
     Number(item.suggestions.some((s) => s.approval))
+  const timing = (item: ReconItem) => Number(["in_transit", "outstanding"].includes(item.suggestions[0]?.action))
   return Object.values(state.items)
     .filter((item) =>
       item.kind === "exception"
@@ -94,6 +105,7 @@ export function queueItems(state: ReconState): ReconItem[] {
     .sort(
       (a, b) =>
         gated(a) - gated(b) ||
+        timing(b) - timing(a) ||
         (b.suggestions[0]?.confidence ?? 0) -
           (a.suggestions[0]?.confidence ?? 0) ||
         a.id.localeCompare(b.id)

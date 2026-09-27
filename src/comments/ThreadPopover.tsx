@@ -1,3 +1,4 @@
+import { restorePageFocus } from "@/recon/focus"
 import { useEffect, useRef, type ReactElement } from "react"
 import { Check, RotateCcw, X } from "lucide-react"
 import {
@@ -41,15 +42,13 @@ export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
             : state.threadFor,
         selectedItemId: next ? itemId : state.selectedItemId,
       }))
-    if (!next && motionNode.current)
-      cardMotion(motionNode.current, false, commit)
-    else commit()
+    commit()
   }
   if (phone)
     return (
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>{children}</SheetTrigger>
-        <SheetContent
+        <SheetContent onCloseAutoFocus={restorePageFocus}
           onOpenAutoFocus={(event) => event.preventDefault()}
           side="bottom"
           showCloseButton={false}
@@ -72,7 +71,7 @@ export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent
+      <PopoverContent onCloseAutoFocus={restorePageFocus}
         align="end"
         side="bottom"
         sideOffset={8}

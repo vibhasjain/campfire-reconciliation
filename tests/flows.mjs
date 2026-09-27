@@ -97,12 +97,13 @@ const box = visible('[contenteditable="true"]');
 await box.waitFor({ timeout: 3000 });
 await box.type("none of these match");
 await press("Enter");
-const found = visible('[data-suggestion-id*="r04"]:has-text("Found by Ember") [data-action="accept"]');
-await found.waitFor({ timeout: 8000 });
+await visible('text=Found by Ember').waitFor({ timeout: 8000 });
 await shot("candidate");
-await click(found);
+await press("Escape");
+await press("a");
 await page.waitForTimeout(300);
-await finish((await itemStatus("r04")) !== "open", { r04: await itemStatus("r04") });
+const source = await page.evaluate(() => window.__recon.store.getState().items.r04.resolution?.source);
+await finish((await itemStatus("r04")) !== "open" && source === "ember", { r04: await itemStatus("r04"), source });
 `,
   // Many-to-one: ⌘-click Cascade's deposit and 3 invoices, press M.
   many: `

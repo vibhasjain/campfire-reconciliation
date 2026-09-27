@@ -265,6 +265,12 @@ export function compactItems(items: ReturnType<typeof openItems>): string {
   return lines.join("\n")
 }
 
+async function saySnapshot(ctx: RunCtx, markdown: string) {
+  const clock = recon.getState().clock
+  const time = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+  await ctx.say(`As of ${time}\n\n${markdown}`, { snapshot: { clock, question: ctx.input.text } })
+}
+
 export const reconciliationScript: Script = {
   id: "reconciliation",
   match: reconIntentScore,
@@ -289,10 +295,10 @@ export const reconciliationScript: Script = {
       return
     }
     if (intent === "left") {
-      const items = openItems()
       await tool(ctx, "Reading remaining reconciliation items")
+      const items = openItems()
       const summary = summarize(recon.getState())
-      await ctx.say(
+      await saySnapshot(ctx,
         `${items.length ? compactItems(items) : "All items are reconciled."}\n\nDifference: ${fmtMoney(summary.difference)}`
       )
       return
@@ -303,7 +309,7 @@ export const reconciliationScript: Script = {
           row.status === "open" && (row.suggestions[0]?.confidence ?? 0) >= 90
       )
       if (!items.length) {
-        await ctx.say(
+        await saySnapshot(ctx,
           "There are no open suggestions at 90% confidence or above."
         )
         return
@@ -339,7 +345,7 @@ export const reconciliationScript: Script = {
         } else await ctx.say(`${reviewed.title}: ${result.reason}`)
       }
       await flushApprovals()
-      await ctx.say(
+      await saySnapshot(ctx,
         `Accepted ${acceptedCount} suggestions. The difference is now **${fmtMoney(summarize(recon.getState()).difference)}**.`
       )
       return
@@ -381,9 +387,13 @@ export const reconciliationScript: Script = {
                 action.label === `Added suggestion: ${candidate.title}`
             )?.id,
           }
-          ctx.card(card)
+          if (ctx.input.chatId?.startsWith("thread:") && card.actionId) ctx.card({
+            kind: "recon-change", actionId: card.actionId, itemId, suggestionId: candidate.id,
+            label: `Added ${candidate.title} (${candidate.confidence}%) as the top suggestion`,
+          })
+          else ctx.card(card)
         }
-        await ctx.say("Is this the one?")
+        if (!ctx.input.chatId?.startsWith("thread:")) await ctx.say("Is this the one?")
       } else {
         ctx.collapse("Searched the AP inbox, bills and GL ±30 days")
         await ctx.say("No additional match found.")

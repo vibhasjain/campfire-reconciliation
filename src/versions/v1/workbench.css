@@ -1,3 +1,6 @@
+.wb-phone-action {
+  display: none;
+}
 .wb-name > span {
   display: block;
   overflow: hidden;
@@ -147,7 +150,14 @@ body:has(.wb-page) [data-testid="toast"]:not(:last-child) {
   }
   .wb-table .wb-suggestion,
   .wb-table col.wb-suggestion {
-    width: 32px;
+    width: 84px;
+  }
+  .wb-table .wb-suggestion > span {
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .wb-phone-action {
+    display: inline;
   }
   .wb-name > span {
     display: -webkit-box;

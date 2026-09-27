@@ -60,6 +60,7 @@ import { DoneState } from "@/recon/DoneState"
 import { PageChat } from "@/recon/PageChat"
 import { ShortcutsDialog } from "@/recon/ShortcutsDialog"
 import type { ReconItem } from "@/recon/data"
+import { useFlowToastOffset } from "./useFlowToastOffset"
 import "./flow.css"
 
 function choose(id: string) {
@@ -111,6 +112,43 @@ function ThreadDock({ id, focusCard }: { id: string; focusCard: () => void }) {
         trigger
       )}
     </div>
+  )
+}
+function TeammateNote({ itemId }: { itemId: string }) {
+  const message = useDB(
+    (s) =>
+      Object.values(s.messages)
+        .filter(
+          (m) =>
+            m.chatId === `thread:${itemId}` &&
+            (m.author === "priya" || m.author === "daniel") &&
+            m.text
+        )
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0]
+  )
+  const name = useRecon((s) =>
+    message?.author ? s.teammates[message.author].name.split(" ")[0] : ""
+  )
+  if (!message) return null
+  return (
+    <button
+      type="button"
+      data-action="comment"
+      className="flow-teammate-note"
+      title={`${name} · ${message.text}`}
+      onClick={() => {
+        focusThread(itemId)
+        requestAnimationFrame(() =>
+          document
+            .querySelector(`[data-thread-item="${itemId}"]`)
+            ?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+        )
+      }}
+    >
+      <span className="font-medium">{name}</span>
+      <span aria-hidden="true"> · </span>
+      {message.text}
+    </button>
   )
 }
 function FocusCard({ item }: { item: ReconItem }) {
@@ -202,6 +240,7 @@ function FocusCard({ item }: { item: ReconItem }) {
               size="full"
               active
             />
+            <TeammateNote itemId={item.id} />
             {item.suggestions.length > 1 && (
               <div className="mt-2 flex items-center justify-end gap-1">
                 <Button
@@ -300,17 +339,7 @@ export default function V3() {
   const [lineMode, setLineMode] = useState(false)
   const reduced = useReducedMotion()
   const phone = useMediaQuery("(max-width: 639px)")
-  useEffect(() => {
-    if (!phone) return
-    const style = document.body.style
-    const previous = style.getPropertyValue("--toast-offset")
-    const priority = style.getPropertyPriority("--toast-offset")
-    style.setProperty("--toast-offset", "64px")
-    return () => {
-      if (previous) style.setProperty("--toast-offset", previous, priority)
-      else style.removeProperty("--toast-offset")
-    }
-  }, [phone])
+  useFlowToastOffset(phone)
   const current = items.find((i) => i.id === selectedId) ?? pending[0]
   useEffect(() => {
     if (!selectedId && pending[0]) choose(pending[0].id)
@@ -403,8 +432,15 @@ export default function V3() {
           </div>
           <Popover open={overview} onOpenChange={setOverview}>
             <PopoverTrigger asChild>
-              <Button variant="ghost" title="Overview · L">
-                All {exceptions.length}
+              <Button
+                variant="ghost"
+                className="flow-overview-trigger"
+                title="Overview · L"
+              >
+                All exceptions
+                <kbd aria-hidden="true" className="flow-key-hint">
+                  L
+                </kbd>
               </Button>
             </PopoverTrigger>
             <PopoverContent

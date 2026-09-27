@@ -1,3 +1,5 @@
+import { flushSync } from "react-dom"
+import { focusPage } from "./focus"
 import { useEffect, useRef } from "react"
 import { ui } from "@/app/ui-store"
 import { focusThread } from "@/comments"
@@ -45,6 +47,7 @@ export function useReconKeys({
           layerOrder.push(key)
         }
       }
+      if (["threadFor", "pageChatOpen", "inboxOpen", "shortcutsOpen"].some(key => previous[key as keyof typeof previous] && !next[key as keyof typeof next])) focusPage()
       previous = next
     })
     const onKey = (event: KeyboardEvent) => {
@@ -68,7 +71,17 @@ export function useReconKeys({
             return
           }
         }
+        // Evidence owns its Escape even when opened inside another layer.
+        const evidence = document.querySelector<HTMLElement>('[data-recon-evidence][data-state="open"]')
+        if (evidence) {
+          flushSync(() => evidence.dispatchEvent(new Event("recon-close")))
+          focusPage()
+          event.preventDefault()
+          event.stopImmediatePropagation()
+          return
+        }
         const shell = ui.get()
+        flushSync(() => {
         if (shell.dialog) ui.set({ dialog: null })
         else if (shell.paletteOpen) ui.set({ paletteOpen: false })
         else {
@@ -89,10 +102,13 @@ export function useReconKeys({
           else if (shell.halfSheet) ui.set({ halfSheet: null })
           else return
         }
+        })
+        focusPage()
         event.preventDefault()
         event.stopImmediatePropagation()
         return
       }
+      if (ui.get().dialog || ui.get().paletteOpen || state.shortcutsOpen || document.querySelector('[role="dialog"][data-state="open"]')) return
       if (
         target?.closest(
           'input,textarea,select,[contenteditable]:not([contenteditable="false"]),[cmdk-root],[data-cmdk-root],[role="dialog"]'
@@ -158,9 +174,17 @@ export function useReconKeys({
       }
       event.preventDefault()
     }
+    const onViewSuggestion = (event: Event) => {
+      const id = (event as CustomEvent<string>).detail
+      const selector = `[data-suggestion-id="${CSS.escape(id)}"]`
+      if (!document.querySelector(selector)) flushSync(() => enter?.())
+      requestAnimationFrame(() => document.querySelector(selector)?.scrollIntoView({ block: "nearest", behavior: "smooth" }))
+    }
+    window.addEventListener("recon:view-suggestion", onViewSuggestion)
     window.addEventListener("keydown", onKey, true)
     return () => {
       unsubscribe()
+      window.removeEventListener("recon:view-suggestion", onViewSuggestion)
       window.removeEventListener("keydown", onKey, true)
     }
   }, [move, enter, cycle, enabled])

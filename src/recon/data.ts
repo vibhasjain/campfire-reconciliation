@@ -543,7 +543,7 @@ propose(
   "fees",
   "create_je",
   "Record September bank service charges",
-  "Same monthly analysis fee as July ($271.10) and August ($279.85).",
+  "Recurring monthly analysis fee (Jul $271.10, Aug $279.85)",
   evidence(
     97,
     proof(
@@ -639,7 +639,7 @@ const hiddenNotion = propose(
   "r04",
   "invoice-NTN-88213",
   "create_bill",
-  "Create bill from Notion invoice NTN-88213",
+  "Create bill from NTN-88213",
   "The unprocessed AP invoice confirms Notion Plus: 40 seats, annual service, and a $9,600 total.",
   evidence(
     96,

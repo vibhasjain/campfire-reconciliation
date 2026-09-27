@@ -1,3 +1,4 @@
+import { restorePageFocus } from "@/recon/focus"
 import { Keyboard } from "lucide-react"
 import {
   Dialog,
@@ -34,7 +35,7 @@ export function ShortcutsDialog() {
         reconUi.set((state) => ({ ...state, shortcutsOpen }))
       }
     >
-      <DialogContent className="sm:max-w-[420px]">
+      <DialogContent onCloseAutoFocus={restorePageFocus} className="sm:max-w-[420px]">
         <DialogHeader>
           <Keyboard />
           <DialogTitle>Keyboard shortcuts</DialogTitle>

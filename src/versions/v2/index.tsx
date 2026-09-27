@@ -79,9 +79,14 @@ function LedgerLine({
         }))
       }}
     >
-      <time className="text-fg-3 tabular-nums" dateTime={line.date}>
-        {line.date.slice(5).replace("-", "/")}
-      </time>
+      <span className="paired-line-meta">
+        <span className="paired-side-label">
+          {side === "book" ? "Books" : "Bank"}
+        </span>
+        <time className="text-fg-3 tabular-nums" dateTime={line.date}>
+          {line.date.slice(5).replace("-", "/")}
+        </time>
+      </span>
       <span className="paired-description">{line.description}</span>
       <Money cents={line.amount} />
     </button>
@@ -140,7 +145,8 @@ function Group({
         <div className="paired-side">
           {beginning ? (
             <button className="paired-beginning" onClick={onOpen}>
-              Beginning balance{" "}
+              <span className="paired-side-label">Books</span>
+              <span>Beginning balance</span>
               <Money
                 cents={suggestion?.bookDelta ?? item.resolution?.bookDelta ?? 0}
               />
@@ -151,16 +157,20 @@ function Group({
             ))
           ) : (
             <button className="paired-ghost" onClick={onOpen}>
-              {ghost}
+              <span className="paired-side-label">Books</span>
+              <span>{ghost}</span>
             </button>
           )}
         </div>
         <button
           className="paired-connector"
-          aria-label={`Open ${item.title}`}
+          aria-label={`${item.status === "open" ? "Suggested: " : "Open "}${item.title}`}
           aria-expanded={expanded}
           onClick={onToggle}
         >
+          {item.status === "open" && (
+            <span className="paired-connector-cue">Suggested</span>
+          )}
           <svg
             viewBox={`0 0 64 ${rows * 44}`}
             preserveAspectRatio="none"
@@ -204,11 +214,14 @@ function Group({
             ))
           ) : (
             <button className="paired-ghost" onClick={onOpen}>
-              {beginning
-                ? "August close"
-                : suggestion?.action === "in_transit"
-                  ? "In transit · 10/01"
-                  : "Outstanding"}
+              <span className="paired-side-label">Bank</span>
+              <span>
+                {beginning
+                  ? "August close"
+                  : suggestion?.action === "in_transit"
+                    ? "In transit · 10/01"
+                    : "Outstanding"}
+              </span>
             </button>
           )}
         </div>

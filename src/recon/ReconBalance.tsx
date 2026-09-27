@@ -94,7 +94,7 @@ export function ReconBalance({
         />
         <span>·</span>
         <span>
-          <span data-testid="items-left">{left}</span> left
+          <span data-testid="items-left">{left}</span> left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}
         </span>
         <span
           role="progressbar"
@@ -154,7 +154,7 @@ export function ReconBalance({
         <div className="flex items-center gap-2 text-xs">
           <span className="font-medium">Difference</span>
           <span className="text-fg-4">
-            · <span data-testid="items-left">{left}</span> left
+            · <span data-testid="items-left">{left}</span> left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}
           </span>
         </div>
         <div

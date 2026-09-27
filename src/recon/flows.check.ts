@@ -56,6 +56,7 @@ function reset() {
 setFastMode(true)
 reset()
 const queue = queueItems(recon.getState())
+assert(queue[0].id === "r06" && queue[1].id === "r05", "Timing adjustments lead the queue")
 const routine = queue.filter(
   (item) => !item.suggestions.some((s) => s.approval)
 )
@@ -66,10 +67,10 @@ assert(
   "Routine work precedes approval gates"
 )
 assert(
-  routine.every(
+  routine.slice(2).every(
     (item, i) =>
       i === 0 ||
-      routine[i - 1].suggestions[0].confidence >= item.suggestions[0].confidence
+      routine.slice(2)[i - 1].suggestions[0].confidence >= item.suggestions[0].confidence
   ),
   "Routine confidence descends"
 )
@@ -270,16 +271,18 @@ assert(
     (message) =>
       message.author === "ember" &&
       message.parts.some(
-        (part) => part.type === "card" && part.card.kind === "recon-candidate"
+        (part) => part.type === "card" && part.card.kind === "recon-change"
       )
   ),
-  "Ember emits the actionable candidate card"
+  "Ember emits a compact reversible addition in item threads"
 )
+assert(!turns.some(m => m.parts.some(p => p.type === "card" && p.card.kind === "recon-candidate")), "Thread has no duplicate actionable proposal")
+assert(recon.getState().items.r04.suggestions[reconUi.get().suggestionIndex.r04].invoiceNumber === "NTN-88213", "Discovered invoice is active")
 const candidateReply = turns.find(
   (message) =>
     message.author === "ember" &&
     message.parts.some(
-      (part) => part.type === "card" && part.card.kind === "recon-candidate"
+      (part) => part.type === "card" && part.card.kind === "recon-change"
     )
 )!
 assert(
@@ -287,7 +290,7 @@ assert(
   "Discovery emits one outcome card"
 )
 const candidatePart = candidateReply.parts.find(
-  (part) => part.type === "card" && part.card.kind === "recon-candidate"
+  (part) => part.type === "card" && part.card.kind === "recon-change"
 )!
 assert(
   candidatePart.type === "card" &&
@@ -369,7 +372,7 @@ const closing = Object.values(db.get().messages)
   ?.parts.at(-1)
 assert(
   closing?.type === "text" &&
-    closing.markdown.startsWith(`Accepted ${eligible.length - 1} suggestions.`),
+    closing.markdown.startsWith("As of ") && closing.markdown.includes(`Accepted ${eligible.length - 1} suggestions.`),
   "Batch reports the actual number accepted"
 )
 assert(
@@ -381,6 +384,14 @@ assert(
 )
 
 await flushApprovals()
+reset()
+const summaryChat = send({ chatId: "page", text: "what's left?", mentions: [], attachments: [], context: [] })
+await until(() => !isRunning(summaryChat), "Live summary")
+const summaryPart = Object.values(db.get().messages).filter(m => m.chatId === summaryChat && m.role === "assistant").at(-1)?.parts.at(-1)
+assert(summaryPart?.type === "text" && /^As of \d{1,2}:\d{2} [AP]M/.test(summaryPart.markdown), "Live answer starts with local time")
+assert(summaryPart.snapshot?.question === "what's left?" && summaryPart.snapshot.clock === recon.getState().clock, "Snapshot retains exact question and revision")
+ok(acceptSuggestion("r06"), "Change state after summary")
+assert(summaryPart.snapshot.clock !== recon.getState().clock, "Live answer becomes stale after a state change")
 reset()
 setFastMode(undefined)
 console.log("ALL FLOW CHECKS PASSED")

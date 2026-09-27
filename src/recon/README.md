@@ -1,14 +1,20 @@
 # Shared reconciliation core
 
 Import from `@/recon` or the named component module; comments only from `@/comments`.
-All amounts are integer cents. State is in memory; reload restores the fixture.
+All amounts are integer cents. State persists after 300ms in one localStorage snapshot per version path.
+Recon, engine chats/messages/approvals, comments, and `reconUi.completed` restore
+on reload. Interrupted streams finish; interrupted batch approvals are dismissed
+and Daniel sign-offs resume. Storage errors fall back to fixtures. `?fast` never
+reads or writes demo storage. “Reset demo” in ⌘K and “Start over” after submission
+clear the current version snapshot and reload.
 `src/versions/ReconScreen.tsx` is the reference composition for all three lanes.
 
 ## State
 
 - `recon`: singleton framework-free store (`getState`, `subscribe`, mutations).
 - `useRecon(selector)`, `useSummary()`, `useItem(id)`, `useQueue()`, `useReconciled()`.
-- Queue: routine items first by top-suggestion confidence descending, approval-gated
+- Queue: timing items (`in_transit` / `outstanding`) first, then other items by
+  top-suggestion confidence descending, approval-gated
   items last; includes touched exceptions
   and reopened auto pairs. Resolved exceptions precede auto pairs in Reconciled.
 - `reconUi.get()/set(updater)/subscribe`, `useReconUi(selector)` own selection,
@@ -29,9 +35,9 @@ acceptLabel?, rejectLabel?, footer?})`: factors, evidence and entry preview; def
   receive the active suggestion; visible index lives in `reconUi`.
 - `EvidenceChip({attachmentId})`, `DocumentPreview({attachment})`: HTML documents.
 - `ReconBalance({variant?: 'full'|'compact', className?})`: animated reconciliation.
-- `DoneState()`: “Mark complete”; disabled tooltip gives items left. Confirmation:
-  “Mark complete and send to Daniel Kim for approval?”. After submission:
-  “Complete · waiting on Daniel's approval” and disabled “Sent to Daniel”.
+- `DoneState()`: “Submit to Daniel”; disabled tooltip gives items left. Confirmation:
+  “Submit this reconciliation to Daniel Kim for approval?”. After submission:
+  “Submitted · waiting on Daniel” and disabled “Submitted”.
 - `PageChat()`, `ShortcutsDialog()`: mount once per version. Shell header opens chat
   and CommentsInbox. Page chat is 380×540 desktop, bottom sheet on phones.
   Desktop right position is `calc(20px + var(--page-chat-offset, 0px))`;
@@ -76,6 +82,8 @@ acceptLabel?, rejectLabel?, footer?})`: factors, evidence and entry preview; def
   Difference contains just formatted money; done exists only while summary.done.
 - `npx tsx src/recon/store.check.ts` → ALL CHECKS PASSED.
 - `npx tsx src/recon/flows.check.ts` → ALL FLOW CHECKS PASSED (real headless engine).
+- `npx tsx src/recon/persistence.check.ts` checks reload, version isolation, fast
+  bypass, blocked/corrupt storage, interrupted output and ID continuity.
 - Sandbox builds: export `CAMPFIRE_OUT_DIR=dist` for build and preview; deployment
   still defaults to `../campfire`. `npm run build`, `npm run lint`.
 - Preview: `npm run preview -- --port 4802 --strictPort`; `/campfire1|2|3?fast`.
@@ -102,11 +110,18 @@ acceptLabel?, rejectLabel?, footer?})`: factors, evidence and entry preview; def
   Escape in a nonempty composer first blurs it; the next Escape closes the top
   layer. An empty composer blurs and closes its layer on the first Escape.
 - Ember discovery collapses tool steps to “Searched the AP inbox, bills and GL ±30 days”.
-  It emits one `recon-candidate` per outcome, with “Found by Ember”, Accept /
-  “Not this one”, and “Added to suggestions · Revert” in its footer; no duplicate
-  change cards. `ReconCandidateCard` adds optional `actionId` for that footer.
+  Item threads emit one compact `recon-change` addition with View / Revert.
+  The item owns the active actionable suggestion with “Found by Ember”.
+  Page chat retains the actionable `recon-candidate` card and Revert footer.
   Other mutations retain one change card each and completed tools collapse.
 - Page answers use compact lists with six visible items then “and N more”, and
-  close with the current difference. Bulk review rows wrap and expand beyond six.
+  close with the current difference. Live-state answers begin “As of <local time>”;
+  changed revisions show “Out of date · Ask again”, resending the original question. Bulk review rows wrap and expand beyond six.
   `itemAmount` falls back to absolute top-suggestion bookDelta for items with no
   lines (r14: $1,150.00). Factor explanations use facts rather than wide tables.
+
+- Counts append “· N with Daniel” only while approvals are pending.
+- Overlay close restores focus to the main region synchronously; keyboard handling
+  stays at window capture. Manual continuity check: open each evidence, shortcuts,
+  thread, page-chat or sheet overlay, press Esc then immediately A/X/J/K; the first
+  key must act on the selected item. Typing and open dialogs keep their own keys.

@@ -1,3 +1,4 @@
+import { SnapshotAnswer } from "@/recon/SnapshotAnswer"
 import type { Message } from "@/data/types"
 import type { RunView } from "@/agent/engine"
 import { ChatSteps, ChatMarkdown, ChatCard } from "@/features/agent"
@@ -54,12 +55,7 @@ export function ThreadMessage({
                   }
                 />
               ) : part.type === "text" ? (
-                <ChatMarkdown
-                  key={index}
-                  markdown={part.markdown}
-                  streaming={part.streaming}
-                  className="gap-2 text-sm leading-5 font-normal"
-                />
+                <SnapshotAnswer key={index} part={part} chatId={message.chatId} />
               ) : (
                 <ChatCard key={part.id} card={part.card} />
               )

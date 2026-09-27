@@ -61,7 +61,7 @@ export interface RunCtx {
   /** Auto-collapse the live step list with a past-tense summary ("Ran code and retrieved data"). */
   collapse(pastTense: string): void
   /** Streams words (25–40ms each, fade-in .15s); table rows stream whole. */
-  say(markdown: string, opts?: { wps?: number }): Promise<void>
+  say(markdown: string, opts?: { wps?: number; snapshot?: { clock: number; question: string } }): Promise<void>
   card(card: Card): ID
   updateCard(id: ID, card: Partial<Card>): void
   openPanel(target: HalfSheetTarget): void

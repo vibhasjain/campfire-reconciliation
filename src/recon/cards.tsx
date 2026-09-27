@@ -1,9 +1,10 @@
+import { flushSync } from "react-dom"
 import { Check, RotateCcw } from "lucide-react"
 import type { Card } from "@/data/types"
 import { Button } from "@/components/ui/button"
 import { Suggestion } from "./Suggestion"
 import { Money } from "./Money"
-import { useItem, useRecon, itemAmount } from "./useRecon"
+import { useItem, useRecon, itemAmount, recon, reconUi } from "./useRecon"
 import {
   acceptSuggestion,
   rejectSuggestion,
@@ -78,13 +79,20 @@ function ChangeCard({
     state.actions.find((record) => record.id === card.actionId)
   )
   const reverted = Boolean(action?.reverted)
+  const addition = card.suggestionId ? card.label.match(/^Added (.*) (\(\d+%\) as the top suggestion)$/) : null
   return (
     <div className="flex items-start gap-3 rounded-lg border-hair border-line bg-surface px-3 py-2.5">
       <Check className="mt-0.5 size-4 shrink-0 text-brand" />
       <div className="min-w-0 flex-1 text-xs">
-        <div className="font-medium text-fg">{card.label}</div>
+        <div className="font-medium text-fg">{addition ? <>Added <em>{addition[1]}</em> {addition[2]} ·</> : card.label}</div>
         {card.detail && <div className="mt-1 text-fg-3">{card.detail}</div>}
       </div>
+      {card.itemId && card.suggestionId && !reverted && <Button size="xs" variant="ghost" onClick={() => {
+        const itemId = card.itemId!, suggestionId = card.suggestionId!
+        const index = recon.getState().items[itemId]?.suggestions.findIndex(s => s.id === suggestionId) ?? 0
+        flushSync(() => reconUi.set(s => ({ ...s, selectedItemId: itemId, threadFor: null, suggestionIndex: { ...s.suggestionIndex, [itemId]: Math.max(0, index) } })))
+        window.dispatchEvent(new CustomEvent("recon:view-suggestion", { detail: suggestionId }))
+      }}>View</Button>}
       <Button
         size="xs"
         variant="ghost"

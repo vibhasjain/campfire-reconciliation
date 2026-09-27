@@ -276,3 +276,28 @@
   > div:first-child {
   display: none;
 }
+.flow-overview-trigger {
+  flex-shrink: 0;
+}
+.flow-key-hint {
+  visibility: hidden;
+  font: inherit;
+  font-size: 12px;
+  color: var(--c-fg-4);
+}
+.flow-overview-trigger:hover .flow-key-hint {
+  visibility: visible;
+}
+.flow-teammate-note {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--c-fg-3);
+}

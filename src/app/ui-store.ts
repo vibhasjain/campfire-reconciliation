@@ -1,3 +1,4 @@
+import { focusPage } from "@/recon/focus"
 // In-memory shell state. No navigation or storage side effects.
 import { isValidElement, useSyncExternalStore, type ReactNode } from "react"
 import { createStore } from "@/data/store"
@@ -26,7 +27,11 @@ const store = createStore<UIState>({
 
 export const ui = {
   get: store.get,
-  set: (patch: Partial<UIState>) => store.set((state) => ({ ...state, ...patch })),
+  set: (patch: Partial<UIState>) => {
+    const previous = store.get()
+    store.set((state) => ({ ...state, ...patch }))
+    if ((previous.dialog && patch.dialog === null) || (previous.halfSheet && patch.halfSheet === null) || (previous.paletteOpen && patch.paletteOpen === false)) focusPage()
+  },
   subscribe: store.subscribe,
 }
 

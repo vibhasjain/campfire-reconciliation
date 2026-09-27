@@ -277,3 +277,12 @@ export function revertAction(actionId: string, actor: Actor = "maya"): Result {
   }
   return failure(result)
 }
+
+// Resume Daniel's scripted sign-off when a reload interrupted the wait.
+if (typeof window !== "undefined") {
+  for (const item of Object.values(recon.getState().items)) {
+    if (item.status !== "awaiting_approval") continue
+    const action = recon.getState().actions.slice().reverse().find(a => a.itemId === item.id && a.kind === "accept" && !a.reverted)
+    if (action) requestApproval(item.id, action.id)
+  }
+}

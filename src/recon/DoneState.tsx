@@ -1,3 +1,4 @@
+import { resetDemo } from "@/data/persistence"
 import { Check, CheckCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,9 +19,9 @@ export function DoneState() {
     openDialog({
       kind: "confirm",
       props: {
-        title: "Mark complete and send to Daniel Kim for approval?",
+        title: "Submit this reconciliation to Daniel Kim for approval?",
         body: "September 2026 · Chase Operating ••4821",
-        confirmLabel: "Mark complete",
+        confirmLabel: "Submit to Daniel",
         tone: "brand",
         onConfirm() {
           if (!summarize(recon.getState()).done) return
@@ -40,10 +41,10 @@ export function DoneState() {
       {completed ? (
         <>
           <CheckCheck />
-          Sent to Daniel
+          Submitted
         </>
       ) : (
-        "Mark complete"
+        "Submit to Daniel"
       )}
     </Button>
   )
@@ -57,7 +58,7 @@ export function DoneState() {
           <TooltipContent>
             {summary.open + summary.awaitingApproval} items left
             {summary.awaitingApproval
-              ? ` · ${summary.awaitingApproval} Awaiting Daniel`
+              ? ` · ${summary.awaitingApproval} with Daniel`
               : ""}
             {summary.difference !== 0 ? " · Difference must be $0.00" : ""}
           </TooltipContent>
@@ -77,7 +78,7 @@ export function DoneState() {
         <div className="flex flex-col gap-1">
           <h2 className="text-sm font-semibold text-brand">
             {completed
-              ? "Complete · waiting on Daniel's approval"
+              ? "Submitted · waiting on Daniel"
               : "Reconciled · $0.00 difference"}
           </h2>
           <div className="flex flex-wrap items-center gap-x-2 text-xs text-fg-3">
@@ -91,7 +92,7 @@ export function DoneState() {
           </div>
         </div>
       </div>
-      {button}
+      <div className="flex items-center gap-3">{completed && <button type="button" className="text-xs text-fg-4 hover:text-fg" onClick={resetDemo}>Start over</button>}{button}</div>
     </section>
   )
 }

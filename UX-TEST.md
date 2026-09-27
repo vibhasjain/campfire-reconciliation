@@ -40,3 +40,33 @@ The first test pass found two real bugs, both fixed in fix round 1:
 - **v1:** the queue opens on approval items, so where to start isn't obvious. On phones, row names truncate.
 - **v2:** after an accept, J jumps back to the first open item. J then Enter doesn't open the row. A green connector dot reads as "already matched", and the statement label doesn't say it's adjusted. On phones, Accept sits below the fold.
 - **v3:** the thread composer takes focus after the view advances, so pressing A types an "a". Advancing goes to the earliest open item instead of the next one. Undo leaves the wrong card on screen. On phones, the reasoning truncates.
+
+## Round 2 — after fix rounds 1 and 2
+
+### Automated flows: 24/24 pass
+
+| | Keyboard: keys to clear 14 | Mouse: clicks to clear 14 |
+|---|---|---|
+| v1 Workbench | 14 (3.5s) | 15 (4.2s) |
+| v2 Paired ledger | 15 (3.6s; was 28) | 15 (14.3s; was 28 clicks) |
+| v3 Flow | 14 (3.5s) | 14 (3.9s) |
+
+### Evaluator scores (1–5)
+
+| | Speed | Clarity | Confidence | AI trust | Fluidity | Done-ness | Phone | Restraint |
+|---|---|---|---|---|---|---|---|---|
+| v1 Workbench | 4 | 4 | 4 | 4 | 4 | **3** | 4 | 4 |
+| v2 Paired ledger | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+| v3 Flow | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+
+### Still open (going into round 3)
+- A reload loses resolutions, approvals and the submission. All three evaluators flagged it.
+- The final action's wording. "Mark complete" still surprises Maya because it starts Daniel's approval; the evaluators expect "Submit".
+- On Notion, the found proposal appears twice: in the item and in the thread.
+- After Esc closes an overlay, the first keypress is lost.
+- The "what's left?" answer carries no timestamp, so reopening the chat shows it as if it were current.
+- Some accepts move the difference away from zero, because the $86,400 deposit in transit sits late in the queue.
+- By version:
+  - **v1:** the heading still says "Ready for review" after submitting, and phone rows show only the glyph with no action label.
+  - **v2:** stacked phone rows have no side labels, and the fee reasoning copy contradicts itself.
+  - **v3:** the rail's link is called "All 14", and the phone breadcrumb cuts off "••4821".

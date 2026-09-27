@@ -1,3 +1,4 @@
+import { restoreSlice, persistSlice } from "@/data/persistence"
 import { useSyncExternalStore } from "react"
 import { createStore, db, insert, nextId, patch } from "@/data/store"
 import type { EntityRef, Message } from "@/data/types"
@@ -7,14 +8,15 @@ import { waitFor } from "@/recon/speed"
 import { toast } from "@/components/common/toast"
 import type { CommentsState } from "./types"
 
-export const comments = createStore<CommentsState>({
+export const comments = createStore<CommentsState>(restoreSlice("comments", {
   threads: {},
   reactions: {},
   unread: {},
   emberUnread: {},
-})
+}))
+persistSlice("comments", comments.get, comments.subscribe)
 const viewing = new Set<string>()
-const observed = new Set<string>()
+const observed = new Set<string>(Object.keys(db.get().messages))
 export const threadChatId = (itemId: string) => `thread:${itemId}`
 export function useComments<T>(selector: (state: CommentsState) => T): T {
   return useSyncExternalStore(
@@ -79,6 +81,7 @@ export function appendThreadMessage(
 }
 export function seedThreads() {
   for (const thread of Object.values(recon.getState().threads)) {
+    const existing = comments.get().threads[threadChatId(thread.itemId)]
     const chatId = ensureThread(thread.itemId)
     for (const message of thread.messages) {
       observed.add(message.id)
@@ -87,6 +90,7 @@ export function seedThreads() {
         at: message.at,
       })
     }
+    if (existing) continue
     comments.set((state) => ({
       ...state,
       threads: {

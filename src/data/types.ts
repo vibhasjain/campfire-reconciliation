@@ -26,10 +26,10 @@ export type Card =
   | { kind: 'approval'; approvalId: ID }
   | { kind: 'answers'; qa: { q: string; a: string }[] }
   | { kind: 'recon-candidate'; itemId: ID; suggestionId: ID }
-  | { kind: 'recon-change'; actionId: ID; label: string; detail?: string }
+  | { kind: 'recon-change'; actionId: ID; label: string; detail?: string; itemId?: ID; suggestionId?: ID }
   | { kind: 'recon-item'; itemId: ID }
 export type MessagePart =
-  | { type: 'text'; markdown: string; streaming?: boolean }
+  | { type: 'text'; markdown: string; streaming?: boolean; snapshot?: { clock: number; question: string } }
   | { type: 'steps'; status: string; live: boolean; open: boolean; steps: ToolStep[] }
   | { type: 'card'; id: ID; card: Card }
 export type Attachment = { id: ID; name: string; size: number; mime: string; text?: string; state: 'uploading' | 'ready' }

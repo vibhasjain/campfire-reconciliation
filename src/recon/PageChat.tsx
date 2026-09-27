@@ -1,3 +1,4 @@
+import { restorePageFocus } from "@/recon/focus"
 import { X } from "lucide-react"
 import { EmberIcon } from "@/components/common/EmberIcon"
 import { createPortal } from "react-dom"
@@ -41,7 +42,7 @@ export function PageChat() {
           reconUi.set((state) => ({ ...state, pageChatOpen }))
         }
       >
-        <SheetContent
+        <SheetContent onCloseAutoFocus={restorePageFocus}
           onOpenAutoFocus={(event) => event.preventDefault()}
           side="bottom"
           showCloseButton={false}

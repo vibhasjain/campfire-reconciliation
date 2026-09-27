@@ -84,7 +84,18 @@ function actionLabel(item: ReconItem) {
     return "Match + FX"
   return labels[suggestion.action]
 }
-const groups = ["Suggested", "Bank only", "Books only", "Needs approval"]
+const phoneLabels: Record<string, string> = {
+  "Create JE": "JE",
+  "Create bill": "Bill",
+  Outstanding: "Outst.",
+  "In transit": "Transit",
+  "Fix amount": "Fix",
+  "Match + fee": "+ fee",
+  "Match + FX": "+ FX",
+  "Reverse dup": "Dup",
+  "Reverse void": "Void",
+}
+const groups = ["Books only", "Suggested", "Bank only", "Needs approval"]
 const groupFor = (item: ReconItem) =>
   item.suggestions.some((s) => s.approval)
     ? "Needs approval"
@@ -325,6 +336,7 @@ export default function Workbench() {
   const queue = useQueue()
   const reconciled = useReconciled()
   const summary = useSummary()
+  const completed = useReconUi((state) => state.completed)
   const state = useRecon((s) => s)
   const selected = useReconUi((s) => s.selectedItemId)
   const selection = useReconUi((s) => s.selectedLines)
@@ -533,7 +545,9 @@ export default function Workbench() {
       <Balance />
       {summary.done && tab === "To review" ? (
         <div className="wb-done mt-8">
-          <h2 className="mb-3 text-lg font-medium">Ready for review</h2>
+          <h2 className="mb-3 text-lg font-medium">
+            {completed ? "Submitted · waiting on Daniel" : "Reconciled"}
+          </h2>
           <DoneState />
         </div>
       ) : (
@@ -667,6 +681,14 @@ export default function Workbench() {
                               : item.status === "awaiting_approval"
                                 ? "Awaiting Daniel"
                                 : actionLabel(item)}
+                          </span>
+                          <span className="wb-phone-action">
+                            {item.status === "resolved"
+                              ? "Done"
+                              : item.status === "awaiting_approval"
+                                ? "Daniel"
+                                : (phoneLabels[actionLabel(item)] ??
+                                  actionLabel(item))}
                           </span>
                         </span>
                       </td>

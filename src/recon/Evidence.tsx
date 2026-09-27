@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { restorePageFocus } from "@/recon/focus"
+import { useCallback, useState } from "react"
 import {
   Building2,
   CheckCheck,
@@ -151,6 +152,12 @@ export function EvidenceChip({ attachmentId }: { attachmentId: string }) {
   const attachment = useRecon((state) => state.attachments[attachmentId])
   const isMobile = useIsMobile()
   const [open, setOpen] = useState(false)
+  const evidenceRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return
+    const close = () => setOpen(false)
+    node.addEventListener("recon-close", close)
+    return () => node.removeEventListener("recon-close", close)
+  }, [])
   if (!attachment) return null
   const Icon = documentKinds[attachment.kind].icon
   const shortTitle = attachment.number ?? attachment.title
@@ -172,7 +179,7 @@ export function EvidenceChip({ attachmentId }: { attachmentId: string }) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
-        <DialogContent
+        <DialogContent onCloseAutoFocus={restorePageFocus} data-recon-evidence ref={evidenceRef}
           className="max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden bg-page"
           aria-describedby={undefined}
         >
@@ -188,7 +195,7 @@ export function EvidenceChip({ attachmentId }: { attachmentId: string }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent
+      <PopoverContent onCloseAutoFocus={restorePageFocus} data-recon-evidence ref={evidenceRef}
         align="start"
         sideOffset={6}
         className="max-h-[min(600px,var(--radix-popover-content-available-height))] w-[420px] max-w-[calc(100vw-2rem)] overflow-y-auto bg-page p-2"

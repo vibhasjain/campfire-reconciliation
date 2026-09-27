@@ -1,3 +1,4 @@
+import { restorePageFocus } from "@/recon/focus"
 import { useState } from "react"
 import { MessageSquare, Search } from "lucide-react"
 import {
@@ -52,7 +53,7 @@ export function CommentsInbox() {
         reconUi.set((current) => ({ ...current, inboxOpen: next }))
       }
     >
-      <SheetContent
+      <SheetContent onCloseAutoFocus={restorePageFocus}
         side="right"
         aria-describedby={undefined}
         className="w-[min(100vw,380px)]! max-w-none! border-l-hair border-line bg-surface p-0"
