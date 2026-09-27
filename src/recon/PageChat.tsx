@@ -1,4 +1,5 @@
-import { Flame, X } from "lucide-react"
+import { X } from "lucide-react"
+import { EmberIcon } from "@/components/common/EmberIcon"
 import { createPortal } from "react-dom"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,9 +19,7 @@ export function PageChat() {
     reconUi.set((state) => ({ ...state, pageChatOpen: false }))
   const header = (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b-hair border-line px-3">
-      <span className="flex size-6 items-center justify-center rounded-full bg-brand text-ai">
-        <Flame className="size-4" />
-      </span>
+      <EmberIcon className="size-5" />
       <h2 id="page-ember-title" className="flex-1 text-sm font-medium">
         Ember
       </h2>

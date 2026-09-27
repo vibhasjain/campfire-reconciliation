@@ -1,4 +1,4 @@
-import { Flame } from "lucide-react"
+import { EmberIcon } from "@/components/common/EmberIcon"
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar"
 import { recon } from "@/recon/useRecon"
 import type { Actor } from "@/recon/data"
@@ -8,7 +8,7 @@ const colors: Record<Actor, string> = {
   maya: "bg-brand-tint text-brand",
   daniel: "bg-accent-blue-tint text-accent-blue-text",
   priya: "bg-accent-purple-tint text-accent-purple-text",
-  ember: "bg-brand text-ai",
+  ember: "bg-surface ring-1 ring-line",
 }
 export function ParticipantAvatar({
   actor,
@@ -21,7 +21,11 @@ export function ParticipantAvatar({
   return (
     <Avatar size="sm" className={cn("size-6", className)} title={teammate.name}>
       <AvatarFallback className={cn("text-[9px] font-medium", colors[actor])}>
-        {actor === "ember" ? <Flame className="size-4" /> : teammate.initials}
+        {actor === "ember" ? (
+          <EmberIcon className="size-4" />
+        ) : (
+          teammate.initials
+        )}
       </AvatarFallback>
     </Avatar>
   )

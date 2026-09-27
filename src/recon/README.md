@@ -44,7 +44,7 @@ acceptLabel?, rejectLabel?})`: factors, evidence and entry preview; default acti
   `openItemThread(itemId, draft?)`, `useFlash(itemId)` support version controls.
 - `useReconKeys({move(delta), enter?, cycle?, enabled?})` mounts once per version.
   Up/Down or K/J move; Left/Right cycle; Enter opens; A accepts; X rejects;
-  U unreconciles; M matches; C opens/focuses comments; Cmd/Ctrl+J toggles page chat;
+  U unreconciles; M matches; C opens/focuses comments; Cmd/Ctrl+E (J alias) toggles Ask Ember;
   ? opens shortcuts; Escape closes the top layer. Editable/cmdk targets are ignored.
   Backtick, tilde and triple-click are reserved and never bound.
 

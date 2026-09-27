@@ -83,7 +83,7 @@ export function useReconKeys({
       )
         return
       const key = event.key.toLowerCase()
-      if ((event.metaKey || event.ctrlKey) && key === "j" && !event.altKey) {
+      if ((event.metaKey || event.ctrlKey) && (key === "e" || key === "j") && !event.altKey) {
         event.preventDefault()
         reconUi.set((current) => ({
           ...current,

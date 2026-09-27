@@ -19,7 +19,7 @@ const shortcuts = [
   ["U", "Unreconcile item"],
   ["M", "Match selected lines"],
   ["C", "Comment on item"],
-  ["⌘J / Ctrl+J", "Toggle Ember chat"],
+  ["⌘E / Ctrl+E", "Ask Ember"],
   ["?", "Show shortcuts"],
   ["Esc", "Close topmost layer"],
   ["⌘ / Ctrl / ⇧ + click", "Select multiple lines"],

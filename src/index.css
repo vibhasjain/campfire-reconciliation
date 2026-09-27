@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/inter";
+@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -29,7 +29,7 @@
   --c-fill-hover: #F3F1EB;
   --c-fill-selected: #EBE8E0;
 
-  --c-line-subtle: #EEEBE5;
+  --c-line-subtle: #EBE8E0;
   --c-line: #E5E2DC;
   --c-line-input: #DAD6CE;
   --c-line-strong: #C9C4BA;
@@ -49,10 +49,10 @@
   --c-segment: #F3F1EB;
   --c-segment-active: #EBE8E0;
 
-  --c-danger: oklch(0.64 0.2 30);
-  --c-danger-strong: oklch(0.6 0.19 30);
+  --c-danger: #B04A4A;
+  --c-danger-strong: #9A3E3E;
   --c-danger-tint: oklch(0.95 0.018 30);
-  --c-success: oklch(0.64 0.17 150);
+  --c-success: #43704F;
   --c-overlay: oklch(0 0 0 / 0.12);
 
   /* accents: strong / tint (10%) / text */
@@ -134,7 +134,7 @@
 
 @theme inline static {
   --font-heading: var(--font-sans);
-  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-sans: "Geist Variable", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-ink: oklch(var(--ink));
@@ -276,7 +276,7 @@
   --text-3xl--line-height: 36px;
   --text-3xl--letter-spacing: -0.015em;
 
-  --font-weight-normal: 425;
+  --font-weight-normal: 400;
   --font-weight-medium: 500;
 
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -332,7 +332,7 @@
   font-weight: 500;
   letter-spacing: 0.005em;
 }
-/* Inter at weight 500 tracks slightly wider (shell.md type scale); explicit tracking-* still wins. */
+/* Medium weight tracks slightly wider at small sizes; explicit tracking-* still wins. */
 @layer utilities {
   .text-sm.font-medium:not([class*="tracking-"]) {
     letter-spacing: 0.0025em;
