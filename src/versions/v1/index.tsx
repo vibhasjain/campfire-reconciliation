@@ -13,9 +13,7 @@ import {
   ChevronRight,
   Clock3,
   Keyboard,
-  LockKeyhole,
   RotateCcw,
-  Sparkles,
   X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -52,6 +50,7 @@ import { useReconKeys } from "@/recon/keys"
 import { Money, Delta } from "@/recon/Money"
 import { fmtDate } from "@/recon/store"
 import { ReconBalance } from "@/recon/ReconBalance"
+import { AiMark } from "@/recon/AiMark"
 import { LineRow } from "@/recon/LineRow"
 import { SuggestionCarousel } from "@/recon/SuggestionCarousel"
 import { DoneState } from "@/recon/DoneState"
@@ -71,6 +70,18 @@ const labels: Record<Action, string> = {
   in_transit: "In transit",
   reverse_dup: "Reverse dup",
   reverse_void: "Reverse void",
+}
+function actionLabel(item: ReconItem) {
+  const suggestion = item.suggestions[0]
+  if (!suggestion) return "Review"
+  if (suggestion.action === "match_many")
+    return `Match ${suggestion.bookIds.length}`
+  if (
+    suggestion.action === "match_adjust" &&
+    suggestion.entries?.some((entry) => /\bFX\b/i.test(entry.account))
+  )
+    return "Match + FX"
+  return labels[suggestion.action]
 }
 const groups = ["Needs approval", "Suggested", "Bank only", "Books only"]
 const groupFor = (item: ReconItem) =>
@@ -183,15 +194,21 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
       </div>
       <div className="px-5 pb-5">
         {item.status === "resolved" ? (
-          <Button
-            data-action="unreconcile"
-            variant="outline"
-            onClick={() => unreconcileItem(item.id)}
-            title="Unreconcile (U)"
-          >
-            <RotateCcw />
-            Unreconcile<kbd>U</kbd>
-          </Button>
+          <div className="flex items-center justify-between gap-3">
+            <span className="flex items-center gap-2 text-xs text-brand">
+              <Check className="size-4" />
+              Reconciled
+            </span>
+            <Button
+              data-action="unreconcile"
+              variant="outline"
+              onClick={() => unreconcileItem(item.id)}
+              title="Unreconcile (U)"
+            >
+              <RotateCcw />
+              Unreconcile<kbd>U</kbd>
+            </Button>
+          </div>
         ) : (
           <SuggestionCarousel itemId={item.id} size="compact" />
         )}
@@ -277,9 +294,12 @@ export default function Workbench() {
   const visible = all.slice(page * 50, page * 50 + 50)
   const itemsRef = useRef(all)
   const tabRef = useRef(tab)
+  const retainedIndex = useRef(0)
   useEffect(() => {
     itemsRef.current = all
     tabRef.current = tab
+    const index = all.findIndex((item) => item.id === selected)
+    if (index >= 0) retainedIndex.current = index
   })
   const move = useCallback(function navigate(delta: -1 | 1) {
     const items = itemsRef.current
@@ -288,7 +308,12 @@ export default function Workbench() {
     )
     const nextIndex = Math.max(
       0,
-      Math.min(items.length - 1, index < 0 ? 0 : index + delta)
+      Math.min(
+        items.length - 1,
+        index < 0
+          ? Math.max(0, retainedIndex.current + (delta < 0 ? -1 : 0))
+          : index + delta
+      )
     )
     const next = items[nextIndex]
     if (!next) return
@@ -323,28 +348,35 @@ export default function Workbench() {
     if (id) cycleSuggestion(id, delta)
   }, [])
   useReconKeys({ move, enter, cycle })
-  useEffect(
-    () =>
-      recon.subscribe(() => {
-        const id = reconUi.get().selectedItemId
-        if (
-          !id ||
-          tabRef.current !== "To review" ||
-          recon.getState().items[id]?.status !== "resolved"
-        )
-          return
-        const before = itemsRef.current
-        const index = before.findIndex((item) => item.id === id)
-        const remaining = before.filter(
-          (item) => recon.getState().items[item.id]?.status !== "resolved"
-        )
-        const next =
-          remaining[Math.min(Math.max(index, 0), remaining.length - 1)]
-        reconUi.set((s) => ({ ...s, selectedItemId: next?.id ?? null }))
-        if (!next) closeHalfSheet()
-      }),
-    []
-  )
+  useEffect(() => {
+    let lastAction = recon.getState().actions.at(-1)
+    return recon.subscribe(() => {
+      const state = recon.getState()
+      const action = state.actions.at(-1)
+      const fresh = action !== lastAction
+      lastAction = action
+      const id = reconUi.get().selectedItemId
+      // Only Maya's explicit acceptance advances. Ember, matching and later
+      // approvals retain the conversation and its reversible change card.
+      if (
+        !fresh ||
+        !id ||
+        tabRef.current !== "To review" ||
+        action?.kind !== "accept" ||
+        action.actor !== "maya" ||
+        action.itemId !== id
+      )
+        return
+      const before = itemsRef.current
+      const index = before.findIndex((item) => item.id === id)
+      const remaining = before.filter(
+        (item) => item.id !== id && state.items[item.id]?.status !== "resolved"
+      )
+      const next = remaining[Math.min(Math.max(index, 0), remaining.length - 1)]
+      reconUi.set((s) => ({ ...s, selectedItemId: next?.id ?? null }))
+      if (!next) closeHalfSheet()
+    })
+  }, [])
   useEffect(
     () => () => {
       if (ui.get().halfSheet) closeHalfSheet()
@@ -477,14 +509,6 @@ export default function Workbench() {
                   const multi = [...item.bankIds, ...item.bookIds].some((id) =>
                     [...selection.bank, ...selection.book].includes(id)
                   )
-                  const Icon =
-                    item.status === "resolved"
-                      ? Check
-                      : item.status === "awaiting_approval"
-                        ? Clock3
-                        : group === "Needs approval"
-                          ? LockKeyhole
-                          : Sparkles
                   return (
                     <motion.tr
                       key={item.id}
@@ -493,7 +517,7 @@ export default function Workbench() {
                       data-item-id={item.id}
                       data-selected={selected === item.id || multi || undefined}
                       tabIndex={0}
-                      aria-label={line?.description ?? item.title}
+                      aria-label={item.title}
                       onClick={(event) => select(event, item)}
                       onFocus={(event) => {
                         if (event.target === event.currentTarget)
@@ -537,9 +561,9 @@ export default function Workbench() {
                       </td>
                       <td
                         className={cn(TABLE_CELL, "truncate")}
-                        title={line?.description ?? item.title}
+                        title={item.title}
                       >
-                        {line?.description ?? item.title}
+                        {item.title}
                       </td>
                       <td className={cn(TABLE_CELL, "text-right")}>
                         <Money
@@ -552,23 +576,19 @@ export default function Workbench() {
                       </td>
                       <td className={cn(TABLE_CELL, "wb-suggestion")}>
                         <span className="flex items-center gap-2 text-xs text-fg-3">
-                          <span
-                            className={cn(
-                              "flex size-4 shrink-0 items-center justify-center rounded-full",
-                              Icon === Sparkles
-                                ? "bg-brand text-ai"
-                                : "text-brand"
-                            )}
-                          >
-                            <Icon className="size-4" />
-                          </span>
+                          {item.status === "resolved" ? (
+                            <Check className="size-4 shrink-0 text-brand" />
+                          ) : item.status === "awaiting_approval" ? (
+                            <Clock3 className="size-4 shrink-0 text-brand" />
+                          ) : (
+                            <AiMark />
+                          )}
                           <span className="wb-action-label">
                             {item.status === "resolved"
                               ? "Reconciled"
                               : item.status === "awaiting_approval"
                                 ? "Awaiting Daniel"
-                                : (labels[item.suggestions[0]?.action] ??
-                                  "Review")}
+                                : actionLabel(item)}
                           </span>
                         </span>
                       </td>

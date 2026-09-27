@@ -7,7 +7,6 @@ import {
   Clock,
   Keyboard,
   RotateCcw,
-  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CommentsInbox, ThreadPin } from "@/comments"
@@ -24,6 +23,7 @@ import {
   matchSelection,
   unreconcileItem,
 } from "@/recon/actions"
+import { AiMark } from "@/recon/AiMark"
 import { Money } from "@/recon/Money"
 import { Suggestion } from "@/recon/Suggestion"
 import { ReconBalance } from "@/recon/ReconBalance"
@@ -94,6 +94,12 @@ function Group({ item }: { item: ReconItem }) {
       exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
       className="paired-group group"
       data-item-id={item.id}
+      onClick={(event) => {
+        if (
+          !(event.target as HTMLElement).closest("button, a, input, textarea")
+        )
+          selectItem(item.id)
+      }}
       data-selected={selected || undefined}
       data-resolved={resolved || undefined}
     >
@@ -154,13 +160,18 @@ function Group({ item }: { item: ReconItem }) {
                   />
                 ))}
           </svg>
-          <span className="paired-dot">
+          <span
+            className={`paired-node ${resolved || item.status === "awaiting_approval" ? "paired-status" : "paired-proposal"}`}
+          >
             {resolved ? (
               <Check />
             ) : item.status === "awaiting_approval" ? (
               <Clock />
             ) : (
-              <Sparkles />
+              <>
+                <span className="paired-dot" />
+                <AiMark className="paired-ai-mark" />
+              </>
             )}
           </span>
         </button>
@@ -207,7 +218,7 @@ function Group({ item }: { item: ReconItem }) {
             <>
               <Suggestion
                 size="compact"
-                active={false}
+                active={selected}
                 suggestion={{
                   ...suggestion,
                   entries: undefined,
@@ -253,17 +264,43 @@ export default function V2() {
   const summary = useSummary()
   const state = useRecon((s) => s)
   const selection = useReconUi((s) => s.selectedLines)
+  const threadFor = useReconUi((s) => s.threadFor)
   const [filter, setFilter] = useState("Unreconciled")
   const [expanded, setExpanded] = useState(false)
   const [page, setPage] = useState(0)
   const reduced = useReducedMotion()
-  const pending = queue
-    .filter((item) => item.status !== "resolved")
+  const [threadAnchor, setThreadAnchor] = useState({
+    id: threadFor,
+    inQueue: Boolean(
+      threadFor && state.items[threadFor]?.status !== "resolved"
+    ),
+  })
+  if (threadAnchor.id !== threadFor) {
+    setThreadAnchor({
+      id: threadFor,
+      inQueue: Boolean(
+        threadFor && state.items[threadFor]?.status !== "resolved"
+      ),
+    })
+  }
+  const heldItem =
+    threadAnchor.inQueue && threadFor ? state.items[threadFor] : undefined
+  const pending = [
+    ...queue,
+    ...(heldItem && !queue.some((item) => item.id === heldItem.id)
+      ? [heldItem]
+      : []),
+  ]
+    .filter((item) => item.status !== "resolved" || item.id === heldItem?.id)
     .sort((a, b) =>
       a.id === "r14" ? -1 : b.id === "r14" ? 1 : a.id.localeCompare(b.id)
     )
   const showResolved = expanded || filter !== "Unreconciled"
-  const resolvedPage = reconciled.slice(page * 15, (page + 1) * 15)
+  // Keep the same keyed row and ThreadPin mounted until its thread closes.
+  const availableResolved = reconciled.filter(
+    (item) => !pending.some((pendingItem) => pendingItem.id === item.id)
+  )
+  const resolvedPage = availableResolved.slice(page * 15, (page + 1) * 15)
   const visible = [
     ...(showResolved ? resolvedPage : []),
     ...(filter !== "Reconciled" ? pending : []),
@@ -372,7 +409,7 @@ export default function V2() {
               <Button
                 variant="ghost"
                 aria-label="Next page"
-                disabled={(page + 1) * 15 >= reconciled.length}
+                disabled={(page + 1) * 15 >= availableResolved.length}
                 onClick={() => setPage((p) => p + 1)}
               >
                 <ChevronRight />
@@ -380,7 +417,7 @@ export default function V2() {
             </div>
           </div>
         )}
-        {filter !== "Reconciled" && !summary.done && (
+        {filter !== "Reconciled" && pending.length > 0 && (
           <AnimatePresence initial={false} mode="popLayout">
             {pending.map((item) => (
               <Group key={item.id} item={item} />

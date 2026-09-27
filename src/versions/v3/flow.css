@@ -99,11 +99,6 @@
 .flow-suggestion {
   padding: 0 28px 20px;
 }
-.flow-suggestion section {
-  background: var(--c-ai-tint);
-  border: 0;
-  box-shadow: none;
-}
 .flow-suggestion section > div > div:last-child {
   display: none;
 }
@@ -211,7 +206,8 @@
   }
   .flow-balance {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
   .flow-history {
     padding: 0 16px;

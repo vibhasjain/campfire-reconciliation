@@ -95,7 +95,7 @@
   min-width: 36px;
   color: var(--c-fg-3);
 }
-.paired-ledger svg:not(.paired-connector > svg) {
+.paired-ledger svg:not(.paired-connector > svg):not(.paired-ai-mark svg) {
   width: 16px;
   height: 16px;
 }
@@ -112,7 +112,7 @@
 }
 .paired-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr) 64px;
+  grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr) 84px;
   align-items: stretch;
   padding-left: 8px;
 }
@@ -174,7 +174,7 @@
   fill: none;
   stroke-width: 1;
 }
-.paired-dot {
+.paired-node {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -183,10 +183,31 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  background: var(--c-brand);
-  color: var(--c-ai);
+  width: 16px;
+  height: 16px;
+  color: var(--c-brand);
+}
+.paired-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-ai);
+}
+.paired-ai-mark {
+  display: none;
+}
+.paired-group:hover .paired-ai-mark,
+.paired-group:focus-within .paired-ai-mark,
+.paired-group[data-selected] .paired-ai-mark {
+  display: inline-flex;
+}
+.paired-group:hover .paired-dot,
+.paired-group:focus-within .paired-dot,
+.paired-group[data-selected] .paired-dot {
+  display: none;
+}
+.paired-status {
+  background: var(--c-surface);
 }
 .paired-group[data-resolved] .paired-connector > svg {
   stroke: var(--c-brand);
@@ -212,10 +233,6 @@
   position: relative;
   margin: 4px 72px 16px 16px;
   max-width: 640px;
-}
-.paired-detail [data-suggestion-id] {
-  background: var(--c-ai-tint);
-  border-color: transparent;
 }
 .paired-detail [data-suggestion-id] h3 {
   padding-right: 62px;
@@ -337,26 +354,20 @@
     display: none;
   }
   .paired-grid {
-    grid-template-columns: minmax(0, 1fr) 40px;
+    grid-template-columns: minmax(0, 1fr);
     padding: 6px;
   }
   .paired-side {
     grid-column: 1;
-    position: relative;
-    padding-top: 18px;
   }
-  .paired-side:before {
-    content: "Books";
-    position: absolute;
-    top: 0;
-    left: 8px;
-    font-size: 12px;
-    color: var(--c-fg-3);
+  .paired-side:first-child {
+    grid-row: 2;
   }
-  .paired-side:nth-child(3):before {
-    content: "Statement";
+  .paired-side:nth-child(3) {
+    grid-row: 4;
   }
   .paired-connector {
+    grid-row: 3;
     grid-column: 1;
     min-height: 24px;
   }
@@ -371,14 +382,12 @@
     border-left: 1px solid var(--c-line-strong);
     top: 0;
   }
-  .paired-dot {
-    width: 18px;
-    height: 18px;
-  }
   .paired-tools {
-    grid-column: 2;
-    grid-row: 1/4;
-    align-content: flex-start;
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: flex-end;
+    min-width: 0;
+    padding: 0 4px;
   }
   .paired-line {
     grid-template-columns: 36px minmax(0, 1fr) auto;

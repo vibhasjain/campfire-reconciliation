@@ -183,7 +183,7 @@ function FocusCard({ item }: { item: ReconItem }) {
                 attachmentIds: suggestion.attachmentIds?.slice(0, 1),
               }}
               size="full"
-              active={false}
+              active
             />
             {item.suggestions.length > 1 && (
               <div className="mt-2 flex items-center justify-end gap-1">
@@ -281,6 +281,18 @@ export default function V3() {
   const [history, setHistory] = useState(false)
   const [lineMode, setLineMode] = useState(false)
   const reduced = useReducedMotion()
+  const phone = useMediaQuery("(max-width: 639px)")
+  useEffect(() => {
+    if (!phone) return
+    const style = document.body.style
+    const previous = style.getPropertyValue("--toast-offset")
+    const priority = style.getPropertyPriority("--toast-offset")
+    style.setProperty("--toast-offset", "64px")
+    return () => {
+      if (previous) style.setProperty("--toast-offset", previous, priority)
+      else style.removeProperty("--toast-offset")
+    }
+  }, [phone])
   const current = items.find((i) => i.id === selectedId) ?? pending[0]
   useEffect(() => {
     if (!selectedId && pending[0]) choose(pending[0].id)
@@ -457,7 +469,7 @@ export default function V3() {
       </div>
       <div className="flow-history">
         <button className="text-xs text-fg-3" onClick={() => setHistory(true)}>
-          Reconciled {summary.autoMatched} + {summary.resolved}
+          {reconciled.length} reconciled
         </button>
       </div>
       <div className="flow-stage">
