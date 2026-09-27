@@ -116,7 +116,7 @@ export const VERSIONS: Version[] = [
       "Twelve illustrated frames: how Maya should feel before, during and after the close.",
       "Written from the voice notes; illustrations generated with Codex.",
     ],
-    commit: "e84779e",
+    commit: "8033934",
   },
   {
     id: "a-1.1",
