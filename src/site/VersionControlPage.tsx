@@ -70,9 +70,12 @@ export default function VersionControlPage() {
     : visible[0]?.id
 
   useEffect(() => {
-    ;(
-      cards.current.get(initial.active) ?? cards.current.values().next().value
-    )?.focus({ preventScroll: true })
+    const first = cards.current.values().next().value
+    const restored = cards.current.get(initial.active) ?? first
+    restored?.focus({ preventScroll: true })
+    // Back from a page: bring the remembered card into view (the async page misses scroll restoration).
+    if (restored && restored !== first)
+      restored.scrollIntoView({ block: "center" })
     const shortcut = (event: globalThis.KeyboardEvent) => {
       if (
         event.key !== "/" ||
@@ -138,7 +141,7 @@ export default function VersionControlPage() {
         <div
           role="group"
           aria-label="Medium"
-          className="flex max-w-full flex-wrap gap-0.5 rounded-md border-hair border-line bg-segment p-1"
+          className="flex max-w-full [scrollbar-width:none] gap-0.5 overflow-x-auto rounded-md border-hair border-line bg-segment p-1 [&>*]:shrink-0"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault()

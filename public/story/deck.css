@@ -47,7 +47,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 
 /* phone: no slides — one continuous scroll */
 @media (max-width: 700px) {
-  html, body { overflow: auto; }
+  html, body { height: auto; overflow: visible; } /* the window scrolls, so the logo scrolls away with frame 1 */
   .slide[hidden] { display: flex; }
   .slide { position: relative; opacity: 1; visibility: visible; }
   .counter, .nav { display: none; }

@@ -220,13 +220,12 @@ const CANVAS_CONTROLS = `<nav id="zoom-controls" aria-label="Canvas zoom"><butto
   addEventListener('gestureend', event => event.preventDefault(), opts);
   // Brilliant exposes labels; Paper exposes named frame sections. Ignore note cards.
   const roundTwo = [...canvas.querySelectorAll('.canvas-label,.frame[aria-label]')]
-    .filter(node => /\\b(r2|round\\s*2)\\b/i.test(node.getAttribute('aria-label') || node.textContent)
-      && /^[A-D][1-9][0-9]*\\b/i.test(node.getAttribute('aria-label') || node.textContent))
+    .filter(node => /\\b(r2|round\\s*2)\\b/i.test(node.getAttribute('aria-label') || node.textContent))
     .sort((a, b) => a.offsetTop - b.offsetTop || a.offsetLeft - b.offsetLeft)[0];
   if (roundTwo) roundTwo.id = 'r2';
   function landOnRoundTwo() {
     if (location.hash !== '#r2' || !roundTwo) return;
-    scrollTo(Math.max(0, roundTwo.offsetLeft * z - 32), Math.max(0, roundTwo.offsetTop * z - 64));
+    scrollTo(Math.max(0, roundTwo.offsetLeft * z - 32), Math.max(0, roundTwo.offsetTop * z - 72)); // clear the home pill
   }
   setZoom(1);
   if (document.readyState === 'complete') landOnRoundTwo();
