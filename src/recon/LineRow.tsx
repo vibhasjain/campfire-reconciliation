@@ -76,8 +76,8 @@ export function LineRow({
         {fmtDate(line.date)}
       </time>
       <span className="flex min-w-0 flex-col gap-0.5">
-        <span className="truncate text-fg-2">{line.description}</span>
-        <span className="truncate text-xxs text-fg-4">
+        <span className="break-words text-fg-2">{line.description}</span>
+        <span className="text-xxs break-words text-fg-4">
           <span className="sm:hidden">{fmtDate(line.date)} · </span>
           {reference ?? line.payee ?? "Statement transaction"}
           {line.reference && side === "book" ? ` · ${line.reference}` : ""}

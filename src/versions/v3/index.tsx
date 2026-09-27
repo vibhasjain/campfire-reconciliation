@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import {
   Check,
@@ -31,7 +38,9 @@ import {
   useReconUi,
   useSummary,
   useReconciled,
+  useQueue,
   itemAmount,
+  nextOpenAfter,
 } from "@/recon/useRecon"
 import {
   acceptSuggestion,
@@ -65,25 +74,12 @@ function Status({ item }: { item: ReconItem }) {
     <Circle className="size-4 text-fg-4" />
   )
 }
-function ThreadDock({ id }: { id: string }) {
+function ThreadDock({ id, focusCard }: { id: string; focusCard: () => void }) {
   const phone = useMediaQuery("(max-width: 639px)")
   const open = useReconUi((s) => s.threadFor === id)
   const hasMessages = useDB((s) =>
     Object.values(s.messages).some((m) => m.chatId === `thread:${id}`)
   )
-  useEffect(() => {
-    if (reconUi.get().threadFor === id) return
-    const timer = window.setTimeout(() => {
-      const active = document.activeElement
-      if (
-        reconUi.get().threadFor !== id &&
-        active instanceof HTMLElement &&
-        active.closest("[data-thread-item]")
-      )
-        active.blur()
-    }, 50)
-    return () => window.clearTimeout(timer)
-  }, [id])
   const trigger = (
     <button
       data-action="comment"
@@ -96,7 +92,17 @@ function ThreadDock({ id }: { id: string }) {
   )
   if (phone) return <ThreadPopover itemId={id}>{trigger}</ThreadPopover>
   return (
-    <div className="flow-thread rounded-lg border-hair border-line bg-surface">
+    <div
+      className="flow-thread rounded-lg border-hair border-line bg-surface"
+      onPointerDownCapture={() => reconUi.set((s) => ({ ...s, threadFor: id }))}
+      onFocusCapture={(event) => {
+        if (
+          reconUi.get().threadFor !== id &&
+          (event.target as HTMLElement).closest('[contenteditable="true"]')
+        )
+          focusCard()
+      }}
+    >
       {open || hasMessages ? (
         <div>
           <ThreadView itemId={id} variant="docked" />
@@ -108,6 +114,14 @@ function ThreadDock({ id }: { id: string }) {
   )
 }
 function FocusCard({ item }: { item: ReconItem }) {
+  const card = useRef<HTMLElement>(null)
+  const focusCard = useCallback(() => {
+    if (reconUi.get().selectedItemId === item.id)
+      card.current?.focus({ preventScroll: true })
+  }, [item.id])
+  useLayoutEffect(() => {
+    if (reconUi.get().threadFor !== item.id) focusCard()
+  }, [item.id, focusCard])
   const index = useReconUi((s) => s.suggestionIndex[item.id] ?? 0)
   const selected = useReconUi((s) => s.selectedLines)
   const suggestion =
@@ -131,6 +145,9 @@ function FocusCard({ item }: { item: ReconItem }) {
   return (
     <>
       <article
+        ref={card}
+        tabIndex={-1}
+        aria-label={item.title}
         data-item-id={item.id}
         data-selected="true"
         className={`flow-card rounded-[12px] border-hair border-line bg-surface ${flash ? "flow-flash" : ""}`}
@@ -258,7 +275,7 @@ function FocusCard({ item }: { item: ReconItem }) {
           )}
         </footer>
       </article>
-      <ThreadDock id={item.id} />
+      <ThreadDock id={item.id} focusCard={focusCard} />
     </>
   )
 }
@@ -269,9 +286,10 @@ export default function V3() {
     () => items.filter((i) => i.kind === "exception"),
     [items]
   )
+  const queue = useQueue()
   const pending = useMemo(
-    () => items.filter((i) => i.status !== "resolved"),
-    [items]
+    () => queue.filter((i) => i.status !== "resolved"),
+    [queue]
   )
   const selectedId = useReconUi((s) => s.selectedItemId)
   const selectedLines = useReconUi((s) => s.selectedLines)
@@ -316,8 +334,9 @@ export default function V3() {
           ].includes(action.kind)
         )
           return
-        const next = Object.values(state.items).find((i) => i.status === "open")
-        if (next) choose(next.id)
+        if (!Object.hasOwn(action.before.items, id)) return
+        const next = nextOpenAfter(id)?.id
+        if (next) choose(next)
       }),
     []
   )

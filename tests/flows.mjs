@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // Drives every version through Maya's core flows with dev-browser (Playwright page API).
-// Usage: node tests/flows.mjs [--base http://localhost:4801] [--versions 1,2,3] [--flows keyboard,mouse,...]
+// Usage: node tests/flows.mjs [--base http://localhost:4801] [--versions 1,2,3] [--flows keyboard,mouse,...] [--out results.json]
 // Each flow runs on a fresh load with ?fast (simulated delays ≤150ms) and prints one JSON line per run.
 import { spawnSync } from "node:child_process"
+import { writeFileSync } from "node:fs"
 
 const arg = (name, fallback) => {
   const i = process.argv.indexOf(`--${name}`)
@@ -168,6 +169,8 @@ for (const v of VERSIONS) {
   }
 }
 spawnSync("dev-browser", [], { input: 'await browser.closePage("cf-flows")', encoding: "utf8" })
+const out = arg("out")
+if (out) writeFileSync(out, JSON.stringify(results, null, 2))
 const failed = results.filter((r) => !r.ok)
 console.log(failed.length ? `FAILED ${failed.length}/${results.length}` : `ALL ${results.length} FLOW RUNS PASSED`)
 process.exit(failed.length ? 1 : 0)

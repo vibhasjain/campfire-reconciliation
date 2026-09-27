@@ -16,11 +16,15 @@ type ReconCardType = Extract<
   Card,
   { kind: "recon-candidate" | "recon-change" | "recon-item" }
 >
-function CandidateCard({
-  card,
-}: {
-  card: Extract<ReconCardType, { kind: "recon-candidate" }>
-}) {
+export type ReconCandidateCard = Extract<
+  ReconCardType,
+  { kind: "recon-candidate" }
+> & { actionId?: string }
+
+function CandidateCard({ card }: { card: ReconCandidateCard }) {
+  const action = useRecon((state) =>
+    state.actions.find((record) => record.id === card.actionId)
+  )
   const item = useItem(card.itemId)
   const suggestion = item?.suggestions.find(
     (candidate) => candidate.id === card.suggestionId
@@ -37,6 +41,21 @@ function CandidateCard({
       size="compact"
       active={item.status === "open"}
       rejectLabel="Not this one"
+      footer={
+        action && (
+          <div className="flex items-center gap-1 text-[11px] text-fg-3">
+            Added to suggestions ·{" "}
+            <Button
+              size="xs"
+              variant="ghost"
+              disabled={action.reverted}
+              onClick={() => revertAction(action.id)}
+            >
+              {action.reverted ? "Reverted" : "Revert"}
+            </Button>
+          </div>
+        )
+      }
       onAccept={() => {
         acceptSuggestion(item.id, suggestion.id)
       }}
@@ -107,7 +126,7 @@ function ItemCard({
             {item.status === "resolved"
               ? "Reconciled"
               : item.status === "awaiting_approval"
-                ? "Awaiting approval"
+                ? "Awaiting Daniel"
                 : "Open"}
           </div>
         </div>

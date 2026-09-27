@@ -42,6 +42,7 @@ export function PageChat() {
         }
       >
         <SheetContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           side="bottom"
           showCloseButton={false}
           className="h-[min(620px,88dvh)]! rounded-t-[12px] bg-surface"
@@ -61,7 +62,8 @@ export function PageChat() {
       role="region"
       aria-labelledby="page-ember-title"
       data-recon-layer="page"
-      className="fixed right-5 bottom-5 z-40 flex h-[min(540px,calc(100dvh-88px))] w-[380px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-[12px] border-hair border-line bg-surface shadow-menu"
+      style={{ right: "calc(20px + var(--page-chat-offset, 0px))" }}
+      className="fixed bottom-5 z-40 flex h-[min(540px,calc(100dvh-88px))] w-[380px] max-w-[calc(100vw-32px)] flex-col overflow-hidden rounded-[12px] border-hair border-line bg-surface shadow-menu"
     >
       {header}
       <ThreadView chatId="page" variant="docked" />

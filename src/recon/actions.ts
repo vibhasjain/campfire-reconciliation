@@ -103,7 +103,9 @@ function requestApproval(itemId: string, acceptedActionId: string) {
     const approved = recon.approve(itemId, "daniel")
     if (approved.ok) {
       appendThreadMessage(itemId, "Approved.", "daniel")
-      show(`Approved · ${state.items[itemId].title}`, { tone: "success" })
+      show(`Daniel approved · ${state.items[itemId].title}`, {
+        tone: "success",
+      })
     } else failure(approved)
   })()
   pendingApprovals.add(promise)
@@ -130,15 +132,25 @@ export function acceptSuggestion(
     return failure({ ok: false, reason: "No suggestion is available" })
   const result = recon.accept(itemId, suggestion.id, actor)
   if (!result.ok) return failure(result)
-  show(`Accepted · ${item.title}`, {
-    tone: "success",
-    action: {
-      label: "Undo",
-      onClick: () => {
-        revertAction(result.actionId)
+  if (
+    typeof document !== "undefined" &&
+    document.activeElement instanceof HTMLElement
+  )
+    document.activeElement.blur()
+  show(
+    suggestion.approval
+      ? "Sent to Daniel for approval"
+      : `Accepted · ${item.title}`,
+    {
+      tone: "success",
+      action: {
+        label: "Undo",
+        onClick: () => {
+          revertAction(result.actionId)
+        },
       },
-    },
-  })
+    }
+  )
   if (suggestion.approval) requestApproval(itemId, result.actionId)
   return result
 }
@@ -254,6 +266,14 @@ export function revertAction(actionId: string, actor: Actor = "maya"): Result {
     }
   }
   const result = recon.revert(actionId, actor)
-  if (result.ok) show("Change reverted", { tone: "success" })
+  if (result.ok) {
+    const itemId = target?.itemId ?? Object.keys(target?.before.items ?? {})[0]
+    if (itemId) {
+      reconUi.set((current) => ({ ...current, selectedItemId: itemId }))
+      show(`Restored · ${recon.getState().items[itemId]?.title ?? itemId}`, {
+        tone: "success",
+      })
+    }
+  }
   return failure(result)
 }

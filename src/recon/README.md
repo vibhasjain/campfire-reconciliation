@@ -8,7 +8,8 @@ All amounts are integer cents. State is in memory; reload restores the fixture.
 
 - `recon`: singleton framework-free store (`getState`, `subscribe`, mutations).
 - `useRecon(selector)`, `useSummary()`, `useItem(id)`, `useQueue()`, `useReconciled()`.
-- Queue: approval/judgment first, then absolute impact; includes touched exceptions
+- Queue: routine items first by top-suggestion confidence descending, approval-gated
+  items last; includes touched exceptions
   and reopened auto pairs. Resolved exceptions precede auto pairs in Reconciled.
 - `reconUi.get()/set(updater)/subscribe`, `useReconUi(selector)` own selection,
   `selectedLines: {bank,book}`, `suggestionIndex`, `expandedWhy`, `threadFor`,
@@ -23,14 +24,18 @@ All amounts are integer cents. State is in memory; reload restores the fixture.
 - `LineRow({side: 'bank'|'book', lineId?, line?, className?})`: plain click selects
   the item; Command/Control/Shift-click toggles the line in `selectedLines`.
 - `Suggestion({suggestion, size?: 'compact'|'full', active?, onAccept?, onReject?,
-acceptLabel?, rejectLabel?})`: factors, evidence and entry preview; default actions.
+acceptLabel?, rejectLabel?, footer?})`: factors, evidence and entry preview; default actions.
 - `SuggestionCarousel({itemId, size?, active?, onAccept?, onReject?})`: callbacks
   receive the active suggestion; visible index lives in `reconUi`.
 - `EvidenceChip({attachmentId})`, `DocumentPreview({attachment})`: HTML documents.
 - `ReconBalance({variant?: 'full'|'compact', className?})`: animated reconciliation.
-- `DoneState()`: disabled completion before zero; confirm submits to Daniel.
+- `DoneState()`: “Mark complete”; disabled tooltip gives items left. Confirmation:
+  “Mark complete and send to Daniel Kim for approval?”. After submission:
+  “Complete · waiting on Daniel's approval” and disabled “Sent to Daniel”.
 - `PageChat()`, `ShortcutsDialog()`: mount once per version. Shell header opens chat
   and CommentsInbox. Page chat is 380×540 desktop, bottom sheet on phones.
+  Desktop right position is `calc(20px + var(--page-chat-offset, 0px))`;
+  versions with right sheets set `--page-chat-offset` on a portal ancestor (body).
 - `ReconCard({card})`: recon-candidate, recon-change, recon-item; agent dispatches it.
 
 ## Actions and keyboard
@@ -45,7 +50,8 @@ acceptLabel?, rejectLabel?})`: factors, evidence and entry preview; default acti
 - `useReconKeys({move(delta), enter?, cycle?, enabled?})` mounts once per version.
   Up/Down or K/J move; Left/Right cycle; Enter opens; A accepts; X rejects;
   U unreconciles; M matches; C opens/focuses comments; Cmd/Ctrl+E (J alias) toggles Ask Ember;
-  ? opens shortcuts; Escape closes the top layer. Editable/cmdk targets are ignored.
+  ? opens shortcuts; Escape blurs a nonempty composer, then closes the top layer.
+  Other shortcuts ignore editable/cmdk targets.
   Backtick, tilde and triple-click are reserved and never bound.
 
 ## Comments public boundary
@@ -75,3 +81,32 @@ acceptLabel?, rejectLabel?})`: factors, evidence and entry preview; default acti
 - Preview: `npm run preview -- --port 4802 --strictPort`; `/campfire1|2|3?fast`.
 
 - Toasts sit above `var(--toast-offset)` (default 0). A version with a bottom-pinned bar sets it (e.g. on `document.body.style`) so toasts never cover its controls.
+
+## Usability contracts
+
+- Meaning-bearing text wraps. Evidence labels may truncate. Expanded Why leads
+  with each factor's label and detail plus a visual contribution bar (weight × score).
+  One muted formula footnote shows the weights and final confidence.
+- Full Suggestion shows “No change to the difference” for zero effect, otherwise
+  “Difference → <fmtMoney(current difference + effect)>” above its actions.
+  Effect in cents is `(inTransit ?? 0) - (outstanding ?? 0) - bookDelta`.
+- Approval-gated accepts say “Send to Daniel”; toast “Sent to Daniel for approval”
+  includes Undo. Pending status is “Awaiting Daniel”; approval toast is
+  “Daniel approved · <item title>”.
+- `nextOpenAfter(itemId): ReconItem | undefined` returns the next open queue item,
+  wrapping and excluding the current item. Use its `.id` to advance selection.
+- Successful Undo/Revert selects the restored item, flashes it, and toasts
+  “Restored · <title>”. Conflicting later edits still block undo.
+- ThreadView never autofocuses on mount or item/draft changes. C / `focusThread`
+  and explicit clicks focus the composer. Accept blurs focus back to the page.
+  Escape in a nonempty composer first blurs it; the next Escape closes the top
+  layer. An empty composer blurs and closes its layer on the first Escape.
+- Ember discovery collapses tool steps to “Searched the AP inbox, bills and GL ±30 days”.
+  It emits one `recon-candidate` per outcome, with “Found by Ember”, Accept /
+  “Not this one”, and “Added to suggestions · Revert” in its footer; no duplicate
+  change cards. `ReconCandidateCard` adds optional `actionId` for that footer.
+  Other mutations retain one change card each and completed tools collapse.
+- Page answers use compact lists with six visible items then “and N more”, and
+  close with the current difference. Bulk review rows wrap and expand beyond six.
+  `itemAmount` falls back to absolute top-suggestion bookDelta for items with no
+  lines (r14: $1,150.00). Factor explanations use facts rather than wide tables.

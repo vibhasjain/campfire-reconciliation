@@ -27,7 +27,7 @@ import {
   TABLE_HEADER,
   TABLE_ROW,
 } from "@/components/common/table-styles"
-import { openHalfSheet, closeHalfSheet, ui } from "@/app/ui-store"
+import { openHalfSheet, closeHalfSheet, ui, useUI } from "@/app/ui-store"
 import { CommentsInbox, ThreadPin, ThreadView } from "@/comments"
 import { cn } from "@/lib/utils"
 import {
@@ -40,6 +40,7 @@ import {
   useSummary,
   useItem,
   itemAmount,
+  queueItems,
 } from "@/recon/useRecon"
 import {
   cycleSuggestion,
@@ -83,17 +84,61 @@ function actionLabel(item: ReconItem) {
     return "Match + FX"
   return labels[suggestion.action]
 }
-const groups = ["Needs approval", "Suggested", "Bank only", "Books only"]
+const groups = ["Suggested", "Bank only", "Books only", "Needs approval"]
 const groupFor = (item: ReconItem) =>
   item.suggestions.some((s) => s.approval)
-    ? groups[0]
+    ? "Needs approval"
     : !item.bankIds.length
-      ? groups[3]
+      ? "Books only"
       : !item.bookIds.length
-        ? groups[2]
-        : groups[1]
+        ? "Bank only"
+        : "Suggested"
 const ordered = (items: ReconItem[]) =>
   groups.flatMap((group) => items.filter((item) => groupFor(item) === group))
+
+// Follows v1's grouped display order, which differs from the core queue order.
+function nextOpenAfter(itemId: string) {
+  const items = ordered(queueItems(recon.getState()))
+  const index = items.findIndex((item) => item.id === itemId)
+  return [...items.slice(index + 1), ...items.slice(0, index + 1)].find(
+    (item) => item.id !== itemId && item.status === "open"
+  )
+}
+
+function useSheetChatOffset() {
+  const sheetOpen = useUI((state) => Boolean(state.halfSheet))
+  useEffect(() => {
+    const body = document.body
+    const previous = body.style.getPropertyValue("--page-chat-offset")
+    const reset = () =>
+      previous
+        ? body.style.setProperty("--page-chat-offset", previous)
+        : body.style.removeProperty("--page-chat-offset")
+    if (!sheetOpen) return
+    const sheet = document.querySelector<HTMLElement>(
+      '[data-slot="half-sheet"]'
+    )
+    if (!sheet) return
+    const desktop = window.matchMedia("(min-width: 1024px)")
+    const update = () => {
+      if (desktop.matches)
+        body.style.setProperty(
+          "--page-chat-offset",
+          `${sheet.getBoundingClientRect().width}px`
+        )
+      else reset()
+    }
+    const observer = new ResizeObserver(update)
+    observer.observe(sheet)
+    desktop.addEventListener("change", update)
+    update()
+    return () => {
+      observer.disconnect()
+      desktop.removeEventListener("change", update)
+      reset()
+    }
+  }, [sheetOpen])
+}
 
 function SelectionPill() {
   const selection = useReconUi((s) => s.selectedLines)
@@ -276,6 +321,7 @@ function Balance() {
 }
 
 export default function Workbench() {
+  useSheetChatOffset()
   const queue = useQueue()
   const reconciled = useReconciled()
   const summary = useSummary()
@@ -301,6 +347,43 @@ export default function Workbench() {
     const index = all.findIndex((item) => item.id === selected)
     if (index >= 0) retainedIndex.current = index
   })
+  useEffect(() => {
+    if (!reconUi.get().selectedItemId) {
+      const first = itemsRef.current[0]
+      if (first)
+        reconUi.set((state) => ({ ...state, selectedItemId: first.id }))
+    }
+  }, [])
+  // Detail reads the same selection, so Undo also restores an open sheet's item.
+  useEffect(() => {
+    if (!selected) return
+    let scrollFrame = 0
+    const frame = requestAnimationFrame(() => {
+      let items = itemsRef.current
+      if (
+        !items.some((item) => item.id === selected) &&
+        recon.getState().items[selected]?.status === "open"
+      ) {
+        setTab("To review")
+        items = ordered(
+          queueItems(recon.getState()).filter(
+            (item) => item.status !== "resolved"
+          )
+        )
+      }
+      const index = items.findIndex((item) => item.id === selected)
+      if (index >= 0) setPage(Math.floor(index / 50))
+      scrollFrame = requestAnimationFrame(() => {
+        document
+          .querySelector(`[data-item-id="${selected}"]`)
+          ?.scrollIntoView({ block: "nearest" })
+      })
+    })
+    return () => {
+      cancelAnimationFrame(frame)
+      cancelAnimationFrame(scrollFrame)
+    }
+  }, [selected])
   const move = useCallback(function navigate(delta: -1 | 1) {
     const items = itemsRef.current
     const index = items.findIndex(
@@ -367,12 +450,7 @@ export default function Workbench() {
         action.itemId !== id
       )
         return
-      const before = itemsRef.current
-      const index = before.findIndex((item) => item.id === id)
-      const remaining = before.filter(
-        (item) => item.id !== id && state.items[item.id]?.status !== "resolved"
-      )
-      const next = remaining[Math.min(Math.max(index, 0), remaining.length - 1)]
+      const next = nextOpenAfter(id)
       reconUi.set((s) => ({ ...s, selectedItemId: next?.id ?? null }))
       if (!next) closeHalfSheet()
     })
@@ -560,10 +638,10 @@ export default function Workbench() {
                         {line ? fmtDate(line.date) : "Sep 1"}
                       </td>
                       <td
-                        className={cn(TABLE_CELL, "truncate")}
+                        className={cn(TABLE_CELL, "wb-name")}
                         title={item.title}
                       >
-                        {item.title}
+                        <span>{item.title}</span>
                       </td>
                       <td className={cn(TABLE_CELL, "text-right")}>
                         <Money

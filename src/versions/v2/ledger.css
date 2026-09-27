@@ -109,6 +109,15 @@
 }
 .paired-group[data-selected] {
   background: var(--c-fill-subtle);
+  box-shadow: inset 0 0 0 2px var(--c-focus);
+}
+.paired-group:focus {
+  outline: none;
+}
+.paired-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .paired-grid {
   display: grid;
@@ -173,6 +182,7 @@
   stroke: var(--c-line-strong);
   fill: none;
   stroke-width: 1;
+  stroke-dasharray: 3 3;
 }
 .paired-node {
   position: absolute;
@@ -191,7 +201,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--c-ai);
+  background: var(--c-surface);
+  border: 1px solid var(--c-ai);
 }
 .paired-ai-mark {
   display: none;
@@ -211,6 +222,10 @@
 }
 .paired-group[data-resolved] .paired-connector > svg {
   stroke: var(--c-brand);
+  stroke-dasharray: none;
+}
+.paired-group[data-resolved] .paired-node {
+  background: var(--c-ai);
 }
 .paired-tools {
   display: flex;
@@ -379,8 +394,19 @@
     position: absolute;
     height: 24px;
     left: 50%;
-    border-left: 1px solid var(--c-line-strong);
+    border-left: 1px dashed var(--c-line-strong);
     top: 0;
+  }
+  .paired-group[data-resolved] .paired-connector:before {
+    border-left-style: solid;
+    border-left-color: var(--c-brand);
+  }
+  .paired-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   .paired-tools {
     grid-column: 1;

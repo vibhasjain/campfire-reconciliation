@@ -17,7 +17,7 @@ export type ReconKeyOptions = {
   enabled?: boolean
 }
 
-/** A single keymap for every version; Radix owns Escape inside its own layers. */
+/** Capture Escape before editors and Radix so each press handles one layer. */
 export function useReconKeys({
   move,
   enter,
@@ -52,6 +52,22 @@ export function useReconKeys({
       const target = event.target instanceof HTMLElement ? event.target : null
       const state = reconUi.get()
       if (event.key === "Escape") {
+        const editor = target?.closest<HTMLElement>(
+          'textarea,input,[contenteditable="true"]'
+        )
+        if (editor) {
+          const text =
+            editor instanceof HTMLInputElement ||
+            editor instanceof HTMLTextAreaElement
+              ? editor.value
+              : editor.textContent
+          editor.blur()
+          if (text?.trim()) {
+            event.preventDefault()
+            event.stopImmediatePropagation()
+            return
+          }
+        }
         const shell = ui.get()
         if (shell.dialog) ui.set({ dialog: null })
         else if (shell.paletteOpen) ui.set({ paletteOpen: false })
@@ -74,6 +90,7 @@ export function useReconKeys({
           else return
         }
         event.preventDefault()
+        event.stopImmediatePropagation()
         return
       }
       if (
@@ -83,7 +100,11 @@ export function useReconKeys({
       )
         return
       const key = event.key.toLowerCase()
-      if ((event.metaKey || event.ctrlKey) && (key === "e" || key === "j") && !event.altKey) {
+      if (
+        (event.metaKey || event.ctrlKey) &&
+        (key === "e" || key === "j") &&
+        !event.altKey
+      ) {
         event.preventDefault()
         reconUi.set((current) => ({
           ...current,
@@ -137,10 +158,10 @@ export function useReconKeys({
       }
       event.preventDefault()
     }
-    window.addEventListener("keydown", onKey)
+    window.addEventListener("keydown", onKey, true)
     return () => {
       unsubscribe()
-      window.removeEventListener("keydown", onKey)
+      window.removeEventListener("keydown", onKey, true)
     }
   }, [move, enter, cycle, enabled])
 }

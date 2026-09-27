@@ -11,8 +11,10 @@ import { cn } from "@/lib/utils"
 import { acceptSuggestion, rejectSuggestion } from "./actions"
 import type { Suggestion as ReconSuggestion } from "./data"
 import { EvidenceChip } from "./Evidence"
+import type { ReactNode } from "react"
+import { fmtMoney } from "./store"
 import { Money } from "./Money"
-import { reconUi, useItem, useReconUi } from "./useRecon"
+import { reconUi, useItem, useReconUi, useSummary } from "./useRecon"
 
 export interface SuggestionProps {
   suggestion: ReconSuggestion
@@ -21,10 +23,9 @@ export interface SuggestionProps {
   onAccept?: () => void
   onReject?: () => void
   acceptLabel?: string
+  footer?: ReactNode
   rejectLabel?: string
 }
-
-const decimal = (value: number) => Number(value.toFixed(4)).toString()
 
 export function Suggestion({
   suggestion,
@@ -34,6 +35,7 @@ export function Suggestion({
   onReject,
   acceptLabel = "Accept",
   rejectLabel = "Reject",
+  footer,
 }: SuggestionProps) {
   const expanded = useReconUi(
     (state) => state.expandedWhy[suggestion.id] ?? false
@@ -41,10 +43,11 @@ export function Suggestion({
   const item = useItem(suggestion.itemId)
   const disabled = item?.status !== "open"
   const compact = size === "compact"
-  const weightedTotal = suggestion.factors.reduce(
-    (sum, factor) => sum + factor.weight * factor.score * 100,
-    0
-  )
+  const summary = useSummary()
+  const effect =
+    (suggestion.inTransit ?? 0) -
+    (suggestion.outstanding ?? 0) -
+    suggestion.bookDelta
   const formula = suggestion.factors
     .map((factor) => `${factor.weight.toFixed(2)}·${factor.key}`)
     .join(" + ")
@@ -80,7 +83,7 @@ export function Suggestion({
           </span>
         </div>
         <p
-          className="truncate text-xs leading-5 text-fg-3"
+          className="text-xs leading-5 break-words text-fg-3"
           title={suggestion.reasoning}
         >
           {suggestion.reasoning}
@@ -186,39 +189,41 @@ export function Suggestion({
                   key={factor.key}
                   className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1 border-b-hair border-line-subtle py-2 first:pt-0"
                 >
-                  <div className="min-w-0 flex-1 basis-36">
-                    <div className="text-[11px] font-medium text-fg-2">
-                      {factor.label}
+                  <div className="w-full min-w-0">
+                    <div className="text-[11px] leading-4 text-fg-3">
+                      <span className="font-medium text-fg-2">
+                        {factor.label}
+                      </span>{" "}
+                      · {factor.detail}
                     </div>
-                    <div className="mt-0.5 text-[11px] leading-4 text-fg-3">
-                      {factor.detail}
+                    <div
+                      aria-hidden="true"
+                      className="mt-1.5 h-0.5 rounded-full bg-line-subtle"
+                    >
+                      <div
+                        className="h-full rounded-full bg-brand/40"
+                        style={{
+                          width: `${factor.weight * factor.score * 100}%`,
+                        }}
+                      />
                     </div>
                   </div>
-                  <span className="pt-0.5 text-right font-mono text-[10px] leading-4 whitespace-nowrap text-fg-3 tabular-nums">
-                    {decimal(factor.weight)} × {decimal(factor.score * 100)}% ={" "}
-                    {(factor.weight * factor.score * 100).toFixed(2)}%
-                  </span>
                 </div>
               ))}
-              <div className="flex items-center justify-between gap-3 pt-2 text-[11px] font-medium">
-                <span className="text-fg-2">Total confidence</span>
-                <span
-                  className="text-brand tabular-nums"
-                  title={`Rounded weighted total: ${weightedTotal.toFixed(4)}%`}
-                >
-                  {suggestion.confidence}%
-                </span>
-              </div>
-              <div
-                className="mt-2 overflow-x-auto border-t-hair border-line-subtle pt-2 font-mono text-[10px] leading-4 whitespace-nowrap text-fg-3"
-                title="Weighted factor scores, rounded to the nearest percent"
-              >
-                {formula}
+              <div className="mt-2 text-[10px] leading-4 text-fg-4">
+                {formula} = {suggestion.confidence}%
               </div>
             </div>
           </CollapsibleContent>
         </Collapsible>
-        <div className="flex items-center gap-1.5">
+        {!compact && (
+          <p className="text-xs text-fg-3">
+            {effect === 0
+              ? "No change to the difference"
+              : `Difference → ${fmtMoney(summary.difference + effect)}`}
+          </p>
+        )}
+        <div className="flex flex-wrap items-center gap-1.5">
           <Button
             type="button"
             variant="brand"
@@ -233,10 +238,12 @@ export function Suggestion({
           >
             <Check className="size-4" />
             {item?.status === "awaiting_approval"
-              ? "Awaiting approval"
+              ? "Awaiting Daniel"
               : item?.status === "resolved"
                 ? "Accepted"
-                : acceptLabel}
+                : suggestion.approval
+                  ? "Send to Daniel"
+                  : acceptLabel}
             <Kbd className="ml-1 h-4 min-w-4 bg-surface/10 px-1 text-[10px] text-ai">
               A
             </Kbd>
@@ -261,6 +268,7 @@ export function Suggestion({
             </Kbd>
           </Button>
         </div>
+        {footer}
       </div>
     </section>
   )

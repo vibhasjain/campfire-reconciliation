@@ -73,6 +73,8 @@ export function itemAmount(item: ReconItem, state = recon.getState()): number {
     (sum, id) => sum + state.bankLines[id].amount,
     0
   )
+  if (!item.bankIds.length && !item.bookIds.length)
+    return Math.abs(item.suggestions[0]?.bookDelta ?? 0)
   return item.bankIds.length
     ? bank
     : item.bookIds.reduce((sum, id) => sum + state.bookLines[id].amount, 0)
@@ -81,23 +83,8 @@ export function queueItems(state: ReconState): ReconItem[] {
   const touched = new Set(
     state.actions.flatMap((action) => Object.keys(action.before.items))
   )
-  const impact = (item: ReconItem) => {
-    const book = item.bookIds.reduce(
-      (sum, id) => sum + state.bookLines[id].amount,
-      0
-    )
-    const bank = item.bankIds.reduce(
-      (sum, id) => sum + state.bankLines[id].amount,
-      0
-    )
-    return Math.abs(bank - book || item.suggestions[0]?.bookDelta || 0)
-  }
-  const judgment = (item: ReconItem) =>
-    item.suggestions.some((s) => s.approval)
-      ? 2
-      : !item.suggestions[0] || item.suggestions[0].confidence < 90
-        ? 1
-        : 0
+  const gated = (item: ReconItem) =>
+    Number(item.suggestions.some((s) => s.approval))
   return Object.values(state.items)
     .filter((item) =>
       item.kind === "exception"
@@ -106,11 +93,19 @@ export function queueItems(state: ReconState): ReconItem[] {
     )
     .sort(
       (a, b) =>
-        judgment(b) - judgment(a) ||
-        impact(b) - impact(a) ||
-        Math.abs(itemAmount(b, state)) - Math.abs(itemAmount(a, state)) ||
+        gated(a) - gated(b) ||
+        (b.suggestions[0]?.confidence ?? 0) -
+          (a.suggestions[0]?.confidence ?? 0) ||
         a.id.localeCompare(b.id)
     )
+}
+/** Next open item in the queue, wrapping after the current item. */
+export function nextOpenAfter(itemId: string): ReconItem | undefined {
+  const queue = queueItems(recon.getState())
+  const index = queue.findIndex((item) => item.id === itemId)
+  return [...queue.slice(index + 1), ...queue.slice(0, index + 1)].find(
+    (item) => item.status === "open" && item.id !== itemId
+  )
 }
 export const useQueue = () => useRecon(queueItems)
 export function reconciledItems(state: ReconState): ReconItem[] {

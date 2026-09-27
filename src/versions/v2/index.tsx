@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import {
   Check,
@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { CommentsInbox, ThreadPin } from "@/comments"
 import {
+  recon,
+  queueItems,
   reconUi,
   useRecon,
   useReconUi,
@@ -32,13 +34,22 @@ import { PageChat } from "@/recon/PageChat"
 import { ShortcutsDialog } from "@/recon/ShortcutsDialog"
 import { useReconKeys } from "@/recon/keys"
 import type { ReconItem } from "@/recon/data"
+import { focusRow, nextOpenAfter } from "./navigation"
 import "./ledger.css"
 
 function selectItem(id: string) {
   reconUi.set((s) => ({ ...s, selectedItemId: id }))
 }
 
-function LedgerLine({ id, side }: { id: string; side: "bank" | "book" }) {
+function LedgerLine({
+  id,
+  side,
+  onOpen,
+}: {
+  id: string
+  side: "bank" | "book"
+  onOpen: () => void
+}) {
   const line = useRecon((s) =>
     side === "book" ? s.bookLines[id] : s.bankLines[id]
   )
@@ -51,7 +62,8 @@ function LedgerLine({ id, side }: { id: string; side: "bank" | "book" }) {
       data-selected={selected || undefined}
       aria-pressed={selected}
       title={line.description}
-      onClick={(event) =>
+      onClick={(event) => {
+        onOpen()
         reconUi.set((s) => ({
           ...s,
           selectedItemId: line.itemId,
@@ -65,22 +77,42 @@ function LedgerLine({ id, side }: { id: string; side: "bank" | "book" }) {
                 }
               : { bank: [], book: [] },
         }))
-      }
+      }}
     >
       <time className="text-fg-3 tabular-nums" dateTime={line.date}>
         {line.date.slice(5).replace("-", "/")}
       </time>
-      <span className="truncate">{line.description}</span>
+      <span className="paired-description">{line.description}</span>
       <Money cents={line.amount} />
     </button>
   )
 }
 
-function Group({ item }: { item: ReconItem }) {
+function Group({
+  item,
+  expanded,
+  onOpen,
+  onToggle,
+}: {
+  item: ReconItem
+  expanded: boolean
+  onOpen: () => void
+  onToggle: () => void
+}) {
   const selected = useReconUi((s) => s.selectedItemId === item.id)
   const index = useReconUi((s) => s.suggestionIndex[item.id] ?? 0)
   const suggestion =
     item.suggestions[Math.min(index, item.suggestions.length - 1)]
+  const detail = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!expanded || !window.matchMedia("(max-width: 767px)").matches) return
+    const frame = requestAnimationFrame(() => {
+      detail.current
+        ?.querySelector('[data-action="accept"]')
+        ?.parentElement?.scrollIntoView({ block: "nearest" })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [expanded, index])
   const resolved = item.status === "resolved"
   const rows = Math.max(item.bookIds.length, item.bankIds.length, 1)
   const pairs = resolved ? item.pairings : suggestion?.pairings
@@ -93,12 +125,13 @@ function Group({ item }: { item: ReconItem }) {
       layout="position"
       exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
       className="paired-group group"
+      tabIndex={-1}
       data-item-id={item.id}
       onClick={(event) => {
         if (
           !(event.target as HTMLElement).closest("button, a, input, textarea")
         )
-          selectItem(item.id)
+          onOpen()
       }}
       data-selected={selected || undefined}
       data-resolved={resolved || undefined}
@@ -106,10 +139,7 @@ function Group({ item }: { item: ReconItem }) {
       <div className="paired-grid">
         <div className="paired-side">
           {beginning ? (
-            <button
-              className="paired-beginning"
-              onClick={() => selectItem(item.id)}
-            >
+            <button className="paired-beginning" onClick={onOpen}>
               Beginning balance{" "}
               <Money
                 cents={suggestion?.bookDelta ?? item.resolution?.bookDelta ?? 0}
@@ -117,13 +147,10 @@ function Group({ item }: { item: ReconItem }) {
             </button>
           ) : item.bookIds.length ? (
             item.bookIds.map((id) => (
-              <LedgerLine key={id} id={id} side="book" />
+              <LedgerLine key={id} id={id} side="book" onOpen={onOpen} />
             ))
           ) : (
-            <button
-              className="paired-ghost"
-              onClick={() => selectItem(item.id)}
-            >
+            <button className="paired-ghost" onClick={onOpen}>
               {ghost}
             </button>
           )}
@@ -131,13 +158,8 @@ function Group({ item }: { item: ReconItem }) {
         <button
           className="paired-connector"
           aria-label={`Open ${item.title}`}
-          aria-expanded={selected}
-          onClick={() =>
-            reconUi.set((s) => ({
-              ...s,
-              selectedItemId: selected ? null : item.id,
-            }))
-          }
+          aria-expanded={expanded}
+          onClick={onToggle}
         >
           <svg
             viewBox={`0 0 64 ${rows * 44}`}
@@ -178,13 +200,10 @@ function Group({ item }: { item: ReconItem }) {
         <div className="paired-side">
           {item.bankIds.length ? (
             item.bankIds.map((id) => (
-              <LedgerLine key={id} id={id} side="bank" />
+              <LedgerLine key={id} id={id} side="bank" onOpen={onOpen} />
             ))
           ) : (
-            <button
-              className="paired-ghost"
-              onClick={() => selectItem(item.id)}
-            >
+            <button className="paired-ghost" onClick={onOpen}>
               {beginning
                 ? "August close"
                 : suggestion?.action === "in_transit"
@@ -212,8 +231,8 @@ function Group({ item }: { item: ReconItem }) {
           )}
         </div>
       </div>
-      {selected && !resolved && (
-        <div className="paired-detail">
+      {expanded && !resolved && (
+        <div ref={detail} className="paired-detail">
           {suggestion ? (
             <>
               <Suggestion
@@ -265,6 +284,49 @@ export default function V2() {
   const state = useRecon((s) => s)
   const selection = useReconUi((s) => s.selectedLines)
   const threadFor = useReconUi((s) => s.threadFor)
+  const selectedId = useReconUi((s) => s.selectedItemId)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  useEffect(() => {
+    let previous = recon.getState()
+    return recon.subscribe(() => {
+      const current = recon.getState()
+      const before = previous
+      previous = current
+      const action = current.actions.at(-1)
+      const id = reconUi.get().selectedItemId
+      if (
+        !action ||
+        action === before.actions.at(-1) ||
+        !id ||
+        reconUi.get().threadFor
+      )
+        return
+      if (
+        action.actor !== "maya" ||
+        !["accept", "matchSelected"].includes(action.kind) ||
+        !action.before.items[id]
+      )
+        return
+      const next = nextOpenAfter(
+        id,
+        queueItems(before).map((item) => item.id)
+      )
+      reconUi.set((s) => ({ ...s, selectedItemId: next }))
+      setExpandedId(next)
+    })
+  }, [])
+  useEffect(() => {
+    if (selectedId && !reconUi.get().threadFor && !reconUi.get().pageChatOpen)
+      focusRow(selectedId)
+  }, [selectedId])
+  const openGroup = (id: string) => {
+    selectItem(id)
+    setExpandedId(id)
+  }
+  const toggleGroup = (id: string) => {
+    selectItem(id)
+    setExpandedId(expandedId === id ? null : id)
+  }
   const [filter, setFilter] = useState("Unreconciled")
   const [expanded, setExpanded] = useState(false)
   const [page, setPage] = useState(0)
@@ -290,11 +352,8 @@ export default function V2() {
     ...(heldItem && !queue.some((item) => item.id === heldItem.id)
       ? [heldItem]
       : []),
-  ]
-    .filter((item) => item.status !== "resolved" || item.id === heldItem?.id)
-    .sort((a, b) =>
-      a.id === "r14" ? -1 : b.id === "r14" ? 1 : a.id.localeCompare(b.id)
-    )
+  ].filter((item) => item.status !== "resolved" || item.id === heldItem?.id)
+
   const showResolved = expanded || filter !== "Unreconciled"
   // Keep the same keyed row and ThreadPin mounted until its thread closes.
   const availableResolved = reconciled.filter(
@@ -312,18 +371,16 @@ export default function V2() {
     const next =
       visible[Math.max(0, Math.min(visible.length - 1, current + delta))]
     if (next) {
+      setExpandedId(null)
       selectItem(next.id)
-      requestAnimationFrame(() =>
-        document
-          .querySelector(`[data-item-id="${next.id}"]`)
-          ?.scrollIntoView({ block: "nearest", behavior: "smooth" })
-      )
+      focusRow(next.id)
     }
   }
   useReconKeys({
     move,
     enter: () => {
-      if (!reconUi.get().selectedItemId && visible[0]) selectItem(visible[0].id)
+      const id = reconUi.get().selectedItemId ?? visible[0]?.id
+      if (id) toggleGroup(id)
     },
     cycle: (delta) => {
       const id = reconUi.get().selectedItemId
@@ -362,11 +419,11 @@ export default function V2() {
       </header>
       <div className="paired-summary">
         <div>
-          Books <Money cents={summary.adjustedBook} />
+          Books (adjusted) <Money cents={summary.adjustedBook} />
         </div>
         <ReconBalance variant="compact" className="paired-balance" />
         <div>
-          Statement <Money cents={summary.adjustedBank} />
+          Statement (adjusted) <Money cents={summary.adjustedBank} />
         </div>
       </div>
       <div className="paired-ledger-surface">
@@ -395,7 +452,13 @@ export default function V2() {
         {showResolved && (
           <div className="paired-resolved">
             {resolvedPage.map((item) => (
-              <Group key={item.id} item={item} />
+              <Group
+                key={item.id}
+                item={item}
+                expanded={selectedId === item.id && expandedId === item.id}
+                onOpen={() => openGroup(item.id)}
+                onToggle={() => toggleGroup(item.id)}
+              />
             ))}
             <div className="paired-pagination">
               <Button
@@ -420,7 +483,13 @@ export default function V2() {
         {filter !== "Reconciled" && pending.length > 0 && (
           <AnimatePresence initial={false} mode="popLayout">
             {pending.map((item) => (
-              <Group key={item.id} item={item} />
+              <Group
+                key={item.id}
+                item={item}
+                expanded={selectedId === item.id && expandedId === item.id}
+                onOpen={() => openGroup(item.id)}
+                onToggle={() => toggleGroup(item.id)}
+              />
             ))}
           </AnimatePresence>
         )}

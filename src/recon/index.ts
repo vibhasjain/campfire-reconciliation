@@ -10,6 +10,7 @@ export {
   useReconciled,
   itemAmount,
   queueItems,
+  nextOpenAfter,
   reconciledItems,
 } from "./useRecon"
 export type { ReconUIState } from "./useRecon"

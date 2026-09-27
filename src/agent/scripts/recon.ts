@@ -1,8 +1,9 @@
+import type { ReconCandidateCard } from "@/recon/cards"
 import type { SendInput, RunCtx, Script } from "../types"
 import type { ActionRecord, Suggestion } from "@/recon/data"
 import type { Result } from "@/recon/store"
 import { fmtDate, fmtMoney, summarize } from "@/recon/store"
-import { recon, reconUi, itemAmount } from "@/recon/useRecon"
+import { recon, reconUi, itemAmount, queueItems } from "@/recon/useRecon"
 import {
   acceptSuggestion,
   activeSuggestion,
@@ -214,26 +215,54 @@ async function showResult(ctx: RunCtx, result: Result, success: string) {
   if (action) changeCard(ctx, action)
   await ctx.say(success)
 }
-async function tool(ctx: RunCtx, label: string, rows?: string[][]) {
+async function tool(
+  ctx: RunCtx,
+  label: string,
+  rows?: string[][],
+  collapse = true
+) {
   ctx.status(label)
   const step = ctx.step("search", label)
   if (rows) step.rows(rows)
   await ctx.wait(420)
   step.done()
+  if (collapse)
+    ctx.collapse(
+      label.replace(
+        /^(Searching|Reading|Comparing|Inspecting|Preparing|Updating|Removing)/,
+        (verb) =>
+          ({
+            Searching: "Searched",
+            Reading: "Read",
+            Comparing: "Compared",
+            Inspecting: "Inspected",
+            Preparing: "Prepared",
+            Updating: "Updated",
+            Removing: "Removed",
+          })[verb]!
+      )
+    )
 }
-const escapeCell = (text: string) =>
-  text.replace(/\|/g, "\\|").replace(/\n/g, " ")
 function confidenceTable(suggestion: Suggestion): string {
-  const rows = suggestion.factors.map(
-    (factor) =>
-      `| ${factor.label} | ${escapeCell(factor.detail)} | ${(factor.weight * 100).toFixed(0)}% | ${(factor.score * 100).toFixed(1)}% | ${(factor.weight * factor.score * 100).toFixed(2)}% |`
+  return (
+    suggestion.factors
+      .map((factor) => `- **${factor.label}** · ${factor.detail}`)
+      .join("\n") +
+    `\n\n${suggestion.factors.map((factor) => `${factor.weight.toFixed(2)}·${factor.key}`).join(" + ")} = ${suggestion.confidence}%`
   )
-  return `**Why ${suggestion.confidence}%?**\n\n| Factor | Detail | Weight | Score | Contribution |\n| --- | --- | ---: | ---: | ---: |\n${rows.join("\n")}\n| **Total** | Rounded weighted score | 100% | | **${suggestion.confidence}%** |`
 }
 function openItems() {
-  return Object.values(recon.getState().items).filter(
+  return queueItems(recon.getState()).filter(
     (item) => item.status !== "resolved"
   )
+}
+export function compactItems(items: ReturnType<typeof openItems>): string {
+  const lines = items.slice(0, 6).map((item) => {
+    const top = item.suggestions[0]
+    return `- **${item.title}** · ${fmtMoney(itemAmount(item))} · ${item.status === "awaiting_approval" ? "Awaiting Daniel" : top ? `${top.title} (${top.confidence}%)` : "Review needed"}`
+  })
+  if (items.length > 6) lines.push(`and ${items.length - 6} more`)
+  return lines.join("\n")
 }
 
 export const reconciliationScript: Script = {
@@ -262,15 +291,9 @@ export const reconciliationScript: Script = {
     if (intent === "left") {
       const items = openItems()
       await tool(ctx, "Reading remaining reconciliation items")
-      const rows = items.map((row) => {
-        const top = row.suggestions[0]
-        return `| ${escapeCell(row.title)} | ${fmtMoney(itemAmount(row))} | ${escapeCell(top?.title ?? "Review needed")} | ${top ? `${top.confidence}%` : "—"} |`
-      })
       const summary = summarize(recon.getState())
       await ctx.say(
-        items.length
-          ? `| Item | Amount | Top suggestion | Confidence |\n| --- | ---: | --- | ---: |\n${rows.join("\n")}\n\n**Difference: ${fmtMoney(summary.difference)}** · ${items.length} left.`
-          : `All items are reconciled. **Difference: ${fmtMoney(summary.difference)}.**`
+        `${items.length ? compactItems(items) : "All items are reconciled."}\n\nDifference: ${fmtMoney(summary.difference)}`
       )
       return
     }
@@ -326,12 +349,16 @@ export const reconciliationScript: Script = {
       return
     }
     if (intent === "search") {
-      await tool(ctx, "Searching AP inbox, bills and GL ±30 days", [
-        ["Amount", fmtMoney(itemAmount(item))],
-        ["Payee", item.title],
-      ])
+      await tool(
+        ctx,
+        "Searching AP inbox, bills and GL ±30 days",
+        [
+          ["Amount", fmtMoney(itemAmount(item))],
+          ["Payee", item.title],
+        ],
+        false
+      )
       const { candidates, actions } = discoverCandidates(itemId)
-      for (const action of actions) changeCard(ctx, action)
       if (candidates.length) {
         await tool(
           ctx,
@@ -339,19 +366,27 @@ export const reconciliationScript: Script = {
           candidates.map((candidate) => [
             candidate.invoiceNumber ?? candidate.title,
             `${candidate.confidence}%`,
-          ])
+          ]),
+          false
         )
-        for (const candidate of candidates)
-          ctx.card({
+        ctx.collapse("Searched the AP inbox, bills and GL ±30 days")
+        for (const candidate of candidates) {
+          const card: ReconCandidateCard = {
             kind: "recon-candidate",
             itemId,
             suggestionId: candidate.id,
-          })
+            actionId: actions.find(
+              (action) =>
+                action.kind === "addSuggestion" &&
+                action.label === `Added suggestion: ${candidate.title}`
+            )?.id,
+          }
+          ctx.card(card)
+        }
         await ctx.say("Is this the one?")
       } else {
-        await ctx.say(
-          `I searched the AP inbox, bills and GL within 30 days and found no additional match. ${item.bankIds.length && !item.bookIds.length ? "I can book it as a new entry." : !item.bankIds.length && item.bookIds.length ? "I can mark it outstanding." : "I can edit a line or compare a manual selection."}`
-        )
+        ctx.collapse("Searched the AP inbox, bills and GL ±30 days")
+        await ctx.say("No additional match found.")
       }
       return
     }
@@ -420,9 +455,7 @@ export const reconciliationScript: Script = {
         intent === "edit"
           ? editFromInstruction(itemId, textFor(ctx.input))
           : removeFromInstruction(itemId, textFor(ctx.input)),
-        intent === "edit"
-          ? "Updated the line. The change is recorded in the audit trail."
-          : "Removed that candidate. The remaining suggestions are ready to review."
+        intent === "edit" ? "Updated the line." : "Removed that candidate."
       )
       return
     }
@@ -490,9 +523,7 @@ export const reconciliationFallback: Script = {
     }
     const suggestion = activeSuggestion(item.id)
     const awaiting =
-      item.status === "awaiting_approval"
-        ? "\n\nDaniel’s approval is pending."
-        : ""
+      item.status === "awaiting_approval" ? "\n\nAwaiting Daniel." : ""
     await ctx.say(
       `**${item.title}**\n\n${summarizeSide("bank")} · ${summarizeSide("book")}.${awaiting}\n\n${suggestion ? `Top suggestion: **${suggestion.title}** (${suggestion.confidence}%).` : "There are no visible suggestions."}\n\n- Search for another candidate.\n- Explain the confidence factors.\n- ${!item.bankIds.length && item.bookIds.length ? "Mark the check outstanding." : "Edit the description or date."}`
     )

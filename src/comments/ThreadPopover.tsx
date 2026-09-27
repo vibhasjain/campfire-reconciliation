@@ -50,6 +50,7 @@ export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>{children}</SheetTrigger>
         <SheetContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           side="bottom"
           showCloseButton={false}
           aria-describedby={undefined}
@@ -117,7 +118,9 @@ function ThreadCard({
       data-layer="thread"
     >
       <div className="flex min-h-11 items-center gap-2 border-b-hair border-line px-3">
-        <h2 className="min-w-0 flex-1 truncate text-sm font-medium">{title}</h2>
+        <h2 className="min-w-0 flex-1 text-sm font-medium break-words">
+          {title}
+        </h2>
         <Button
           variant="ghost"
           size="icon-sm"

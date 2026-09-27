@@ -18,14 +18,14 @@ export function DoneState() {
     openDialog({
       kind: "confirm",
       props: {
-        title: "Submit to Daniel Kim for review?",
+        title: "Mark complete and send to Daniel Kim for approval?",
         body: "September 2026 · Chase Operating ••4821",
-        confirmLabel: "Submit for review",
+        confirmLabel: "Mark complete",
         tone: "brand",
         onConfirm() {
           if (!summarize(recon.getState()).done) return
           reconUi.set((state) => ({ ...state, completed: true }))
-          toast("Submitted to Daniel for review", { tone: "success" })
+          toast("Sent to Daniel for approval", { tone: "success" })
         },
       },
     })
@@ -40,10 +40,10 @@ export function DoneState() {
       {completed ? (
         <>
           <CheckCheck />
-          Submitted for review
+          Sent to Daniel
         </>
       ) : (
-        "Complete reconciliation"
+        "Mark complete"
       )}
     </Button>
   )
@@ -57,7 +57,7 @@ export function DoneState() {
           <TooltipContent>
             {summary.open + summary.awaitingApproval} items left
             {summary.awaitingApproval
-              ? ` · ${summary.awaitingApproval} awaiting approval`
+              ? ` · ${summary.awaitingApproval} Awaiting Daniel`
               : ""}
             {summary.difference !== 0 ? " · Difference must be $0.00" : ""}
           </TooltipContent>
@@ -76,7 +76,9 @@ export function DoneState() {
         </span>
         <div className="flex flex-col gap-1">
           <h2 className="text-sm font-semibold text-brand">
-            Reconciled · $0.00 difference
+            {completed
+              ? "Complete · waiting on Daniel's approval"
+              : "Reconciled · $0.00 difference"}
           </h2>
           <div className="flex flex-wrap items-center gap-x-2 text-xs text-fg-3">
             <span>{summary.resolved} resolved</span>

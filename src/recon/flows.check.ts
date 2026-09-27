@@ -9,6 +9,7 @@ import {
   discoverCandidates,
   bookFee,
   editFromInstruction,
+  compactItems,
 } from "@/agent/scripts/recon"
 import { postToThread } from "@/comments"
 import {
@@ -19,7 +20,13 @@ import {
   revertAction,
   flushApprovals,
 } from "./actions"
-import { recon, reconUi, queueItems, reconciledItems } from "./useRecon"
+import {
+  recon,
+  reconUi,
+  queueItems,
+  nextOpenAfter,
+  reconciledItems,
+} from "./useRecon"
 import { summarize } from "./store"
 import { setFastMode } from "./speed"
 
@@ -47,6 +54,40 @@ function reset() {
   }))
 }
 setFastMode(true)
+reset()
+const queue = queueItems(recon.getState())
+const routine = queue.filter(
+  (item) => !item.suggestions.some((s) => s.approval)
+)
+assert(
+  queue
+    .slice(0, routine.length)
+    .every((item) => !item.suggestions.some((s) => s.approval)),
+  "Routine work precedes approval gates"
+)
+assert(
+  routine.every(
+    (item, i) =>
+      i === 0 ||
+      routine[i - 1].suggestions[0].confidence >= item.suggestions[0].confidence
+  ),
+  "Routine confidence descends"
+)
+assert(nextOpenAfter(queue.at(-1)!.id)?.id === queue[0].id, "Next open wraps")
+ok(acceptSuggestion(queue[0].id), "Accept queue head")
+assert(
+  nextOpenAfter(queue[0].id)?.id === queue[1].id,
+  "Next open advances from accepted item"
+)
+assert(
+  compactItems([recon.getState().items.r14]).includes("$1,150.00"),
+  "Beginning discrepancy uses book delta"
+)
+assert(
+  compactItems(queue).split("\n").length === 7 &&
+    compactItems(queue).endsWith("and 8 more"),
+  "Lists show six items and remaining count"
+)
 reset()
 assert(
   queueItems(recon.getState()).length === 14,
@@ -234,14 +275,46 @@ assert(
   ),
   "Ember emits the actionable candidate card"
 )
+const candidateReply = turns.find(
+  (message) =>
+    message.author === "ember" &&
+    message.parts.some(
+      (part) => part.type === "card" && part.card.kind === "recon-candidate"
+    )
+)!
 assert(
-  turns.some(
-    (message) =>
-      message.parts.filter(
-        (part) => part.type === "card" && part.card.kind === "recon-change"
-      ).length === 2
+  candidateReply.parts.filter((part) => part.type === "card").length === 1,
+  "Discovery emits one outcome card"
+)
+const candidatePart = candidateReply.parts.find(
+  (part) => part.type === "card" && part.card.kind === "recon-candidate"
+)!
+assert(
+  candidatePart.type === "card" &&
+    "actionId" in candidatePart.card &&
+    typeof candidatePart.card.actionId === "string",
+  "Candidate carries its reversible addition"
+)
+ok(revertAction(candidatePart.card.actionId), "Revert candidate addition")
+assert(
+  reconUi.get().selectedItemId === "r04",
+  "Revert selects the restored item"
+)
+assert(
+  !recon
+    .getState()
+    .items.r04.suggestions.some(
+      (candidate) => candidate.invoiceNumber === "NTN-88213"
+    ),
+  "Revert removes the added candidate"
+)
+assert(
+  candidateReply.parts.some(
+    (part) =>
+      part.type === "steps" &&
+      part.status === "Searched the AP inbox, bills and GL ±30 days"
   ),
-  "Every discovery mutation gets a Revert card"
+  "Discovery steps collapse to a past-tense summary"
 )
 
 reset()

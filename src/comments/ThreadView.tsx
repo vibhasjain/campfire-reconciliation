@@ -81,11 +81,11 @@ export function ThreadView({
       <div className="flex shrink-0 flex-col gap-2 border-t-hair border-line p-3">
         {question && <AskUserQuestion chatId={chatId} q={question} />}
         <Composer
-          key={chatId}
+          key={`${chatId}:${draft ?? ""}`}
           variant="thread"
           chatId={chatId}
           compact
-          autoFocus
+          autoFocus={false}
           prefillText={draft}
           placeholder={itemId ? "Comment or ask @ember…" : "Ask Ember…"}
           onSubmit={

@@ -556,17 +556,25 @@ export function createReconStore(seed: ReconState = defaultSeed): ReconStore {
       const reason =
         validateSuggestion(candidate, item) ?? currentEffect(item, candidate)
       if (reason) return { ok: false, reason }
-      return commit("accept", `Accepted: ${candidate.title}`, actor, [itemId], {
-        items: {
-          [itemId]: {
-            ...item,
-            status: candidate.approval ? "awaiting_approval" : "resolved",
-            acceptedSuggestionId: candidate.id,
-            resolution: candidate,
-            pairings: candidate.pairings ?? [],
+      return commit(
+        "accept",
+        candidate.approval
+          ? "Sent to Daniel for approval"
+          : `Accepted: ${candidate.title}`,
+        actor,
+        [itemId],
+        {
+          items: {
+            [itemId]: {
+              ...item,
+              status: candidate.approval ? "awaiting_approval" : "resolved",
+              acceptedSuggestionId: candidate.id,
+              resolution: candidate,
+              pairings: candidate.pairings ?? [],
+            },
           },
-        },
-      })
+        }
+      )
     },
     approve(itemId, actor = "daniel") {
       const item = state.items[itemId]
