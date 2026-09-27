@@ -1,0 +1,147 @@
+export interface Reference {
+  src: string
+  width: number
+  height: number
+  software: "Campfire" | "Rillet" | "Numeric"
+  title: string
+  note: string
+}
+
+export const REFERENCES: Reference[] = [
+  {
+    src: "/references/perfect-match.webp",
+    width: 1600,
+    height: 800,
+    software: "Campfire",
+    title: "Perfect match",
+    note: "A cleared queue still needs an explicit completion state.",
+  },
+  {
+    src: "/references/missing-bank-fee.webp",
+    width: 1600,
+    height: 800,
+    software: "Campfire",
+    title: "Missing bank fee",
+    note: "An unmatched fee leads to a manual ledger-entry action.",
+  },
+  {
+    src: "/references/reconciliation-calendar.webp",
+    width: 1160,
+    height: 872,
+    software: "Campfire",
+    title: "Reconciliation calendar",
+    note: "Account-by-month status makes close progress scannable.",
+  },
+  {
+    src: "/references/paired-transactions.webp",
+    width: 1440,
+    height: 900,
+    software: "Campfire",
+    title: "Paired transactions",
+    note: "Side-by-side bank and ledger rows establish the reconciliation workspace.",
+  },
+  {
+    src: "/references/resolve-line.webp",
+    width: 1440,
+    height: 900,
+    software: "Campfire",
+    title: "Resolve line",
+    note: "The resolve modal handles one statement line at a time without confidence.",
+  },
+  {
+    src: "/references/review-match.webp",
+    width: 1440,
+    height: 900,
+    software: "Campfire",
+    title: "Review match",
+    note: "A matched pair exposes both records and a reversible removal action.",
+  },
+  {
+    src: "/references/ask-ember.webp",
+    width: 418,
+    height: 872,
+    software: "Campfire",
+    title: "Ask Ember",
+    note: "Suggested questions give the empty assistant panel a starting point.",
+  },
+  {
+    src: "/references/ember-agents.webp",
+    width: 1160,
+    height: 872,
+    software: "Campfire",
+    title: "Ember agents",
+    note: "Task-specific agents make the scope of automation visible.",
+  },
+  {
+    src: "/references/match-confidence.webp",
+    width: 1440,
+    height: 810,
+    software: "Rillet",
+    title: "Match confidence",
+    note: "Confidence sits beside the proposed ledger match.",
+  },
+  {
+    src: "/references/edit-suggestion.webp",
+    width: 1440,
+    height: 810,
+    software: "Rillet",
+    title: "Edit suggestion",
+    note: "Suggested entries remain editable before acceptance.",
+  },
+  {
+    src: "/references/matching-rules.webp",
+    width: 1440,
+    height: 810,
+    software: "Rillet",
+    title: "Matching rules",
+    note: "Merchant conditions can drive repeatable accounting rules.",
+  },
+  {
+    src: "/references/quick-entry.webp",
+    width: 1600,
+    height: 906,
+    software: "Rillet",
+    title: "Quick entry",
+    note: "The proposed entry stays beside the selected bank transaction.",
+  },
+  {
+    src: "/references/transaction-selection.webp",
+    width: 1600,
+    height: 906,
+    software: "Rillet",
+    title: "Transaction selection",
+    note: "The empty detail pane asks for one transaction to begin.",
+  },
+  {
+    src: "/references/suggesting-rules.webp",
+    width: 1440,
+    height: 810,
+    software: "Numeric",
+    title: "Suggesting rules",
+    note: "Progress and a named activity make automated review legible.",
+  },
+  {
+    src: "/references/rule-impact.webp",
+    width: 1440,
+    height: 810,
+    software: "Numeric",
+    title: "Rule impact",
+    note: "Each rule displays its drafted entries and matched-transaction count.",
+  },
+  {
+    src: "/references/proposed-entries.webp",
+    width: 1440,
+    height: 810,
+    software: "Numeric",
+    title: "Proposed entries",
+    note: "Rule groups connect source transactions to proposed journal entries.",
+  },
+  {
+    src: "/references/journal-preview.webp",
+    width: 1440,
+    height: 810,
+    software: "Numeric",
+    title: "Journal preview",
+    note: "A prepared journal exposes debit and credit lines before handoff.",
+  },
+]

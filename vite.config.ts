@@ -6,7 +6,7 @@ import { defineConfig, type Connect, type Plugin } from "vite"
 function versionRoutes(): Plugin {
   const rewrite: Connect.NextHandleFunction = (req, _res, next) => {
     const [pathname, query] = (req.url ?? "").split("?", 2)
-    if (/^\/(v[123]|version-control|references|concepts)(\/[^.]*)?$/.test(pathname)) {
+    if (/^\/(v[123]|version-control|references)(\/[^.]*)?$/.test(pathname)) {
       req.url = `/index.html${query ? `?${query}` : ""}`
     }
     next()

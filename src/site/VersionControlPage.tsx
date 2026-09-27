@@ -1,0 +1,243 @@
+import { useEffect, useRef, useState, type KeyboardEvent } from "react"
+import { Code2, Diamond, FileText, Images, Presentation } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Kbd } from "@/components/ui/kbd"
+import { Chip, type ChipTone } from "@/components/common/Chip"
+import SiteFrame from "./SiteFrame"
+import { REPO, VERSIONS, type Medium } from "./versions"
+import { CARD_COPY } from "./cardCopy"
+import { prefetch } from "./loaders"
+
+const MEDIA = ["All", "Code", "Brilliant", "Paper", "Story"] as const
+const APPEARANCE: Record<Medium, { icon: typeof Code2; tone: ChipTone }> = {
+  Code: { icon: Code2, tone: "green" },
+  Brilliant: { icon: Diamond, tone: "blue" },
+  Paper: { icon: FileText, tone: "copper" },
+  Story: { icon: Presentation, tone: "purple" },
+  References: { icon: Images, tone: "gray" },
+}
+const sorted = [...VERSIONS].sort((a, b) => Date.parse(b.at) - Date.parse(a.at))
+const time = new Intl.DateTimeFormat("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+  timeZone: "America/New_York",
+})
+
+export default function VersionControlPage() {
+  const [medium, setMedium] = useState<(typeof MEDIA)[number]>("All")
+  const [query, setQuery] = useState("")
+  const [active, setActive] = useState(sorted[0].id)
+  const input = useRef<HTMLInputElement>(null)
+  const grid = useRef<HTMLDivElement>(null)
+  const cards = useRef(new Map<string, HTMLDivElement>())
+  const visible = sorted.filter(
+    (v) =>
+      (medium === "All" || medium === v.medium) &&
+      `${v.medium} ${v.title} ${v.version} ${v.changes.join(" ")}`
+        .toLowerCase()
+        .includes(query.toLowerCase().trim())
+  )
+  const activeId = visible.some((v) => v.id === active)
+    ? active
+    : visible[0]?.id
+
+  useEffect(() => {
+    cards.current.get(sorted[0].id)?.focus({ preventScroll: true })
+    const shortcut = (event: globalThis.KeyboardEvent) => {
+      if (
+        event.key !== "/" ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        (event.target instanceof HTMLElement &&
+          event.target.closest('input, textarea, [contenteditable="true"]'))
+      )
+        return
+      event.preventDefault()
+      input.current?.focus()
+    }
+    window.addEventListener("keydown", shortcut)
+    return () => window.removeEventListener("keydown", shortcut)
+  }, [])
+
+  function navigate(event: KeyboardEvent<HTMLDivElement>, index: number) {
+    if (event.metaKey || event.ctrlKey || event.altKey) return
+    const columns = grid.current
+      ? getComputedStyle(grid.current).gridTemplateColumns.split(" ").length
+      : 1
+    let next = index
+    if (event.key === "ArrowLeft" && index % columns > 0) next--
+    if (
+      event.key === "ArrowRight" &&
+      index % columns < columns - 1 &&
+      index + 1 < visible.length
+    )
+      next++
+    if (event.key === "ArrowUp" && index >= columns) next -= columns
+    if (event.key === "ArrowDown" && index + columns < visible.length)
+      next += columns
+    if (event.key.startsWith("Arrow")) {
+      event.preventDefault()
+      cards.current.get(visible[next].id)?.focus()
+    }
+    const link =
+      event.key === "Enter" && event.target === event.currentTarget
+        ? visible[index].links[0]
+        : /^[123]$/.test(event.key)
+          ? visible[index].links[Number(event.key) - 1]
+          : undefined
+    if (link) {
+      event.preventDefault()
+      location.assign(link.href)
+    }
+  }
+
+  return (
+    <SiteFrame title="Version control">
+      <div className="mb-5 flex flex-wrap items-center gap-3">
+        <div
+          role="group"
+          aria-label="Medium"
+          className="flex max-w-full flex-wrap gap-0.5 rounded-lg bg-segment p-1"
+        >
+          {MEDIA.map((value) => (
+            <Button
+              key={value}
+              variant={medium === value ? "selected" : "ghost"}
+              size="sm"
+              aria-pressed={medium === value}
+              onClick={() => setMedium(value)}
+            >
+              {value}
+            </Button>
+          ))}
+        </div>
+        <Input
+          ref={input}
+          aria-label="Filter versions"
+          placeholder="Filter…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-44"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setQuery("")
+              input.current?.blur()
+            }
+            if (e.key === "ArrowDown" || e.key === "Enter") {
+              e.preventDefault()
+              if (visible[0]) cards.current.get(visible[0].id)?.focus()
+            }
+          }}
+        />
+        <span className="ml-auto flex items-center gap-1 text-xs text-fg-4">
+          <Kbd>↑↓←→</Kbd>
+          <span>·</span>
+          <Kbd>Enter</Kbd>
+        </span>
+      </div>
+      <div
+        ref={grid}
+        className="grid grid-cols-1 gap-3 min-[700px]:grid-cols-2 min-[1100px]:grid-cols-3"
+      >
+        {visible.map((version, index) => {
+          const { icon: Icon, tone } = APPEARANCE[version.medium]
+          const copy = CARD_COPY[version.id]
+          return (
+            <div
+              key={version.id}
+              ref={(node) => {
+                if (node) cards.current.set(version.id, node)
+                else cards.current.delete(version.id)
+              }}
+              role="group"
+              aria-label={`${version.medium} ${version.version}: ${copy?.title ?? version.title}`}
+              tabIndex={version.id === activeId ? 0 : -1}
+              onFocus={(e) => {
+                setActive(version.id)
+                if (e.target === e.currentTarget)
+                  prefetch(version.links[0].href)
+              }}
+              onMouseEnter={() => prefetch(version.links[0].href)}
+              onKeyDown={(e) => navigate(e, index)}
+              onClick={(e) => {
+                if (!(e.target as HTMLElement).closest("a, button"))
+                  location.assign(version.links[0].href)
+              }}
+              className="flex min-h-60 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
+            >
+              <div className="flex items-center gap-2">
+                <Chip tone={tone} icon={<Icon />}>
+                  {version.medium}
+                </Chip>
+                <time
+                  dateTime={version.at}
+                  title={new Date(version.at).toLocaleString("en-US", {
+                    timeZone: "America/New_York",
+                  })}
+                  className="ml-auto text-xs text-fg-4 tabular-nums"
+                >
+                  {time.format(new Date(version.at))}
+                </time>
+              </div>
+              <div className="mt-5 flex items-baseline gap-2">
+                <span className="shrink-0 text-sm text-fg-3 tabular-nums">
+                  {version.version}
+                </span>
+                <h2 className="text-sm font-medium">
+                  {copy?.title ?? version.title}
+                </h2>
+              </div>
+              <ul className="mt-3 mb-5 space-y-1 text-xs text-fg-3">
+                {(copy?.lines ?? version.changes).slice(0, 4).map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <div className="mt-auto flex flex-wrap items-center gap-1.5">
+                {version.links.map((link, i) => (
+                  <Button
+                    key={link.href}
+                    asChild
+                    size="xs"
+                    variant={i === 0 ? "outline" : "ghost"}
+                  >
+                    <a
+                      href={link.href}
+                      aria-label={link.label}
+                      onMouseEnter={() => prefetch(link.href)}
+                      onFocus={() => prefetch(link.href)}
+                    >
+                      {version.links.length > 1
+                        ? `v${i + 1}`
+                        : version.medium === "Brilliant" ||
+                            version.medium === "Paper"
+                          ? "Open canvas"
+                          : version.medium === "Story"
+                            ? "Open deck"
+                            : "Browse"}
+                    </a>
+                  </Button>
+                ))}
+                {version.commit && (
+                  <a
+                    href={`${REPO}/commit/${version.commit}`}
+                    className="ml-auto rounded-md text-xs text-fg-4 tabular-nums hover:text-brand focus-visible:outline-2 focus-visible:outline-focus"
+                    aria-label={`Commit ${version.commit}`}
+                  >
+                    {version.commit}
+                  </a>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      {visible.length === 0 && (
+        <p role="status" className="py-16 text-center text-sm text-fg-3">
+          No versions found
+        </p>
+      )}
+    </SiteFrame>
+  )
+}

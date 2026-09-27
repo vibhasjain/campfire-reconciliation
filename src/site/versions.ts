@@ -124,8 +124,10 @@ export const VERSIONS: Version[] = [
     title: "Concept A: Workpaper, restraint pass",
     medium: "Brilliant",
     at: "2026-09-27T16:30:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper#r2" }],
-    changes: ["About two-thirds fewer words; routine items signed in one batch; the bridge carries the numbers."],
+    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper/" }],
+    changes: [
+      "About two-thirds fewer words; routine items signed in one batch; the bridge carries the numbers.",
+    ],
   },
   {
     id: "b-1.1",
@@ -133,8 +135,10 @@ export const VERSIONS: Version[] = [
     title: "Concept B: Balance bridge, restraint pass",
     medium: "Brilliant",
     at: "2026-09-27T15:52:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/b-balance-bridge#r2" }],
-    changes: ["54% fewer words; confidence only on the open suggestion; the keystone holds the difference."],
+    links: [{ label: "Open the canvas", href: "/concepts/b-balance-bridge/" }],
+    changes: [
+      "54% fewer words; confidence only on the open suggestion; the keystone holds the difference.",
+    ],
   },
   {
     id: "d-1.1",
@@ -142,8 +146,10 @@ export const VERSIONS: Version[] = [
     title: "Concept D: Timeline, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:55:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/d-timeline#r2" }],
-    changes: ["Labels only on the selected mark; the difference becomes the headline; timing called out once at the cutoff."],
+    links: [{ label: "Open the canvas", href: "/concepts/d-timeline/" }],
+    changes: [
+      "Labels only on the selected mark; the difference becomes the headline; timing called out once at the cutoff.",
+    ],
   },
   {
     id: "c-1.1",
@@ -151,8 +157,10 @@ export const VERSIONS: Version[] = [
     title: "Concept C: Thread inbox, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:51:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox#r2" }],
-    changes: ["Half the text; one-line inbox rows; the proposal's ledger lines behind a “3 lines” disclosure."],
+    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox/" }],
+    changes: [
+      "Half the text; one-line inbox rows; the proposal's ledger lines behind a “3 lines” disclosure.",
+    ],
   },
   {
     id: "a-1.0",
@@ -160,8 +168,10 @@ export const VERSIONS: Version[] = [
     title: "Concept A: Workpaper",
     medium: "Brilliant",
     at: "2026-09-27T14:55:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper" }],
-    changes: ["Ember drafts the reconciliation as a workpaper; Maya signs by exception; the signed workpaper is the audit trail."],
+    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper/" }],
+    changes: [
+      "Ember drafts the reconciliation as a workpaper; Maya signs by exception; the signed workpaper is the audit trail.",
+    ],
   },
   {
     id: "d-1.0",
@@ -169,8 +179,10 @@ export const VERSIONS: Version[] = [
     title: "Concept D: Timeline",
     medium: "Paper",
     at: "2026-09-27T14:48:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/d-timeline" }],
-    changes: ["September as a time axis: bank above, books below, the cutoff as a hard line; lag and cutoff crossings visible at a glance."],
+    links: [{ label: "Open the canvas", href: "/concepts/d-timeline/" }],
+    changes: [
+      "September as a time axis: bank above, books below, the cutoff as a hard line; lag and cutoff crossings visible at a glance.",
+    ],
   },
   {
     id: "b-1.0",
@@ -178,8 +190,10 @@ export const VERSIONS: Version[] = [
     title: "Concept B: Balance bridge",
     medium: "Brilliant",
     at: "2026-09-27T14:41:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/b-balance-bridge" }],
-    changes: ["The difference is the interface: each exception is a plank on a bank-to-book bridge that closes at $0.00."],
+    links: [{ label: "Open the canvas", href: "/concepts/b-balance-bridge/" }],
+    changes: [
+      "The difference is the interface: each exception is a plank on a bank-to-book bridge that closes at $0.00.",
+    ],
   },
   {
     id: "c-1.0",
@@ -187,8 +201,10 @@ export const VERSIONS: Version[] = [
     title: "Concept C: Thread inbox",
     medium: "Paper",
     at: "2026-09-27T14:29:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox" }],
-    changes: ["The reconciliation as an inbox of 14 threads that each open with Ember's proposal; done means inbox zero."],
+    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox/" }],
+    changes: [
+      "The reconciliation as an inbox of 14 threads that each open with Ember's proposal; done means inbox zero.",
+    ],
   },
   {
     id: "references-1.0",
@@ -197,6 +213,8 @@ export const VERSIONS: Version[] = [
     medium: "References",
     at: "2026-09-27T13:05:00-04:00",
     links: [{ label: "Browse", href: "/references" }],
-    changes: ["Campfire's reconciliation today, plus how Rillet and Numeric approach matching: the context behind the choices."],
+    changes: [
+      "Campfire's reconciliation today, plus how Rillet and Numeric approach matching: the context behind the choices.",
+    ],
   },
 ]

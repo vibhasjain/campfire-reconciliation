@@ -1,15 +1,29 @@
-import { AppShell } from "@/app/AppShell"
-import ReconScreen from "@/versions/ReconScreen"
+import { lazy, Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { loadPrototype, loadReferences, loadVersions } from "@/site/loaders"
 
-// Routes: /v1 Workbench, /v2 Paired ledger, /v3 Flow. "/" is intentionally empty for now;
-// /story, /concepts, /references and /version-control are static pages in public/.
+const PrototypePage = lazy(loadPrototype)
+const VersionControlPage = lazy(loadVersions)
+const ReferencesPage = lazy(loadReferences)
+
 export default function App() {
   const route = location.pathname.match(/^\/v([123])(\/|$)/)
-  if (!route) return null
-  const version = Number(route[1]) as 1 | 2 | 3
   return (
-    <AppShell>
-      <ReconScreen version={version} />
-    </AppShell>
+    <Suspense
+      fallback={
+        <main className="mx-auto max-w-7xl p-6" aria-label="Loading">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="mt-8 h-64 w-full" />
+        </main>
+      }
+    >
+      {route ? (
+        <PrototypePage version={Number(route[1]) as 1 | 2 | 3} />
+      ) : location.pathname.replace(/\/$/, "") === "/references" ? (
+        <ReferencesPage />
+      ) : (
+        <VersionControlPage />
+      )}
+    </Suspense>
   )
 }
