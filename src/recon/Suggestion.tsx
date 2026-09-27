@@ -27,6 +27,14 @@ export interface SuggestionProps {
   rejectLabel?: string
 }
 
+// ponytail: fixture calibration by band; real numbers come from accept/reject history per entity.
+const calibration = (confidence: number) =>
+  confidence >= 90
+    ? "Last quarter, 97% of suggestions scored 90%+ were accepted."
+    : confidence >= 70
+      ? "Last quarter, 81% of suggestions scored 70–89% were accepted."
+      : "Last quarter, 44% of suggestions scored under 70% were accepted."
+
 export function Suggestion({
   suggestion,
   size = "full",
@@ -210,7 +218,10 @@ export function Suggestion({
                   </div>
                 </div>
               ))}
-              <div className="mt-2 text-[10px] leading-4 text-fg-4">
+              <div className="mt-2 text-xs leading-4 text-fg-3">
+                {calibration(suggestion.confidence)}
+              </div>
+              <div className="mt-1 text-[10px] leading-4 text-fg-4">
                 {formula} = {suggestion.confidence}%
               </div>
             </div>

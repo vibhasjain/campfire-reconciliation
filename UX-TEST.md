@@ -91,3 +91,30 @@ The thread flow now also checks that the accepted suggestion is the one Ember fo
 
 ### Left as designed
 Evaluators keep calling the confidence formula "decorative". The owner asked for a formula-level why, so it stays, as a footnote under the facts. NOTES.md says I'd ship confidence bands instead of percentages until they're calibrated.
+
+## Round 4 — v1 and v2 re-checked after the round 3 fixes (v3 had already passed)
+
+| | Speed | Clarity | Confidence | AI trust | Fluidity | Done-ness | Phone | Restraint |
+|---|---|---|---|---|---|---|---|---|
+| v1 Workbench | 4 | 4 | 4 | 3 | 4 | 4 | 3 | 4 |
+| v2 Paired ledger | 4 | 4 | 4 | 3 | 4 | 4 | 3 | 4 |
+
+### Tweaks after round 4 (flows still 24/24)
+- **AI trust.** The "why" footnote now says how the score has held up: "Last quarter, 97% of suggestions scored 90%+ were accepted." The formula stays below it. The calibration figures are fixture data; the real ones would come from each entity's accept/reject history.
+- **Done-ness.** Before submitting, the done block says "Balanced · ready to submit", so "Reconciled" no longer overstates it.
+- **Phone.** Only the newest toast shows, so a stack of toasts can't cover the progress line. On v2, auto-advance leaves room for the sticky summary when it scrolls to the next row.
+- **Known edge case.** Resizing v1 from desktop to phone width without reloading leaves a gap on the left. Loading it at phone width is fine.
+
+## Cross-version comparison (for the demo)
+
+| | v1 Workbench | v2 Paired ledger | v3 Flow |
+|---|---|---|---|
+| The bet | Familiar triage: a queue plus a side sheet | Read across: books and bank aligned, with AI pairs pre-connected | One decision at a time |
+| Keys to clear 14 (test, `?fast`) | 14 | 15 | 14 |
+| Clicks to clear 14 | 15 | 15 | 14 |
+| Mouse time to clear 14 (test) | 4.2s | 14.3s (every item expands inline) | 3.9s |
+| Best at | Scanning and batching; the familiar table | Many-to-one and payee pairing, visible at a glance; closest to Campfire's two panes today | Speed, focus, and the clearest "done" (done-ness 5/5 in round 3) |
+| Weakest at | Needs two surfaces, the table and the sheet | Slowest with a mouse; densest on a phone | Less overview (the "All exceptions" list is one key away) |
+| Final evaluator scores | 3–4 (AI trust 3, phone 3) | 3–4 (AI trust 3, phone 3) | all 4–5 |
+
+**Recommendation.** Ship v3's flow as the default. Keep v1's table as its overview view: the rail's "All exceptions" list already heads that way. Borrow v2's pre-aligned pairing for the many-to-one and name-pairing items.

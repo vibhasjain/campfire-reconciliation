@@ -101,6 +101,7 @@
 }
 .paired-group {
   position: relative;
+  scroll-margin-top: 120px;
   border-bottom: var(--hair) solid var(--c-line-subtle);
   background: var(--c-surface);
 }

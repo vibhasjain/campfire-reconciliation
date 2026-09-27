@@ -80,7 +80,7 @@ export function DoneState({ compact = false }: { compact?: boolean }) {
           <h2 className="text-sm font-semibold text-brand">
             {completed
               ? "Submitted · waiting on Daniel"
-              : "Reconciled · $0.00 difference"}
+              : "Balanced · ready to submit"}
           </h2>
           {!compact && (
             <div className="flex flex-wrap items-center gap-x-2 text-xs text-fg-3">
