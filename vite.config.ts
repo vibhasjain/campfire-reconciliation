@@ -20,7 +20,8 @@ function versionRoutes(): Plugin {
 
 export default defineConfig({
   base: "/campfire/",
-  build: { outDir: "../campfire", emptyOutDir: true },
+  // Local lanes can verify builds without writing into the parent site's output.
+  build: { outDir: process.env.CAMPFIRE_OUT_DIR ?? "../campfire", emptyOutDir: true },
   plugins: [versionRoutes(), react(), tailwindcss()],
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },

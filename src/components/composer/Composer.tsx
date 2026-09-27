@@ -9,6 +9,7 @@ import { COMPOSER_ATTR } from "@/app/hotkeys"
 import { nextId, useDB } from "@/data/store"
 import type { Attachment, EntityRef, ID } from "@/data/types"
 import { send, stop, useRun } from "@/agent/engine"
+import type { SendInput } from "@/agent/types"
 import { cn } from "@/lib/utils"
 import { composerExtensions, makeBridge, serialize } from "./editor"
 import { SuggestPicker } from "./SuggestPicker"
@@ -26,6 +27,12 @@ export type ComposerProps = {
   onSent?: (chatId: ID) => void
   /** Sources for @ mentions; callers can supply teammates. */
   mentionSources?: MentionSource[]
+  /** Allows a comment thread to decide whether a post invokes the agent. */
+  onSubmit?: (input: SendInput) => void | Promise<unknown>
+  placeholder?: string
+  compact?: boolean
+  prefillText?: string
+  autoFocus?: boolean
   className?: string
 }
 
@@ -50,7 +57,7 @@ const EDITOR_ATTRS = {
   class: "max-h-[40vh] overflow-y-auto p-1 text-base leading-[22.5px] font-normal text-fg outline-none whitespace-pre-wrap break-words",
 }
 
-export function Composer({ variant, context: contextProp = [], chatId: chatIdProp, onSent, mentionSources = DEFAULT_MENTIONS, className }: ComposerProps) {
+export function Composer({ variant, context: contextProp = [], chatId: chatIdProp, onSent, mentionSources = DEFAULT_MENTIONS, onSubmit, placeholder = "Ask Ember", compact = false, prefillText, autoFocus = false, className }: ComposerProps) {
   const [prefill] = useState(() => (variant === "page" ? takePrefill() : null))
   const context = useMemo(() => [...contextProp, ...(prefill?.context ?? [])], [contextProp, prefill])
   const [selectedChatId, setSelectedChatId] = useState<ID | undefined>(undefined)
@@ -66,13 +73,21 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
   // Options are built once and never change identity: tiptap's useEditor calls setOptions (a full ProseMirror
   // setProps pass) on every render whose options differ, and the docked composer re-renders on every navigation.
   const [options] = useState(() => ({
-    extensions: composerExtensions({ placeholder: "Ask Ember", bridge }),
-    content: prefill ? { type: "doc", content: [{ type: "paragraph", content: prefill.text ? [{ type: "text", text: prefill.text }] : [] }] } : (loadDraft(draftKey) ?? ""),
-    autofocus: prefill ? ("end" as const) : false,
-    editorProps: { attributes: EDITOR_ATTRS },
+    extensions: composerExtensions({ placeholder, bridge }),
+    content: prefill || prefillText ? { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: prefillText || prefill?.text || "" }] }] } : (loadDraft(draftKey) ?? ""),
+    autofocus: prefill || autoFocus ? ("end" as const) : false,
+    editorProps: { attributes: { ...EDITOR_ATTRS, "aria-label": placeholder, class: cn(EDITOR_ATTRS.class, compact && "max-h-32 text-sm leading-5") } },
     onUpdate: ({ editor: e }: { editor: { isEmpty: boolean; getJSON(): JSONContent } }) => bridge.update(e),
   }))
   const editor = useEditor(options)
+  const shownPrefill = useRef(prefillText)
+  useEffect(() => {
+    if (!editor || shownPrefill.current === prefillText) return
+    shownPrefill.current = prefillText
+    if (!prefillText) return
+    editor.commands.setContent({ type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: prefillText }] }] })
+    editor.commands.focus("end")
+  }, [editor, prefillText])
 
   // Per-context drafts: swap content only when the new context's draft differs (no transaction otherwise).
   const shownKey = useRef(draftKey)
@@ -105,13 +120,15 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
     if (running && chatId) return
     const { text, mentions } = serialize(editor.getJSON())
     const refs = context.filter((c): c is EntityRef => !isViewChip(c))
-    const id = send({ chatId, text, mentions, attachments, context: refs })
+    const input = { chatId, text, mentions, attachments, context: refs }
+    const id = onSubmit ? chatId : send(input)
+    if (onSubmit) void onSubmit(input)
     setSelectedChatId(id)
     editor.commands.clearContent()
     clearTimeout(saveTimer.current)
     saveDraft(draftKey, null)
     setAttachments([])
-    onSent?.(id)
+    if (id) onSent?.(id)
   }
 
   useEffect(() => bridge.setSubmit(submit))
@@ -166,7 +183,7 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
       <SuggestPicker bridge={bridge} sources={mentionSources} />
       <div className="flex h-7 items-center justify-between">
         <div className="flex items-center gap-0.5">
-          <HistoryMenu onSelect={(id) => { setSelectedChatId(id); onSent?.(id) }} />
+          {!compact && <HistoryMenu onSelect={(id) => { setSelectedChatId(id); onSent?.(id) }} />}
           <span className="px-1 text-xxs text-fg-hint">@ to mention Ember or a teammate</span>
         </div>
         <div className="flex items-center gap-1">

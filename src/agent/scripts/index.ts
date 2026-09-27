@@ -1,8 +1,5 @@
-import type { Script } from '../types'
+import type { Script } from "../types"
+import { reconciliationScript, reconciliationFallback } from "./recon"
 
-/** Neutral fallback until the reconciliation lanes supply their demo scripts. */
-export const SCRIPTS: Script[] = [{
-  id: 'fallback',
-  match: () => 1,
-  run: async (ctx) => { await ctx.say('Ember is ready to help with this reconciliation.') },
-}]
+/** Keep the grounded fallback last: the engine uses it if a script emits no text. */
+export const SCRIPTS: Script[] = [reconciliationScript, reconciliationFallback]

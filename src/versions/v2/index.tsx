@@ -1,1 +1,3 @@
-export default function V2() { return null }
+export default function V2() {
+  return null
+}

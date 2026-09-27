@@ -10,18 +10,15 @@ export function focusComposer() {
   return !!el
 }
 
-/** Global shortcuts (shell.md §12): ⌘K palette toggle, ⌘J focus composer, Esc blurs the composer. Nothing else. */
+/** Shell owns the command palette; reconciliation owns its page and item shortcuts. */
 export function useHotkeys() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey) {
+      if ((e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey) {
         const k = e.key.toLowerCase()
         if (k === "k") {
           e.preventDefault()
           ui.set({ paletteOpen: !ui.get().paletteOpen })
-        } else if (k === "j") {
-          e.preventDefault()
-          focusComposer()
         }
         return
       }

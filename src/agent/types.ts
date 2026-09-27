@@ -1,9 +1,22 @@
 // Scripted agent contract. Scripts import these types only.
-import type { Approval, Attachment, Card, DB, EntityRef, ID, Question, ToolStep, ToolStepKind } from '@/data/types'
-import type { HalfSheetTarget } from '@/app/halfsheet'
+import type {
+  Approval,
+  Attachment,
+  Card,
+  DB,
+  EntityRef,
+  ID,
+  Question,
+  ToolStep,
+  ToolStepKind,
+} from "@/data/types"
+import type { HalfSheetTarget } from "@/app/halfsheet"
 
 export type SendInput = {
   chatId?: ID
+  author?: "maya" | "daniel" | "priya" | "ember"
+  /** Comments already append their human row before dispatching the agent. */
+  skipUserMessage?: boolean
   text: string
   mentions: EntityRef[]
   attachments: Attachment[]
@@ -20,15 +33,19 @@ export type StepHandle = {
   error(text: string): void
   rows(rows: string[][]): void
   /** Streams markdown into a subagent card (header = ref chip, "Loading..." until the first word). */
-  subagent(ref: EntityRef, markdown: string, opts?: { wps?: number }): Promise<void>
+  subagent(
+    ref: EntityRef,
+    markdown: string,
+    opts?: { wps?: number }
+  ): Promise<void>
   /** Marks done; label defaults to the past tense of the live label ("Retrieving x" → "Retrieved x"). */
   done(label?: string): void
   fail(error: string): void
 }
 
-export type ApprovalInput = Pick<Approval, 'title' | 'rows'>
+export type ApprovalInput = Pick<Approval, "title" | "rows">
 export type ApprovalResult = { approved: ID[]; dismissed: ID[] }
-export type Answers = Record<string, string> | 'skip'
+export type Answers = Record<string, string> | "skip"
 
 export interface RunCtx {
   input: SendInput
@@ -48,9 +65,8 @@ export interface RunCtx {
   card(card: Card): ID
   updateCard(id: ID, card: Partial<Card>): void
   openPanel(target: HalfSheetTarget): void
-  ask(q: Omit<Question, 'id'>): Promise<Answers>
+  ask(q: Omit<Question, "id">): Promise<Answers>
   approve(a: ApprovalInput): Promise<ApprovalResult>
-
 }
 
 export type Script = {
@@ -61,4 +77,3 @@ export type Script = {
   match(input: SendInput, db: DB): number
   run(ctx: RunCtx): Promise<void>
 }
-

@@ -25,6 +25,9 @@ export type Card =
   | { kind: 'generic'; title: string; markdown?: string }
   | { kind: 'approval'; approvalId: ID }
   | { kind: 'answers'; qa: { q: string; a: string }[] }
+  | { kind: 'recon-candidate'; itemId: ID; suggestionId: ID }
+  | { kind: 'recon-change'; actionId: ID; label: string; detail?: string }
+  | { kind: 'recon-item'; itemId: ID }
 export type MessagePart =
   | { type: 'text'; markdown: string; streaming?: boolean }
   | { type: 'steps'; status: string; live: boolean; open: boolean; steps: ToolStep[] }
@@ -34,6 +37,7 @@ export type Message = {
   id: ID
   chatId: ID
   role: 'user' | 'assistant'
+  author?: 'maya' | 'daniel' | 'priya' | 'ember'
   createdAt: ISO
   text?: string
   mentions?: EntityRef[]
