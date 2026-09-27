@@ -508,7 +508,7 @@ export default function V2() {
         )}
       </div>
       <div className="paired-done">
-        <DoneState />
+        <DoneState compact />
       </div>
       {(selection.bank.length > 0 || selection.book.length > 0) && (
         <motion.div

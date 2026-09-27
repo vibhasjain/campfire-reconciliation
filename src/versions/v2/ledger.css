@@ -314,16 +314,6 @@
 .paired-done {
   margin-top: 16px;
 }
-.paired-done [data-testid="done"] h2 {
-  font-size: 0;
-}
-.paired-done [data-testid="done"] h2:after {
-  content: "Reconciled";
-  font-size: 13px;
-}
-.paired-done [data-testid="done"] h2 + div {
-  display: none;
-}
 .paired-selection {
   position: sticky;
   bottom: 16px;

@@ -336,7 +336,6 @@ export default function Workbench() {
   const queue = useQueue()
   const reconciled = useReconciled()
   const summary = useSummary()
-  const completed = useReconUi((state) => state.completed)
   const state = useRecon((s) => s)
   const selected = useReconUi((s) => s.selectedItemId)
   const selection = useReconUi((s) => s.selectedLines)
@@ -545,10 +544,7 @@ export default function Workbench() {
       <Balance />
       {summary.done && tab === "To review" ? (
         <div className="wb-done mt-8">
-          <h2 className="mb-3 text-lg font-medium">
-            {completed ? "Submitted · waiting on Daniel" : "Reconciled"}
-          </h2>
-          <DoneState />
+          <DoneState compact />
         </div>
       ) : (
         <div className="mt-4 overflow-hidden rounded-lg border-hair border-line">

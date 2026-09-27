@@ -12,7 +12,8 @@ import { recon, reconUi, useReconUi, useSummary } from "./useRecon"
 import { summarize } from "./store"
 import { Money } from "./Money"
 
-export function DoneState() {
+// compact: headline + action only (for versions that already show the balances).
+export function DoneState({ compact = false }: { compact?: boolean }) {
   const summary = useSummary()
   const completed = useReconUi((state) => state.completed)
   const complete = () =>
@@ -81,18 +82,31 @@ export function DoneState() {
               ? "Submitted · waiting on Daniel"
               : "Reconciled · $0.00 difference"}
           </h2>
-          <div className="flex flex-wrap items-center gap-x-2 text-xs text-fg-3">
-            <span>{summary.resolved} resolved</span>
-            <span>·</span>
-            <span>{summary.autoMatched} auto-matched</span>
-            <span>·</span>
-            <span>
-              Adjusted balance <Money cents={summary.adjustedBank} />
-            </span>
-          </div>
+          {!compact && (
+            <div className="flex flex-wrap items-center gap-x-2 text-xs text-fg-3">
+              <span>{summary.resolved} resolved</span>
+              <span>·</span>
+              <span>{summary.autoMatched} auto-matched</span>
+              <span>·</span>
+              <span>
+                Adjusted balance <Money cents={summary.adjustedBank} />
+              </span>
+            </div>
+          )}
         </div>
       </div>
-      <div className="flex items-center gap-3">{completed && <button type="button" className="text-xs text-fg-4 hover:text-fg" onClick={resetDemo}>Start over</button>}{button}</div>
+      <div className="flex items-center gap-3">
+        {completed && (
+          <button
+            type="button"
+            className="text-xs text-fg-4 hover:text-fg"
+            onClick={resetDemo}
+          >
+            Start over
+          </button>
+        )}
+        {button}
+      </div>
     </section>
   )
 }

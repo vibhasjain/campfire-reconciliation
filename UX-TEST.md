@@ -70,3 +70,24 @@ The first test pass found two real bugs, both fixed in fix round 1:
   - **v1:** the heading still says "Ready for review" after submitting, and phone rows show only the glyph with no action label.
   - **v2:** stacked phone rows have no side labels, and the fee reasoning copy contradicts itself.
   - **v3:** the rail's link is called "All 14", and the phone breadcrumb cuts off "••4821".
+
+## Round 3 — after fix round 3
+
+### Automated flows: 24/24 pass
+The thread flow now also checks that the accepted suggestion is the one Ember found. It's accepted with Esc then A, so the same run proves the keyboard continuity fix.
+
+### Evaluator scores (1–5)
+
+| | Speed | Clarity | Confidence | AI trust | Fluidity | Done-ness | Phone | Restraint |
+|---|---|---|---|---|---|---|---|---|
+| v1 Workbench | 4 | 4 | 4 | 3 | **5** | **2** | 4 | 4 |
+| v2 Paired ledger | 4 | 4 | 4 | 4 | 4 | **3** | 4 | 4 |
+| v3 Flow | 4 | 4 | 4 | 4 | **5** | **5** | 4 | 4 |
+
+### Found and fixed after round 3
+- **v1 done state rendered empty.** A local CSS override hid the core `DoneState` after its markup changed. Same cause for **v2**, where a CSS `:after` hack kept the headline on "Reconciled" after submission. Fix: the core `DoneState` gained a `compact` variant, and both hacks are deleted.
+- **Phone toasts covered the next card's Accept or Reject** in v2 and v3. Fix: on phones, toasts now sit at the top under the header.
+- **"What's left?" showed the beginning-balance item as $1,150.00** while the rows show ($1,150.00). Fix: `itemAmount` is signed everywhere.
+
+### Left as designed
+Evaluators keep calling the confidence formula "decorative". The owner asked for a formula-level why, so it stays, as a footnote under the facts. NOTES.md says I'd ship confidence bands instead of percentages until they're calibrated.

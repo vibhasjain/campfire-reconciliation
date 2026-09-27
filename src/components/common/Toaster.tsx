@@ -13,7 +13,7 @@ export function Toaster() {
     () => items
   )
   return (
-    <div className="pointer-events-none fixed right-8 bottom-[calc(2rem+var(--toast-offset,0px))] z-[9999] flex w-[380px] max-w-[calc(100vw-32px)] flex-col items-stretch gap-3 max-sm:right-4 max-sm:bottom-[calc(1rem+var(--toast-offset,0px))]">
+    <div className="pointer-events-none fixed right-8 bottom-[calc(2rem+var(--toast-offset,0px))] z-[9999] flex w-[380px] max-w-[calc(100vw-32px)] flex-col items-stretch gap-3 max-sm:top-16 max-sm:right-4 max-sm:bottom-auto">
       <AnimatePresence initial={false}>
         {list.map((t) => {
           const tone = t.tone ?? "info"

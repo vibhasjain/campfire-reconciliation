@@ -84,7 +84,7 @@ export function itemAmount(item: ReconItem, state = recon.getState()): number {
     0
   )
   if (!item.bankIds.length && !item.bookIds.length)
-    return Math.abs(item.suggestions[0]?.bookDelta ?? 0)
+    return item.suggestions[0]?.bookDelta ?? 0
   return item.bankIds.length
     ? bank
     : item.bookIds.reduce((sum, id) => sum + state.bookLines[id].amount, 0)

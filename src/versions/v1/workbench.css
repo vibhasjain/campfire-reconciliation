@@ -97,9 +97,6 @@
 .wb-thread > div:first-child {
   max-height: 360px;
 }
-.wb-done [data-testid="done"] > div {
-  display: none;
-}
 body:has(.wb-page) [data-testid="toast"]:not(:last-child) {
   display: none;
 }
