@@ -1,7 +1,7 @@
 // Post-build: every page gets its own <title>, favicon links and Open Graph tags.
 // App routes get their own index.html copy (same bundle) so link previews differ per page;
 // static pages (story, concept canvases) are patched in dist, so re-exported canvases stay covered.
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { readFileSync, writeFileSync } from "node:fs"
 
 const SITE = "https://campfire-reconciliation.netlify.app"
 const APP = "Campfire reconciliation"
@@ -63,8 +63,8 @@ const legible = (html) =>
 
 const shell = readFileSync("dist/index.html", "utf8")
 for (const p of PAGES) {
-  const file = `dist${p.path}/index.html`
-  if (p.app) mkdirSync(`dist${p.path}`, { recursive: true })
+  // App routes are written as /v1.html etc. so Netlify serves /v1 directly (no 301 to /v1/).
+  const file = p.app ? `dist${p.path}.html` : `dist${p.path}/index.html`
   writeFileSync(file, apply(p.app ? shell : legible(readFileSync(file, "utf8")), p))
 }
 writeFileSync("dist/index.html", apply(shell, PAGES[0]))
