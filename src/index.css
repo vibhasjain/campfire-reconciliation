@@ -1,0 +1,388 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Campfire design tokens. Raw values live on :root as --c-*,
+   exposed to Tailwind as --color-* (bg-page, text-fg-3, border-line, …) and
+   mapped onto the shadcn variable names so src/components/ui picks them up.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --ink: 0.18 0.01 265;
+  --c-page: #F7F5F0;
+  --c-sidebar: #F7F5F0;
+  --c-surface: #FFFFFF;
+  --c-raised: #FFFFFF;
+
+  --c-fg: #0B1F16;
+  --c-fg-2: #1F3329;
+  --c-fg-3: #5C6B62;
+  --c-fg-4: #6E7B73;
+  --c-fg-hint: #94A098;
+  --c-fg-disabled: #B8C0BA;
+
+  --c-fill-subtle: #F9F8F6;
+  --c-fill-hover: #F3F1EB;
+  --c-fill-selected: #EBE8E0;
+
+  --c-line-subtle: #EEEBE5;
+  --c-line: #E5E2DC;
+  --c-line-input: #DAD6CE;
+  --c-line-strong: #C9C4BA;
+
+  --c-brand: #0A4733;
+  --c-brand-soft: #0A4733;
+  --c-brand-strong: #07392A;
+  --c-brand-tint: #E7EFEA;
+  --c-focus: rgb(10 71 51 / 0.35);
+
+  --c-ai: #B2EC96;
+  --c-ai-ink: #0A4733;
+  --c-ai-tint: rgb(178 236 150 / 0.18);
+  --c-ai-glow: rgb(178 236 150 / 0.45);
+  --c-flame: #F26B1D;
+  --c-table-head: #F9F8F6;
+  --c-segment: #F3F1EB;
+  --c-segment-active: #EBE8E0;
+
+  --c-danger: oklch(0.64 0.2 30);
+  --c-danger-strong: oklch(0.6 0.19 30);
+  --c-danger-tint: oklch(0.95 0.018 30);
+  --c-success: oklch(0.64 0.17 150);
+  --c-overlay: oklch(0 0 0 / 0.12);
+
+  /* accents: strong / tint (10%) / text */
+  --c-accent-red: oklch(0.64 0.2 30);
+  --c-accent-orange: oklch(0.79 0.16 65);
+  --c-accent-yellow: oklch(0.85 0.16 92);
+  --c-accent-lime: oklch(0.82 0.17 128);
+  --c-accent-green: oklch(0.68 0.16 150);
+  --c-accent-blue: oklch(0.66 0.14 252);
+  --c-accent-indigo: oklch(0.57 0.16 275);
+  --c-accent-purple: oklch(0.6 0.17 305);
+  --c-accent-copper: oklch(0.7 0.09 70);
+  --c-accent-gray: oklch(0.66 0.008 265);
+  --tint-a: 10%;
+  /* Accent tints share the same strength across the light theme. */
+  --c-accent-red-tint: color-mix(in oklch, var(--c-accent-red) var(--tint-a), transparent);
+  --c-accent-orange-tint: color-mix(in oklch, var(--c-accent-orange) var(--tint-a), transparent);
+  --c-accent-yellow-tint: color-mix(in oklch, var(--c-accent-yellow) var(--tint-a), transparent);
+  --c-accent-lime-tint: color-mix(in oklch, var(--c-accent-lime) var(--tint-a), transparent);
+  --c-accent-green-tint: color-mix(in oklch, var(--c-accent-green) var(--tint-a), transparent);
+  --c-accent-blue-tint: color-mix(in oklch, var(--c-accent-blue) var(--tint-a), transparent);
+  --c-accent-indigo-tint: color-mix(in oklch, var(--c-accent-indigo) var(--tint-a), transparent);
+  --c-accent-purple-tint: color-mix(in oklch, var(--c-accent-purple) var(--tint-a), transparent);
+  --c-accent-copper-tint: color-mix(in oklch, var(--c-accent-copper) var(--tint-a), transparent);
+  --c-accent-gray-tint: color-mix(in oklch, var(--c-accent-gray) var(--tint-a), transparent);
+  --c-accent-red-text: #6f2a1c;
+  --c-accent-orange-text: #7a4e1e;
+  --c-accent-yellow-text: #74622c;
+  --c-accent-lime-text: #5b6526;
+  --c-accent-green-text: #22552a;
+  --c-accent-blue-text: #24476e;
+  --c-accent-indigo-text: #2d3874;
+  --c-accent-purple-text: #4a3274;
+  --c-accent-copper-text: #5e552f;
+  --c-accent-gray-text: #45474d;
+
+  --shadow-ring: 0 0 0 var(--hair) var(--c-line);
+  --sh-menu: 0 0 0 var(--hair) var(--c-line), 0 6px 18px oklch(var(--ink) / 0.06);
+  --sh-dialog: 0 0 0 var(--hair) var(--c-line), 0 8px 24px oklch(var(--ink) / 0.06);
+  --sh-composer: 0 8px 24px oklch(var(--ink) / 0.06);
+  --sh-button: 0 1px 3px oklch(var(--ink) / 0.04);
+  --sh-button-lg: 0 2px 6px oklch(var(--ink) / 0.04);
+
+  /* shadcn names */
+  --background: var(--c-page);
+  --foreground: var(--c-fg);
+  --card: var(--c-raised);
+  --card-foreground: var(--c-fg);
+  --popover: var(--c-surface);
+  --popover-foreground: var(--c-fg);
+  --primary: var(--c-brand);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: var(--c-fill-hover);
+  --secondary-foreground: var(--c-fg);
+  --muted: var(--c-fill-hover);
+  --muted-foreground: var(--c-fg-4);
+  --accent: var(--c-fill-hover);
+  --accent-foreground: var(--c-fg);
+  --destructive: var(--c-danger);
+  --border: var(--c-line);
+  --input: var(--c-line-input);
+  --ring: var(--c-focus);
+  --chart-1: var(--c-brand);
+  --chart-2: var(--c-accent-green);
+  --chart-3: var(--c-accent-orange);
+  --chart-4: var(--c-accent-purple);
+  --chart-5: var(--c-accent-gray);
+  --radius: 0.5rem;
+  --sidebar: var(--c-sidebar);
+  --sidebar-foreground: var(--c-fg-2);
+  --sidebar-primary: var(--c-brand);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: var(--c-fill-hover);
+  --sidebar-accent-foreground: var(--c-fg);
+  --sidebar-border: var(--c-line);
+  --sidebar-ring: var(--c-focus);
+}
+
+
+@theme inline static {
+  --font-heading: var(--font-sans);
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-ink: oklch(var(--ink));
+  --color-page: var(--c-page);
+  --color-sidebar: var(--c-sidebar);
+  --color-surface: var(--c-surface);
+  --color-raised: var(--c-raised);
+  --color-fg: var(--c-fg);
+  --color-fg-2: var(--c-fg-2);
+  --color-fg-3: var(--c-fg-3);
+  --color-fg-4: var(--c-fg-4);
+  --color-fg-hint: var(--c-fg-hint);
+  --color-fg-disabled: var(--c-fg-disabled);
+  --color-fill-subtle: var(--c-fill-subtle);
+  --color-fill-hover: var(--c-fill-hover);
+  --color-fill-selected: var(--c-fill-selected);
+  --color-line-subtle: var(--c-line-subtle);
+  --color-line: var(--c-line);
+  --color-line-input: var(--c-line-input);
+  --color-line-strong: var(--c-line-strong);
+  --color-brand: var(--c-brand);
+  --color-brand-soft: var(--c-brand-soft);
+  --color-brand-strong: var(--c-brand-strong);
+  --color-brand-tint: var(--c-brand-tint);
+  --color-focus: var(--c-focus);
+  --color-ai: var(--c-ai);
+  --color-ai-ink: var(--c-ai-ink);
+  --color-ai-tint: var(--c-ai-tint);
+  --color-ai-glow: var(--c-ai-glow);
+  --color-flame: var(--c-flame);
+  --color-table-head: var(--c-table-head);
+  --color-segment: var(--c-segment);
+  --color-segment-active: var(--c-segment-active);
+  --color-danger: var(--c-danger);
+  --color-danger-strong: var(--c-danger-strong);
+  --color-danger-tint: var(--c-danger-tint);
+  --color-success: var(--c-success);
+  --color-overlay: var(--c-overlay);
+
+  --color-accent-red: var(--c-accent-red);
+  --color-accent-orange: var(--c-accent-orange);
+  --color-accent-yellow: var(--c-accent-yellow);
+  --color-accent-lime: var(--c-accent-lime);
+  --color-accent-green: var(--c-accent-green);
+  --color-accent-blue: var(--c-accent-blue);
+  --color-accent-indigo: var(--c-accent-indigo);
+  --color-accent-purple: var(--c-accent-purple);
+  --color-accent-copper: var(--c-accent-copper);
+  --color-accent-gray: var(--c-accent-gray);
+  --color-accent-red-tint: var(--c-accent-red-tint);
+  --color-accent-orange-tint: var(--c-accent-orange-tint);
+  --color-accent-yellow-tint: var(--c-accent-yellow-tint);
+  --color-accent-lime-tint: var(--c-accent-lime-tint);
+  --color-accent-green-tint: var(--c-accent-green-tint);
+  --color-accent-blue-tint: var(--c-accent-blue-tint);
+  --color-accent-indigo-tint: var(--c-accent-indigo-tint);
+  --color-accent-purple-tint: var(--c-accent-purple-tint);
+  --color-accent-copper-tint: var(--c-accent-copper-tint);
+  --color-accent-gray-tint: var(--c-accent-gray-tint);
+  --color-accent-red-text: var(--c-accent-red-text);
+  --color-accent-orange-text: var(--c-accent-orange-text);
+  --color-accent-yellow-text: var(--c-accent-yellow-text);
+  --color-accent-lime-text: var(--c-accent-lime-text);
+  --color-accent-green-text: var(--c-accent-green-text);
+  --color-accent-blue-text: var(--c-accent-blue-text);
+  --color-accent-indigo-text: var(--c-accent-indigo-text);
+  --color-accent-purple-text: var(--c-accent-purple-text);
+  --color-accent-copper-text: var(--c-accent-copper-text);
+  --color-accent-gray-text: var(--c-accent-gray-text);
+
+  /* shadcn */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --shadow-menu: var(--sh-menu);
+  --shadow-dialog: var(--sh-dialog);
+  --shadow-composer: var(--sh-composer);
+  --shadow-button: var(--sh-button);
+  --shadow-button-lg: var(--sh-button-lg);
+}
+
+@theme {
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 16px;
+
+  --text-xxs: 11px;
+  --text-xxs--line-height: 14px;
+  --text-xxs--letter-spacing: 0.0025em;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-xs--letter-spacing: 0.002em;
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+  --text-sm--letter-spacing: 0.00015em;
+  --text-base: 15px;
+  --text-base--line-height: 20px;
+  --text-base--letter-spacing: 0;
+  --text-lg: 17px;
+  --text-lg--line-height: 22px;
+  --text-xl: 21px;
+  --text-xl--line-height: 27px;
+  --text-xl--letter-spacing: -0.0075em;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 31px;
+  --text-2xl--letter-spacing: -0.0125em;
+  --text-3xl: 28px;
+  --text-3xl--line-height: 36px;
+  --text-3xl--letter-spacing: -0.015em;
+
+  --font-weight-normal: 425;
+  --font-weight-medium: 500;
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-word-in: word-in 150ms ease both;
+  --animate-spin-arc: spin-arc 1.5s linear infinite;
+  --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes shimmer {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+  }
+  @keyframes word-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes spin-arc {
+    to { transform: rotate(360deg); }
+  }
+}
+
+/* Hairline: 0.5px on retina, 1px at DPR1 (Chrome floors sub-pixel borders to 0 there). */
+:root {
+  --hair: 1px;
+}
+@media (min-resolution: 2dppx) {
+  :root {
+    --hair: 0.5px;
+  }
+}
+@utility border-hair {
+  border-width: var(--hair);
+}
+@utility border-b-hair {
+  border-bottom-width: var(--hair);
+}
+@utility border-t-hair {
+  border-top-width: var(--hair);
+}
+@utility border-r-hair {
+  border-right-width: var(--hair);
+}
+@utility border-l-hair {
+  border-left-width: var(--hair);
+}
+/* text-xs at weight 500 gets slightly wider tracking */
+@utility text-xs-medium {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+/* Inter at weight 500 tracks slightly wider (shell.md type scale); explicit tracking-* still wins. */
+@layer utilities {
+  .text-sm.font-medium:not([class*="tracking-"]) {
+    letter-spacing: 0.0025em;
+  }
+  .text-xs.font-medium:not([class*="tracking-"]) {
+    letter-spacing: 0.005em;
+  }
+}
+/* shimmering status phrase (agent) */
+@utility text-shimmer {
+  background: linear-gradient(90deg, var(--c-fg-4) 0%, var(--c-fg-4) 40%, oklch(var(--ink) / 0.2) 50%, var(--c-fg-4) 60%, var(--c-fg-4) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: var(--animate-shimmer);
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+}
+
+@layer base {
+  /* no pinch or double-tap zoom anywhere (owner requirement); panning still works */
+  html,
+  body {
+    touch-action: pan-x pan-y;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    color-scheme: light;
+    @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-page text-sm text-fg;
+    font-weight: 425;
+  }
+  body td,
+  body th {
+    font-variant-numeric: tabular-nums;
+  }
+  :root {
+    caret-color: var(--c-brand);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: default;
+  }
+}
