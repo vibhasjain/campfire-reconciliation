@@ -37,6 +37,12 @@ const settle = async () => {
   }
 };
 const visible = (sel) => page.locator(sel).filter({ visible: true }).first();
+// Open an item the way Maya would: click its row if the version shows one, else select it.
+const openItem = async (id) => {
+  const row = visible('[data-item-id="' + id + '"]');
+  if (await row.count()) await click(row); else await select(id);
+  await page.waitForTimeout(250);
+};
 const shot = async (name) => saveScreenshot(await page.screenshot(), "cf-flow-v${v}-${flow}-${width}-" + name + ".png");
 const finish = async (ok, extra = {}) => {
   await settle();
@@ -84,8 +90,7 @@ await finish(true);
 `,
   // Thread: "none of these match" on Notion → Ember surfaces NTN-88213 → accept it in the thread.
   thread: `
-await select("r04");
-await page.waitForTimeout(150);
+await openItem("r04");
 await press("c");
 const box = visible('[contenteditable="true"]');
 await box.waitFor({ timeout: 3000 });
@@ -100,8 +105,7 @@ await finish((await itemStatus("r04")) !== "open", { r04: await itemStatus("r04"
 `,
   // Many-to-one: ⌘-click Cascade's deposit and 3 invoices, press M.
   many: `
-await select("r12");
-await page.waitForTimeout(200);
+await openItem("r12");
 const ids = await page.evaluate(() => { const i = window.__recon.store.getState().items.r12; return [...i.bankIds, ...i.bookIds] });
 let found = 0;
 for (const id of ids) {
@@ -132,8 +136,7 @@ await finish(afterAccept === "resolved" && afterUndo === "open" && final === "re
 `,
   // Agent edit then Revert: "book this as a bank fee" on r02, then Revert the change card.
   revert: `
-await select("r02");
-await page.waitForTimeout(150);
+await openItem("r02");
 await press("c");
 const box = visible('[contenteditable="true"]');
 await box.waitFor({ timeout: 3000 });
