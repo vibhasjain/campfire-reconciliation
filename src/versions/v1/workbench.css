@@ -1,0 +1,205 @@
+.wb-page {
+  min-width: 0;
+}
+.wb-page button,
+.wb-detail button {
+  min-height: 36px;
+}
+.wb-page kbd,
+.wb-detail kbd {
+  display: none;
+}
+.wb-page button:is(:hover, :focus-visible) kbd,
+.wb-detail button:is(:hover, :focus-visible) kbd {
+  display: inline-flex;
+}
+.wb-table tr {
+  height: 44px;
+}
+.wb-table td {
+  height: 44px;
+}
+.wb-group-start {
+  position: relative;
+}
+.wb-group-start td {
+  padding-top: 49px;
+}
+.wb-group-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: var(--c-page);
+  border-bottom: var(--hair) solid var(--c-line);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--c-fg-3);
+}
+.wb-group-label span {
+  font-weight: 425;
+  color: var(--c-fg-4);
+}
+.wb-unreconcile {
+  opacity: 0;
+  background: var(--c-surface);
+}
+.wb-table tr:is(:hover, :focus-within) .wb-unreconcile {
+  opacity: 1;
+}
+.wb-detail [data-line-id] {
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  min-height: 40px;
+}
+.wb-detail [data-line-id] time,
+.wb-detail [data-line-id] .text-xxs {
+  display: none;
+}
+.wb-detail [data-suggestion-id] {
+  box-shadow: none;
+  background: var(--c-ai-tint);
+}
+.wb-detail [data-suggestion-id] table {
+  display: none;
+}
+.wb-detail [data-suggestion-id] div:has(> table) {
+  display: none;
+}
+.wb-detail [data-suggestion-id] [data-slot="collapsible-trigger"] {
+  font-size: 0;
+}
+.wb-detail [data-suggestion-id] [data-slot="collapsible-trigger"]::before {
+  content: "Why";
+  font-size: 12px;
+}
+.wb-detail [data-suggestion-id] .flex.flex-wrap.gap-1\.5 > :not(:first-child) {
+  display: none;
+}
+.wb-detail [aria-label="Choose suggestion"] {
+  display: none;
+}
+.wb-detail [class*="text-[11px]"],
+.wb-detail [class*="text-[10px]"] {
+  font-size: 12px;
+}
+.wb-thread > div:first-child:has(> .min-h-28) {
+  display: none;
+}
+.wb-thread > div:first-child {
+  max-height: 360px;
+}
+.wb-done [data-testid="done"] > div {
+  display: none;
+}
+body:has(.wb-page) [data-testid="toast"]:not(:last-child) {
+  display: none;
+}
+[data-slot="half-sheet"]:has(.wb-detail) {
+  width: 480px !important;
+}
+@container workspace-content (max-width: 760px) {
+  .wb-header {
+    align-items: flex-start;
+  }
+  .wb-table .wb-date {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 0;
+  }
+  .wb-table .wb-pin {
+    display: none;
+  }
+  .wb-table .wb-suggestion {
+    width: 40px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .wb-table .wb-action-label,
+  .wb-table th.wb-suggestion {
+    font-size: 0;
+  }
+  .wb-table col.wb-date {
+    width: 0;
+  }
+  .wb-table col.wb-suggestion {
+    width: 40px;
+  }
+  .wb-table col.wb-pin {
+    display: none;
+  }
+  .wb-table td,
+  .wb-table th {
+    font-size: 12px;
+  }
+  .wb-table td.wb-date {
+    font-size: 0;
+  }
+}
+@media (max-width: 639px) {
+  .wb-page {
+    padding: 20px 12px;
+  }
+  .wb-header h1 {
+    font-size: 19px;
+  }
+  .wb-header [role="tablist"] {
+    width: 100%;
+  }
+  .wb-header [role="tab"] {
+    flex: 1;
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+  .wb-table col:nth-child(3) {
+    width: 106px;
+  }
+  .wb-table td,
+  .wb-table th {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .wb-balance [role="progressbar"] {
+    width: 40px;
+  }
+  .wb-selection {
+    gap: 8px;
+    bottom: 12px;
+    padding: 8px;
+  }
+  [data-slot="half-sheet"]:has(.wb-detail) {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    width: 100% !important;
+    padding: 0;
+    background: var(--c-page);
+  }
+  [data-slot="half-sheet"]:has(.wb-detail) > div {
+    border-radius: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wb-page *,
+  .wb-detail * {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+}
+/* Keep the latest undoable change visible when an approval notice follows it. */
+body:has(.wb-page)
+  div:has(> [data-testid="toast"] button)
+  > [data-testid="toast"] {
+  display: none;
+}
+body:has(.wb-page)
+  div:has(> [data-testid="toast"] button)
+  > [data-testid="toast"]:has(button):not(
+    :has(~ [data-testid="toast"] button)
+  ) {
+  display: flex;
+}

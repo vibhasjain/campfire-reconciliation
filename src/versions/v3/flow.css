@@ -1,0 +1,275 @@
+.flow {
+  min-width: 0;
+  width: 100%;
+  padding-bottom: 40px;
+}
+.flow button {
+  min-height: 36px;
+}
+.flow-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 28px;
+}
+.flow-navigation {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.flow-rail {
+  display: flex;
+  overflow-x: auto;
+  min-width: 0;
+}
+.flow-rail button {
+  width: 26px;
+  flex: 0 0 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+}
+.flow-dot {
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 50%;
+  transition: background 180ms;
+}
+.flow-dot.resolved {
+  background: var(--c-brand);
+  border-color: var(--c-brand);
+}
+.flow-dot.current {
+  outline: 1px solid var(--c-brand);
+  outline-offset: 4px;
+}
+.flow-dot.awaiting_approval {
+  border-color: var(--c-accent-orange);
+  outline: 1px solid var(--c-accent-orange);
+  outline-offset: 3px;
+}
+.flow-balance {
+  flex-shrink: 0;
+}
+.flow-balance [role="progressbar"] {
+  display: none;
+}
+.flow-history {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 28px;
+}
+.flow-history button {
+  min-height: 36px;
+}
+.flow-stage {
+  max-width: 720px;
+  margin: 52px auto 0;
+}
+.flow-card {
+  overflow: hidden;
+  transition: background 200ms;
+}
+.flow-card-header {
+  padding: 30px 32px 26px;
+}
+.flow-amount {
+  white-space: nowrap;
+}
+.flow-lines {
+  padding: 0 24px 24px;
+}
+.flow-line {
+  grid-template-columns: 64px minmax(0, 1fr) auto !important;
+  min-height: 44px !important;
+  background: transparent !important;
+}
+.flow-line[data-selected="true"] {
+  background: var(--c-brand-tint) !important;
+}
+.flow-line time,
+.flow-line > span:nth-of-type(2) > span:last-child {
+  display: none;
+}
+.flow-same-amount > span:last-child {
+  display: none;
+}
+.flow-suggestion {
+  padding: 0 28px 20px;
+}
+.flow-suggestion section {
+  background: var(--c-ai-tint);
+  border: 0;
+  box-shadow: none;
+}
+.flow-suggestion section > div > div:last-child {
+  display: none;
+}
+.flow-suggestion section button {
+  min-height: 36px;
+  font-size: 12px;
+}
+.flow-suggestion section span {
+  font-size: 12px;
+}
+.flow-suggestion section [data-slot="collapsible-trigger"] {
+  font-size: 0;
+}
+.flow-suggestion section [data-slot="collapsible-trigger"]::before {
+  content: "Why";
+  font-size: 12px;
+}
+.flow-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 32px 28px;
+}
+.flow-accept {
+  min-width: 160px;
+  min-height: 44px !important;
+}
+.flow-thread {
+  margin-top: 12px;
+  overflow: hidden;
+}
+.flow-thread [data-thread-item] > div:first-child {
+  max-height: 210px;
+}
+.flow-composer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  font-size: 12px;
+  color: var(--c-fg-3);
+  text-align: left;
+}
+.flow-flash {
+  background: var(--c-ai-tint);
+}
+.flow-list-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 36px;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-bottom: var(--hair) solid var(--c-line-subtle);
+}
+.flow-list-row:hover {
+  background: var(--c-fill-subtle);
+}
+.flow-done [data-testid="done"] {
+  padding: 32px;
+}
+.flow-done [data-testid="done"] h2 {
+  font-size: 0;
+}
+.flow-done [data-testid="done"] h2::after {
+  content: "Reconciled";
+  font-size: 21px;
+}
+.flow-done [data-testid="done"] h2 + div {
+  display: none;
+}
+.flow button:focus-visible,
+.flow-list-row:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+@media (max-width: 1100px) {
+  .flow-strip {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .flow-stage {
+    margin: 32px auto 0;
+    padding: 0 16px;
+  }
+}
+@media (max-width: 639px) {
+  .flow {
+    padding-bottom: 100px;
+  }
+  .flow-strip {
+    padding: 8px 16px;
+  }
+  .flow-navigation {
+    width: 100%;
+  }
+  .flow-rail {
+    flex: 1;
+  }
+  .flow-rail button {
+    flex-basis: 36px;
+  }
+  .flow-balance {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .flow-history {
+    padding: 0 16px;
+  }
+  .flow-stage {
+    margin-top: 16px;
+    padding: 0 12px;
+  }
+  .flow-card-header {
+    padding: 24px 20px;
+  }
+  .flow-card-header > div {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .flow-card-header h1 {
+    font-size: 21px;
+  }
+  .flow-amount {
+    align-self: flex-end;
+  }
+  .flow-lines {
+    padding: 0 12px 16px;
+  }
+  .flow-suggestion {
+    padding: 0 12px 12px;
+  }
+  .flow-actions {
+    padding: 0 16px 12px;
+  }
+  .flow-accept {
+    position: fixed;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: calc(100% - 24px);
+    z-index: 30;
+    box-shadow: 0 0 0 12px var(--c-page);
+  }
+  .flow-stage > div {
+    transform: none !important;
+  }
+  .flow-done [data-testid="done"] {
+    gap: 24px;
+    padding: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow * {
+    transition: none !important;
+  }
+}
+.flow-overview button,
+.flow-history-sheet button {
+  min-height: 36px;
+}
+.flow-thread:has([data-thread-item] > div:first-child > div:only-child > svg)
+  [data-thread-item]
+  > div:first-child {
+  display: none;
+}

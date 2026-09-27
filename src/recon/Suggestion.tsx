@@ -1,4 +1,5 @@
-import { Check, ChevronDown, LockKeyhole, Sparkles, X } from "lucide-react"
+import { Check, ChevronDown, LockKeyhole, X } from "lucide-react"
+import { AiMark } from "./AiMark"
 import { Button } from "@/components/ui/button"
 import {
   Collapsible,
@@ -60,9 +61,7 @@ export function Suggestion({
     >
       <div className={cn("flex flex-col gap-2.5", compact ? "p-3" : "p-4")}>
         <div className="flex items-start gap-2">
-          <span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-brand text-ai">
-            <Sparkles className="size-4" strokeWidth={1.5} />
-          </span>
+          <AiMark className="mt-0.5" />
           <h3 className="min-w-0 flex-1 text-xs leading-5 font-medium text-fg">
             {suggestion.title}
           </h3>

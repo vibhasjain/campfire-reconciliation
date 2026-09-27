@@ -1,4 +1,5 @@
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { AiMark } from "./AiMark"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Suggestion as ReconSuggestion } from "./data"
@@ -37,7 +38,7 @@ export function SuggestionCarousel({
   if (!suggestion)
     return (
       <div className="flex items-center gap-2 rounded-lg border-hair border-line px-3 py-4 text-xs text-fg-3">
-        <Sparkles className="size-4 text-brand" />
+        <AiMark />
         No suggestions left. Ask Ember to look again.
       </div>
     )

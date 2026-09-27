@@ -73,3 +73,5 @@ acceptLabel?, rejectLabel?})`: factors, evidence and entry preview; default acti
 - Sandbox builds: export `CAMPFIRE_OUT_DIR=dist` for build and preview; deployment
   still defaults to `../campfire`. `npm run build`, `npm run lint`.
 - Preview: `npm run preview -- --port 4802 --strictPort`; `/campfire1|2|3?fast`.
+
+- Toasts sit above `var(--toast-offset)` (default 0). A version with a bottom-pinned bar sets it (e.g. on `document.body.style`) so toasts never cover its controls.
