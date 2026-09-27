@@ -7,7 +7,7 @@ on reload. Interrupted streams finish; interrupted batch approvals are dismissed
 and Daniel sign-offs resume. Storage errors fall back to fixtures. `?fast` never
 reads or writes demo storage. “Reset demo” in ⌘K and “Start over” after submission
 clear the current version snapshot and reload.
-`src/versions/ReconScreen.tsx` is the reference composition for all three lanes.
+The three versions in `src/versions/v1|v2|v3` are the reference compositions.
 
 ## State
 
