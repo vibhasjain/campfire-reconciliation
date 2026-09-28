@@ -2,7 +2,6 @@ import { restorePageFocus } from "@/recon/focus"
 import { useCallback, useState } from "react"
 import {
   Building2,
-  CheckCheck,
   FileClock,
   FileText,
   Landmark,
@@ -34,7 +33,7 @@ const documentKinds = {
   invoice: { label: "Invoice", icon: FileText },
   receipt: { label: "Receipt", icon: ReceiptText },
   remittance: { label: "Payment remittance", icon: ReceiptText },
-  check: { label: "Check copy", icon: CheckCheck },
+  check: { label: "Check copy", icon: FileText },
   audit: { label: "Audit record", icon: FileClock },
   feed: { label: "Bank feed record", icon: Radio },
   bank_detail: { label: "Bank advice", icon: Landmark },

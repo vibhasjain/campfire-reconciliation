@@ -45,15 +45,18 @@ export function Suggestion({
       )}
     >
       <div className={cn("flex flex-col gap-2.5", compact ? "p-3" : "p-4")}>
+        {/* Mark and tag sit in boxes one title line tall, so all three share the first line's center. */}
         <div className="flex items-start gap-2">
-          <AiMark className="mt-0.5" />
+          <span className="flex h-5 shrink-0 items-center">
+            <AiMark />
+          </span>
           <h3 className="min-w-0 flex-1 text-xs leading-5 font-medium text-fg">
             {suggestion.title}
           </h3>
           <span
             data-confidence
             className={cn(
-              "mt-0.5 shrink-0 rounded-md px-1.5 py-0.5 text-[11px] leading-4 font-medium tabular-nums",
+              "inline-flex h-5 shrink-0 items-center rounded-md px-1.5 text-[11px] font-medium tabular-nums",
               suggestion.confidence >= 90
                 ? "bg-brand-tint text-brand"
                 : suggestion.confidence >= 70
