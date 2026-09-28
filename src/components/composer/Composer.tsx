@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 // Campfire composer: streaming chat, local attachments, and generic @ mentions.
 import { useEffect, useMemo, useRef, useState } from "react"
 import { EditorContent, useEditorState, type JSONContent } from "@tiptap/react"
@@ -187,7 +188,7 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
           <span className="px-1 text-xxs text-fg-hint">@ to mention Ember or a teammate</span>
         </div>
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon-sm" className="size-7 text-fg-3 hover:text-fg-2" title="Upload file" onClick={() => fileRef.current?.click()}>
+          <Button variant="ghost" size="icon-sm" className="size-7 text-fg-3 hover:text-fg-2" tooltip="Attach file" onClick={() => fileRef.current?.click()}>
             <Paperclip />
           </Button>
           <input
@@ -203,24 +204,28 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
             }}
           />
           {busy && chatId ? (
-            <button
-              type="button"
-              aria-label="Stop"
-              onClick={() => stop(chatId)}
-              className="flex h-7 w-10 items-center justify-center rounded-md bg-fill-hover text-fg hover:bg-fill-selected"
-            >
-              <Square className="size-2.5 fill-current" />
-            </button>
+            <ActionTooltip label="Stop">
+              <button
+                type="button"
+                aria-label="Stop"
+                onClick={() => stop(chatId)}
+                className="flex h-7 w-10 items-center justify-center rounded-md bg-fill-hover text-fg hover:bg-fill-selected"
+              >
+                <Square className="size-2.5 fill-current" />
+              </button>
+            </ActionTooltip>
           ) : (
-            <button
-              type="button"
-              aria-label="Send"
-              disabled={!canSend}
-              onClick={submit}
-              className="flex h-7 w-10 items-center justify-center rounded-md bg-brand-soft text-white hover:bg-brand disabled:bg-fill-hover disabled:text-fg-disabled [&_svg]:size-4"
-            >
-              <CornerDownLeft />
-            </button>
+            <ActionTooltip label="Send" shortcut="Enter">
+              <button
+                type="button"
+                aria-label="Send"
+                disabled={!canSend}
+                onClick={submit}
+                className="flex h-7 w-10 items-center justify-center rounded-md bg-brand-soft text-white hover:bg-brand disabled:bg-fill-hover disabled:text-fg-disabled [&_svg]:size-4"
+              >
+                <CornerDownLeft />
+              </button>
+            </ActionTooltip>
           )}
         </div>
       </div>
@@ -236,9 +241,11 @@ function AttachmentChip({ a, onRemove }: { a: Attachment; onRemove: () => void }
       ) : (
         <>
           <FileText className="size-3 shrink-0 text-fg-3 group-hover/att:hidden" />
-          <button type="button" aria-label={`Remove ${a.name}`} onClick={onRemove} className="hidden text-fg-3 group-hover/att:block hover:text-fg">
-            <X className="size-3" />
-          </button>
+          <ActionTooltip label={`Remove ${a.name}`}>
+            <button type="button" aria-label={`Remove ${a.name}`} onClick={onRemove} className="hidden text-fg-3 group-hover/att:block hover:text-fg">
+              <X className="size-3" />
+            </button>
+          </ActionTooltip>
         </>
       )}
       <span className="truncate">{a.name}</span>

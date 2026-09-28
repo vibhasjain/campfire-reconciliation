@@ -2,8 +2,10 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Slot } from "radix-ui"
+import { ActionTooltip } from "./tooltip"
 
-const ghostStyle = "text-fg-2 hover:bg-fill-hover hover:text-fg aria-expanded:bg-fill-selected aria-expanded:text-fg active:bg-fill-selected"
+const ghostStyle =
+  "text-fg-2 hover:bg-fill-hover hover:text-fg aria-expanded:bg-fill-selected aria-expanded:text-fg active:bg-fill-selected"
 
 // spec §4.4 — dense 24px buttons, instant hovers (no transition), hairline borders.
 const buttonVariants = cva(
@@ -17,29 +19,30 @@ const buttonVariants = cva(
         // Content toggles align their text and background with the container edge.
         "ghost-inline": `${ghostStyle} border-0`,
         selected: "border-line bg-fill-hover text-fg",
-        brand: "bg-brand-soft text-white hover:bg-brand disabled:bg-brand-soft/50 disabled:text-white/80",
+        brand:
+          "bg-brand-soft text-white hover:bg-brand disabled:bg-brand-soft/50 disabled:text-white/80",
         destructive: "bg-danger text-white hover:bg-danger-strong",
-        "destructive-soft": "bg-danger-tint text-danger-strong hover:bg-[color-mix(in_oklch,var(--c-danger-tint),var(--c-danger)_12%)]",
+        "destructive-soft":
+          "bg-danger-tint text-danger-strong hover:bg-[color-mix(in_oklch,var(--c-danger-tint),var(--c-danger)_12%)]",
         secondary: "bg-fill-hover text-fg hover:bg-fill-selected",
         link: "text-brand-strong underline-offset-4 hover:underline",
         // shadcn "default" kept for generated components; renders as brand
         default: "bg-brand-soft text-white hover:bg-brand",
       },
       size: {
-        xs: "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&>svg]:mx-0.5 [&_svg:not([class*='size-'])]:size-4",
-        sm: "h-7 gap-1.5 px-2 text-xs-medium [&>svg]:mx-0.5 [&_svg:not([class*='size-'])]:size-4",
-        md: "h-8 gap-1.5 px-2.5 text-sm [&>svg]:mx-0.5 [&_svg:not([class*='size-'])]:size-4",
+        xs: "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
+        sm: "h-7 gap-1.5 px-2 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
+        md: "h-8 gap-1.5 px-2.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
         lg: "h-11 gap-2 px-3 text-base [&_svg:not([class*='size-'])]:size-5",
         icon: "size-6 [&_svg:not([class*='size-'])]:size-4",
         "icon-xs": "size-5 rounded-sm [&_svg:not([class*='size-'])]:size-3.5",
         "icon-sm": "size-7 [&_svg:not([class*='size-'])]:size-4",
         "icon-lg": "size-8 [&_svg:not([class*='size-'])]:size-4",
-        default: "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&>svg]:mx-0.5 [&_svg:not([class*='size-'])]:size-4",
+        default:
+          "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
       },
     },
-    compoundVariants: [
-      { variant: "ghost-inline", className: "px-0" },
-    ],
+    compoundVariants: [{ variant: "ghost-inline", className: "px-0" }],
     defaultVariants: {
       variant: "outline",
       size: "xs",
@@ -52,21 +55,43 @@ function Button({
   variant = "outline",
   size = "xs",
   asChild = false,
+  tooltip,
+  shortcut,
+  title,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    /** Icon buttons use their accessible label by default; false opts out. */
+    tooltip?: React.ReactNode | false
+    shortcut?: string
   }) {
   const Comp = asChild ? Slot.Root : "button"
 
-  return (
+  const label =
+    tooltip === false
+      ? undefined
+      : (tooltip ??
+        title ??
+        (size?.startsWith("icon") ? props["aria-label"] : undefined))
+  const button = (
     <Comp
       data-slot="button"
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
+      aria-label={
+        props["aria-label"] ?? (typeof label === "string" ? label : undefined)
+      }
     />
+  )
+  return label ? (
+    <ActionTooltip label={label} shortcut={shortcut}>
+      {button}
+    </ActionTooltip>
+  ) : (
+    button
   )
 }
 

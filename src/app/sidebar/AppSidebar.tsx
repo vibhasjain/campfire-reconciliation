@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 import { memo } from "react"
 import {
   Banknote,
@@ -29,34 +30,37 @@ export const AppSidebar = memo(function AppSidebar() {
     <SidebarFrame resizable={desktop}>
       <div className="flex h-[66px] shrink-0 items-center gap-2.5 px-5">
         {/* The one live control in the inert shell: home to version control. */}
-        <a
-          href="/version-control"
-          title="Version control"
-          className="rounded outline-none focus-visible:ring-2 focus-visible:ring-focus"
-        >
-          <img
-            src="/campfire-logo.svg"
-            alt="Campfire · back to version control"
-            width={128}
-            height={26}
-            className="h-[26px] w-auto"
-          />
-        </a>
+        <ActionTooltip label="Open version control">
+          <a
+            href="/version-control"
+            className="rounded outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <img
+              src="/campfire-logo.svg"
+              alt="Campfire · back to version control"
+              width={128}
+              height={26}
+              className="h-[26px] w-auto"
+            />
+          </a>
+        </ActionTooltip>
         <span className="flex-1" />
-        <button
-          type="button"
-          aria-label={desktop ? "Collapse sidebar" : "Close sidebar"}
-          onClick={() =>
-            ui.set(
-              desktop
-                ? { sidebarCollapsed: true }
-                : { mobileSidebarOpen: false }
-            )
-          }
-          className="flex size-6 items-center justify-center rounded text-fg-4 outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
-        >
-          <ChevronsLeft className="size-4" />
-        </button>
+        <ActionTooltip label={desktop ? "Collapse sidebar" : "Close sidebar"}>
+          <button
+            type="button"
+            aria-label={desktop ? "Collapse sidebar" : "Close sidebar"}
+            onClick={() =>
+              ui.set(
+                desktop
+                  ? { sidebarCollapsed: true }
+                  : { mobileSidebarOpen: false }
+              )
+            }
+            className="flex size-6 items-center justify-center rounded text-fg-4 outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <ChevronsLeft className="size-4" />
+          </button>
+        </ActionTooltip>
       </div>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pt-2">
         <div className="flex flex-col gap-1">

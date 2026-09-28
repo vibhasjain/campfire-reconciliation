@@ -9,7 +9,7 @@ import {
 import { Kbd } from "@/components/ui/kbd"
 import { cn } from "@/lib/utils"
 import { acceptSuggestion, rejectSuggestion } from "./actions"
-import type { Suggestion as ReconSuggestion } from "./data"
+import { suggestionReasons, type Suggestion as ReconSuggestion } from "./data"
 import { EvidenceChip } from "./Evidence"
 import type { ReactNode } from "react"
 import { fmtMoney } from "./store"
@@ -26,14 +26,6 @@ export interface SuggestionProps {
   footer?: ReactNode
   rejectLabel?: string
 }
-
-// ponytail: fixture calibration by band; real numbers come from accept/reject history per entity.
-const calibration = (confidence: number) =>
-  confidence >= 90
-    ? "Last quarter, 97% of suggestions scored 90%+ were accepted."
-    : confidence >= 70
-      ? "Last quarter, 81% of suggestions scored 70–89% were accepted."
-      : "Last quarter, 44% of suggestions scored under 70% were accepted."
 
 export function Suggestion({
   suggestion,
@@ -56,9 +48,6 @@ export function Suggestion({
     (suggestion.inTransit ?? 0) -
     (suggestion.outstanding ?? 0) -
     suggestion.bookDelta
-  const formula = suggestion.factors
-    .map((factor) => `${factor.weight.toFixed(2)}·${factor.key}`)
-    .join(" + ")
   return (
     <section
       data-suggestion-id={suggestion.id}
@@ -76,19 +65,6 @@ export function Suggestion({
           <h3 className="min-w-0 flex-1 text-xs leading-5 font-medium text-fg">
             {suggestion.title}
           </h3>
-          <span
-            className={cn(
-              "mt-0.5 shrink-0 rounded-md px-1.5 py-0.5 text-[11px] leading-4 font-medium tabular-nums",
-              suggestion.confidence >= 90
-                ? "bg-brand-tint text-brand"
-                : suggestion.confidence >= 70
-                  ? "bg-fill-hover text-fg-3"
-                  : "bg-fill-subtle text-accent-orange-text"
-            )}
-            aria-label={`${suggestion.confidence}% confidence`}
-          >
-            {suggestion.confidence}%
-          </span>
         </div>
         <p
           className="text-xs leading-5 break-words text-fg-3"
@@ -176,12 +152,13 @@ export function Suggestion({
           <CollapsibleTrigger asChild>
             <Button
               type="button"
-              variant="ghost-inline"
+              variant="outline"
               size="xs"
-              className="gap-1 text-[11px] font-normal text-fg-3"
+              className="gap-1.5 border-ai/20 bg-ai-tint text-xs font-medium text-ai-ink shadow-[0_0_3px_var(--c-ai-glow)] hover:bg-ai-tint hover:text-ai-ink aria-expanded:bg-ai-tint aria-expanded:text-ai-ink"
               onClick={(event) => event.stopPropagation()}
             >
-              Why {suggestion.confidence}%?
+              <AiMark />
+              {suggestion.confidence}% confidence
               <ChevronDown
                 className={cn(
                   "size-4 transition-transform",
@@ -191,40 +168,11 @@ export function Suggestion({
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className="mt-2 rounded-md border-hair border-line-subtle bg-fill-subtle p-2.5">
-              {suggestion.factors.map((factor) => (
-                <div
-                  key={factor.key}
-                  className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1 border-b-hair border-line-subtle py-2 first:pt-0"
-                >
-                  <div className="w-full min-w-0">
-                    <div className="text-[11px] leading-4 text-fg-3">
-                      <span className="font-medium text-fg-2">
-                        {factor.label}
-                      </span>{" "}
-                      · {factor.detail}
-                    </div>
-                    <div
-                      aria-hidden="true"
-                      className="mt-1.5 h-0.5 rounded-full bg-line-subtle"
-                    >
-                      <div
-                        className="h-full rounded-full bg-brand/40"
-                        style={{
-                          width: `${factor.weight * factor.score * 100}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
+            <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-5 text-fg-2">
+              {suggestionReasons(suggestion).map((reason) => (
+                <li key={reason}>{reason}</li>
               ))}
-              <div className="mt-2 text-xs leading-4 text-fg-3">
-                {calibration(suggestion.confidence)}
-              </div>
-              <div className="mt-1 text-[10px] leading-4 text-fg-4">
-                {formula} = {suggestion.confidence}%
-              </div>
-            </div>
+            </ul>
           </CollapsibleContent>
         </Collapsible>
         {!compact && (

@@ -690,6 +690,10 @@ export function createReconStore(seed: ReconState = defaultSeed): ReconStore {
               : "match",
           title: `Manually matched ${item.title}`,
           reasoning: "Selected bank and book amounts agree exactly.",
+          reasons: [
+            `The selected bank and book lines total ${fmtMoney(sum(bankIds.map(id => state.bankLines[id])))} on each side.`,
+            "The preparer selected these lines to match.",
+          ],
           factors: [
             {
               key: "amount",
@@ -849,6 +853,10 @@ export function createReconStore(seed: ReconState = defaultSeed): ReconStore {
         action: "create_je",
         title: `Create entry to ${entry.account}`,
         reasoning: "Manual journal entry entered by the preparer.",
+        reasons: [
+          `The preparer entered ${fmtMoney(amount)} to ${entry.account}.`,
+          `The entry ${entry.amount > 0 ? "increases" : "decreases"} cash by ${fmtMoney(amount)}.`,
+        ],
         factors: [
           {
             key: "audit",

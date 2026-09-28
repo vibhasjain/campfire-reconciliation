@@ -3,22 +3,43 @@ import { cn } from "@/lib/utils"
 import { Tooltip as TooltipPrimitive } from "radix-ui"
 
 function TooltipProvider({
-  delayDuration = 700,
+  delayDuration = 0,
+  skipDelayDuration = 100,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
     <TooltipPrimitive.Provider
       data-slot="tooltip-provider"
       delayDuration={delayDuration}
+      skipDelayDuration={skipDelayDuration}
       {...props}
     />
   )
 }
 
+const hoverQuery = "(hover: hover)"
+const subscribeHover = (notify: () => void) => {
+  const media = window.matchMedia(hoverQuery)
+  media.addEventListener("change", notify)
+  return () => media.removeEventListener("change", notify)
+}
+const canHover = () => window.matchMedia(hoverQuery).matches
+
 function Tooltip({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
+  const hover = React.useSyncExternalStore(
+    subscribeHover,
+    canHover,
+    () => false
+  )
+  return (
+    <TooltipPrimitive.Root
+      data-slot="tooltip"
+      {...props}
+      open={hover ? props.open : false}
+    />
+  )
 }
 
 function TooltipTrigger({
@@ -39,7 +60,7 @@ function TooltipContent({
         data-slot="tooltip-content"
         sideOffset={sideOffset}
         className={cn(
-          "z-50 inline-flex w-fit max-w-xs origin-(--radix-tooltip-content-transform-origin) items-center gap-1.5 rounded-md border-hair border-line bg-page px-1.5 py-1 text-xs text-fg-2 shadow-button-lg data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 **:data-[slot=kbd]:rounded-sm",
+          "z-50 inline-flex w-fit max-w-xs items-center gap-2 rounded-md border-hair border-line bg-surface px-2 py-1 text-xs text-fg-2 shadow-menu",
           className
         )}
         {...props}
@@ -51,3 +72,30 @@ function TooltipContent({
 }
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }
+
+/** Shared action hint. asChild keeps the original button/link and its ref intact. */
+function ActionTooltip({
+  children,
+  label,
+  shortcut,
+}: {
+  children: React.ReactElement
+  label: React.ReactNode
+  shortcut?: string
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent>
+        {label}
+        {shortcut && (
+          <kbd className="rounded-sm bg-fill-subtle px-1 font-sans text-[10px] text-fg-4">
+            {shortcut}
+          </kbd>
+        )}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+export { ActionTooltip }

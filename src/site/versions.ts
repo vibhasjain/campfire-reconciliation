@@ -29,7 +29,7 @@ export const VERSIONS: Version[] = [
     at: "2026-09-27T16:24:00-04:00",
     links: prototypes("1.5"),
     changes: [
-      "The why shows calibration: how often suggestions at that confidence were accepted.",
+      "Expand the confidence label to see the transaction facts behind each suggestion.",
       "The done state says “Balanced · ready to submit” until Maya submits to Daniel.",
       "Phones show one toast at a time, so it can't cover progress.",
     ],

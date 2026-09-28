@@ -1,6 +1,6 @@
 import type { ReconCandidateCard } from "@/recon/cards"
 import type { SendInput, RunCtx, Script } from "../types"
-import type { ActionRecord, Suggestion } from "@/recon/data"
+import { suggestionReasons, type ActionRecord, type Suggestion } from "@/recon/data"
 import type { Result } from "@/recon/store"
 import { fmtDate, fmtMoney, summarize } from "@/recon/store"
 import { recon, reconUi, itemAmount, queueItems } from "@/recon/useRecon"
@@ -243,14 +243,10 @@ async function tool(
       )
     )
 }
-function confidenceTable(suggestion: Suggestion): string {
-  return (
-    suggestion.factors
-      .map((factor) => `- **${factor.label}** · ${factor.detail}`)
-      .join("\n") +
-    `\n\n${suggestion.factors.map((factor) => `${factor.weight.toFixed(2)}·${factor.key}`).join(" + ")} = ${suggestion.confidence}%`
-  )
+function confidenceExplanation(suggestion: Suggestion): string {
+  return suggestionReasons(suggestion).map(reason => `- ${reason}`).join("\n")
 }
+
 function openItems() {
   return queueItems(recon.getState()).filter(
     (item) => item.status !== "resolved"
@@ -408,13 +404,8 @@ export const reconciliationScript: Script = {
         )
         return
       }
-      const weakest = [...suggestion.factors].sort(
-        (a, b) => a.score - b.score
-      )[0]
-      await tool(ctx, "Inspecting the confidence factors")
-      await ctx.say(
-        `${confidenceTable(suggestion)}\n\nStronger ${weakest.label.toLowerCase()} evidence would raise confidence.`
-      )
+      await tool(ctx, "Reading the supporting transactions")
+      await ctx.say(confidenceExplanation(suggestion))
       return
     }
     if (intent === "fee") {
@@ -535,7 +526,7 @@ export const reconciliationFallback: Script = {
     const awaiting =
       item.status === "awaiting_approval" ? "\n\nAwaiting Daniel." : ""
     await ctx.say(
-      `**${item.title}**\n\n${summarizeSide("bank")} · ${summarizeSide("book")}.${awaiting}\n\n${suggestion ? `Top suggestion: **${suggestion.title}** (${suggestion.confidence}%).` : "There are no visible suggestions."}\n\n- Search for another candidate.\n- Explain the confidence factors.\n- ${!item.bankIds.length && item.bookIds.length ? "Mark the check outstanding." : "Edit the description or date."}`
+      `**${item.title}**\n\n${summarizeSide("bank")} · ${summarizeSide("book")}.${awaiting}\n\n${suggestion ? `Top suggestion: **${suggestion.title}** (${suggestion.confidence}%).` : "There are no visible suggestions."}\n\n- Search for another candidate.\n- Explain this suggestion.\n- ${!item.bankIds.length && item.bookIds.length ? "Mark the check outstanding." : "Edit the description or date."}`
     )
   },
 }

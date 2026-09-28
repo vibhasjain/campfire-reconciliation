@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 // Question widget above the composer (agent §2.6): radio options with number hints, "Other" input, Skip / Submit.
 import { useEffect, useRef, useState } from "react"
 import { CornerDownLeft, X } from "lucide-react"
@@ -47,14 +48,16 @@ export function AskUserQuestion({ chatId, q }: { chatId: ID; q: Question }) {
     >
       <div className="flex items-start gap-2 pb-1">
         <span className="flex-1 text-sm font-medium text-fg">{q.title}</span>
-        <button
-          type="button"
-          aria-label="Dismiss questions"
-          onClick={() => answerQuestion(chatId, "skip")}
-          className="text-fg-3 hover:text-fg"
-        >
-          <X className="size-4" />
-        </button>
+        <ActionTooltip label="Dismiss questions">
+          <button
+            type="button"
+            aria-label="Dismiss questions"
+            onClick={() => answerQuestion(chatId, "skip")}
+            className="text-fg-3 hover:text-fg"
+          >
+            <X className="size-4" />
+          </button>
+        </ActionTooltip>
       </div>
       <div role="radiogroup" className="flex flex-col">
         {q.options.map((o, i) => (

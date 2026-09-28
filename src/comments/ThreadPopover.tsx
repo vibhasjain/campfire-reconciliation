@@ -23,7 +23,6 @@ import {
   useComments,
 } from "./store"
 import { ThreadView } from "./ThreadView"
-import "./thread-popover.css"
 
 export type ThreadPopoverProps = { itemId: string; children: ReactElement }
 export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
@@ -130,7 +129,7 @@ function ThreadCard({
         <Button
           variant="ghost"
           size="icon-sm"
-          title={resolved ? "Reopen thread" : "Resolve thread"}
+          tooltip={resolved ? "Reopen thread" : "Resolve thread"}
           aria-label={resolved ? "Reopen thread" : "Resolve thread"}
           onClick={() => setThreadResolved(itemId, !resolved)}
         >
@@ -143,7 +142,7 @@ function ThreadCard({
         <Button
           variant="ghost"
           size="icon-sm"
-          title="Close thread"
+          tooltip="Close thread"
           aria-label="Close thread"
           onClick={onClose}
         >

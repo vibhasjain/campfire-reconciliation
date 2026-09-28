@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { AiMark } from "./AiMark"
 import { Button } from "@/components/ui/button"
@@ -91,24 +92,26 @@ export function SuggestionCarousel({
           </div>
           <div className="flex items-center" aria-label="Choose suggestion">
             {suggestions.map((candidate, candidateIndex) => (
-              <button
-                key={candidate.id}
-                type="button"
-                className="flex size-6 items-center justify-center rounded-md outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
-                aria-label={`Suggestion ${candidateIndex + 1}: ${candidate.title}`}
-                aria-pressed={candidateIndex === index}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  select(candidateIndex)
-                }}
-              >
-                <span
-                  className={cn(
-                    "size-1.5 rounded-full",
-                    candidateIndex === index ? "bg-brand" : "bg-line-strong"
-                  )}
-                />
-              </button>
+              <ActionTooltip label={`Suggestion ${candidateIndex + 1}: ${candidate.title}`}>
+                <button
+                  key={candidate.id}
+                  type="button"
+                  className="flex size-6 items-center justify-center rounded-md outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
+                  aria-label={`Suggestion ${candidateIndex + 1}: ${candidate.title}`}
+                  aria-pressed={candidateIndex === index}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    select(candidateIndex)
+                  }}
+                >
+                  <span
+                    className={cn(
+                      "size-1.5 rounded-full",
+                      candidateIndex === index ? "bg-brand" : "bg-line-strong"
+                    )}
+                  />
+                </button>
+              </ActionTooltip>
             ))}
           </div>
         </div>

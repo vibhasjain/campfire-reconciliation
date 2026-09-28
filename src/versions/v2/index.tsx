@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import {
@@ -61,7 +62,6 @@ function LedgerLine({
       data-line-id={id}
       data-selected={selected || undefined}
       aria-pressed={selected}
-      title={line.description}
       onClick={(event) => {
         onOpen()
         reconUi.set((s) => ({
@@ -233,7 +233,7 @@ function Group({
               className="paired-unreconcile"
               data-action="unreconcile"
               aria-label={`Unreconcile ${item.title}`}
-              title="Unreconcile (U)"
+              tooltip="Unreconcile" shortcut="U"
               onClick={() => {
                 selectItem(item.id)
                 unreconcileItem(item.id)
@@ -260,6 +260,7 @@ function Group({
               {item.suggestions.length > 1 && (
                 <div className="paired-alternatives">
                   <Button
+                    tooltip="Previous suggestion"
                     variant="ghost"
                     aria-label="Previous suggestion"
                     onClick={() => cycleSuggestion(item.id, -1)}
@@ -267,6 +268,7 @@ function Group({
                     <ChevronLeft />
                   </Button>
                   <Button
+                    tooltip="Next suggestion"
                     variant="ghost"
                     aria-label="Next suggestion"
                     onClick={() => cycleSuggestion(item.id, 1)}
@@ -455,12 +457,14 @@ export default function V2() {
             <ChevronRight className={showResolved ? "rotate-90" : ""} />
             {reconciled.length} reconciled
           </button>
-          <button
-            aria-label="Keyboard shortcuts"
-            onClick={() => reconUi.set((s) => ({ ...s, shortcutsOpen: true }))}
-          >
-            <Keyboard />
-          </button>
+          <ActionTooltip label="Show keyboard shortcuts" shortcut="?">
+            <button
+              aria-label="Keyboard shortcuts"
+              onClick={() => reconUi.set((s) => ({ ...s, shortcutsOpen: true }))}
+            >
+              <Keyboard />
+            </button>
+          </ActionTooltip>
         </div>
         {showResolved && (
           <div className="paired-resolved">
@@ -475,6 +479,7 @@ export default function V2() {
             ))}
             <div className="paired-pagination">
               <Button
+                tooltip="Previous page"
                 variant="ghost"
                 aria-label="Previous page"
                 disabled={page === 0}
@@ -483,6 +488,7 @@ export default function V2() {
                 <ChevronLeft />
               </Button>
               <Button
+                tooltip="Next page"
                 variant="ghost"
                 aria-label="Next page"
                 disabled={(page + 1) * 15 >= availableResolved.length}

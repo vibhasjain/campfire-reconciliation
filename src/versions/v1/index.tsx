@@ -175,7 +175,6 @@ function SelectionPill() {
         variant="brand"
         data-action="match"
         onClick={() => matchSelection()}
-        title="Match (M)"
       >
         Match <kbd>M</kbd>
       </Button>
@@ -259,7 +258,6 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
               data-action="unreconcile"
               variant="outline"
               onClick={() => unreconcileItem(item.id)}
-              title="Unreconcile (U)"
             >
               <RotateCcw />
               Unreconcile<kbd>U</kbd>
@@ -330,6 +328,7 @@ function Balance() {
         </PopoverContent>
       </Popover>
       <Button
+        tooltip="Show keyboard shortcuts" shortcut="?"
         variant="ghost"
         size="icon"
         aria-label="Keyboard shortcuts"
@@ -707,7 +706,7 @@ export default function Workbench() {
                               size="sm"
                               data-action="unreconcile"
                               aria-label={`Unreconcile ${item.title}`}
-                              title="Unreconcile (U)"
+                              tooltip="Unreconcile" shortcut="U"
                               className="wb-unreconcile h-7 px-1.5 text-fg-3"
                               onClick={(event) => {
                                 event.stopPropagation()

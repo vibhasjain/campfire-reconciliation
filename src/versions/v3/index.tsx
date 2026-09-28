@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 import {
   useCallback,
   useEffect,
@@ -135,7 +136,6 @@ function TeammateNote({ itemId }: { itemId: string }) {
       type="button"
       data-action="comment"
       className="flow-teammate-note"
-      title={`${name} · ${message.text}`}
       onClick={() => {
         focusThread(itemId)
         requestAnimationFrame(() =>
@@ -244,6 +244,7 @@ function FocusCard({ item }: { item: ReconItem }) {
             {item.suggestions.length > 1 && (
               <div className="mt-2 flex items-center justify-end gap-1">
                 <Button
+                  tooltip="Previous suggestion"
                   variant="ghost"
                   aria-label="Previous suggestion"
                   onClick={() => cycleSuggestion(item.id, -1)}
@@ -255,6 +256,7 @@ function FocusCard({ item }: { item: ReconItem }) {
                   {item.suggestions.length}
                 </span>
                 <Button
+                  tooltip="Next suggestion"
                   variant="ghost"
                   aria-label="Next suggestion"
                   onClick={() => cycleSuggestion(item.id, 1)}
@@ -271,7 +273,6 @@ function FocusCard({ item }: { item: ReconItem }) {
               data-action="unreconcile"
               variant="ghost"
               onClick={() => unreconcileItem(item.id)}
-              title="Unreconcile · U"
             >
               <RotateCcw className="size-4" />
               Unreconcile
@@ -284,7 +285,6 @@ function FocusCard({ item }: { item: ReconItem }) {
                 className="flow-accept"
                 disabled={item.status !== "open" || !suggestion}
                 onClick={() => acceptSuggestion(item.id)}
-                title="Accept · A / Enter"
               >
                 <Check className="size-4" />
                 {item.status === "awaiting_approval"
@@ -296,7 +296,6 @@ function FocusCard({ item }: { item: ReconItem }) {
                 variant="ghost"
                 disabled={item.status !== "open" || !suggestion}
                 onClick={() => rejectSuggestion(item.id)}
-                title="Reject · X"
               >
                 Reject
               </Button>
@@ -307,7 +306,6 @@ function FocusCard({ item }: { item: ReconItem }) {
               data-action="match"
               variant="outline"
               onClick={() => matchSelection()}
-              title="Match · M"
             >
               Match
             </Button>
@@ -417,17 +415,18 @@ export default function V3() {
         <div className="flow-navigation">
           <div className="flow-rail" aria-label="Exceptions">
             {queue.map((item) => (
-              <button
-                key={item.id}
-                title={item.title}
-                aria-label={`${item.title}: ${item.status}`}
-                aria-current={current?.id === item.id ? "step" : undefined}
-                onClick={() => choose(item.id)}
-              >
-                <span
-                  className={`flow-dot ${item.status} ${current?.id === item.id ? "current" : ""}`}
-                />
-              </button>
+              <ActionTooltip label={`Open ${item.title}`}>
+                <button
+                  key={item.id}
+                  aria-label={`${item.title}: ${item.status}`}
+                  aria-current={current?.id === item.id ? "step" : undefined}
+                  onClick={() => choose(item.id)}
+                >
+                  <span
+                    className={`flow-dot ${item.status} ${current?.id === item.id ? "current" : ""}`}
+                  />
+                </button>
+              </ActionTooltip>
             ))}
           </div>
           <Popover open={overview} onOpenChange={setOverview}>
@@ -435,7 +434,6 @@ export default function V3() {
               <Button
                 variant="ghost"
                 className="flow-overview-trigger"
-                title="Overview · L"
               >
                 All exceptions
                 <kbd aria-hidden="true" className="flow-key-hint">
@@ -512,7 +510,6 @@ export default function V3() {
                   data-action="match"
                   variant="brand"
                   onClick={() => matchSelection()}
-                  title="Match · M"
                 >
                   Match
                 </Button>
@@ -552,7 +549,6 @@ export default function V3() {
                   <Button
                     variant="ghost"
                     onClick={() => move(1)}
-                    title="Skip · S / ↓"
                   >
                     Skip
                     <ChevronRight className="size-4" />
@@ -604,7 +600,7 @@ export default function V3() {
                   data-action="unreconcile"
                   variant="ghost"
                   aria-label={`Unreconcile ${item.title}`}
-                  title="Unreconcile · U"
+                  tooltip="Unreconcile" shortcut="U"
                   onFocus={() =>
                     reconUi.set((s) => ({ ...s, selectedItemId: item.id }))
                   }

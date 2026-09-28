@@ -1,4 +1,4 @@
-import { balancingTransferAmount, seed } from "./data.ts"
+import { balancingTransferAmount, seed, suggestionReasons } from "./data.ts"
 import {
   createReconStore,
   findAuto,
@@ -235,6 +235,21 @@ function checkSuggestions(): void {
     const baseline = item.suggestions[0]
     for (const suggestion of [...item.suggestions, ...item.hidden]) {
       equal(suggestion.itemId, item.id, `${suggestion.id} item reference`)
+      equal(
+        suggestionReasons({ ...suggestion, reasons: ["Old saved explanation"] }).join("\n"),
+        suggestion.reasons.join("\n"),
+        `${suggestion.id} saved sessions use current explanation copy`
+      )
+      assert(
+        suggestion.reasons.length >= 2 && suggestion.reasons.length <= 3,
+        `${suggestion.id} has two or three reasons`
+      )
+      for (const reason of suggestion.reasons) {
+        assert(
+          reason.endsWith(".") && reason.length <= 130 && !/[\n×÷↔=]|text similarity|subset sum|weight|score|recurrence/i.test(reason),
+          `${suggestion.id} explains transaction facts in a short sentence`
+        )
+      }
       assert(
         suggestion.reasoning.length <= 110 &&
           !suggestion.reasoning.includes("\n"),

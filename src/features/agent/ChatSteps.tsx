@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 // Tool-call list under the assistant label (agent §2.1 steps 3–8, §2.3): shimmering live status, icon rail with
 // connectors, nested code/data/subagent details, grid-rows collapse (150ms), past-tense summary when done.
 import { useState, type ReactNode } from "react"
@@ -225,14 +226,16 @@ function CodeCard({ step }: { step: ToolStep }) {
   const generating = step.state === "running" && !step.code
   return (
     <div className="relative overflow-hidden rounded-md border-hair border-line bg-surface">
-      <button
-        type="button"
-        aria-label="Copy code"
-        onClick={() => copy(step.code ?? "")}
-        className="absolute top-2 right-2 z-10 text-fg-hint hover:text-fg-3"
-      >
-        <Copy className="size-3.5" />
-      </button>
+      <ActionTooltip label="Copy code">
+        <button
+          type="button"
+          aria-label="Copy code"
+          onClick={() => copy(step.code ?? "")}
+          className="absolute top-2 right-2 z-10 text-fg-hint hover:text-fg-3"
+        >
+          <Copy className="size-3.5" />
+        </button>
+      </ActionTooltip>
       <pre className="max-h-[200px] overflow-auto px-4 py-3 font-mono text-[11px] leading-[14px] whitespace-pre-wrap text-accent-blue-text">
         {generating ? (
           <span className="text-shimmer">Generating...</span>

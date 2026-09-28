@@ -32,13 +32,13 @@ export function HalfSheetHeader({
           </Button>
         )}
         {expandHref && (
-          <Button asChild variant="ghost" size="icon" title="Expand half sheet" className="text-fg-3">
+          <Button asChild variant="ghost" size="icon" tooltip="Open full page" className="text-fg-3">
             <a href={expandHref}>
               <ArrowUpRight />
             </a>
           </Button>
         )}
-        <Button variant="ghost" size="icon" title="Close half sheet" onClick={onClose} className="text-fg-3">
+        <Button variant="ghost" size="icon" tooltip="Close" onClick={onClose} className="text-fg-3">
           <X />
         </Button>
       </div>

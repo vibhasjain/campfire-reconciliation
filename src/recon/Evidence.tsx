@@ -167,7 +167,6 @@ export function EvidenceChip({ attachmentId }: { attachmentId: string }) {
       variant="outline"
       size="xs"
       className="max-w-full gap-1.5 font-normal text-fg-3 shadow-none"
-      title={attachment.title}
       aria-label={`View ${attachment.title}`}
       onClick={(event) => event.stopPropagation()}
     >

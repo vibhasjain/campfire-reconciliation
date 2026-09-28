@@ -30,7 +30,7 @@ The three versions in `src/versions/v1|v2|v3` are the reference compositions.
 - `LineRow({side: 'bank'|'book', lineId?, line?, className?})`: plain click selects
   the item; Command/Control/Shift-click toggles the line in `selectedLines`.
 - `Suggestion({suggestion, size?: 'compact'|'full', active?, onAccept?, onReject?,
-acceptLabel?, rejectLabel?, footer?})`: factors, evidence and entry preview; default actions.
+acceptLabel?, rejectLabel?, footer?})`: plain-English reasons, evidence and entry preview; default actions.
 - `SuggestionCarousel({itemId, size?, active?, onAccept?, onReject?})`: callbacks
   receive the active suggestion; visible index lives in `reconUi`.
 - `EvidenceChip({attachmentId})`, `DocumentPreview({attachment})`: HTML documents.
@@ -92,9 +92,8 @@ acceptLabel?, rejectLabel?, footer?})`: factors, evidence and entry preview; def
 
 ## Usability contracts
 
-- Meaning-bearing text wraps. Evidence labels may truncate. Expanded Why leads
-  with each factor's label and detail plus a visual contribution bar (weight × score).
-  One muted formula footnote shows the weights and final confidence.
+- Meaning-bearing text wraps. Evidence labels may truncate. The AI-styled “98% confidence” disclosure
+  opens two or three short, factual reasons. Scoring weights and calibration are not shown.
 - Full Suggestion shows “No change to the difference” for zero effect, otherwise
   “Difference → <fmtMoney(current difference + effect)>” above its actions.
   Effect in cents is `(inTransit ?? 0) - (outstanding ?? 0) - bookDelta`.

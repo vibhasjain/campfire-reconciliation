@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/ui/tooltip"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 
@@ -10,7 +11,9 @@ loadApp().then((App) => {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <ThemeProvider>
-        <App />
+        <TooltipProvider>
+          <App />
+        </TooltipProvider>
       </ThemeProvider>
     </StrictMode>
   )

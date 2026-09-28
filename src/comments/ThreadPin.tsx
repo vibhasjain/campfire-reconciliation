@@ -37,6 +37,8 @@ export function ThreadPin({
   return (
     <ThreadPopover itemId={itemId}>
       <Button
+        tooltip="Open comments"
+        shortcut="C"
         type="button"
         variant="ghost"
         size="sm"

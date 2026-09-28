@@ -1,3 +1,4 @@
+import { ActionTooltip } from "@/components/ui/tooltip"
 import { lazy, Suspense, type ReactNode } from "react"
 import {
   Bell,
@@ -13,7 +14,6 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/components/ui/sheet"
-import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/common/Toaster"
 import { AppSidebar } from "./sidebar/AppSidebar"
 import { InertControl } from "./sidebar/parts"
@@ -39,20 +39,22 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
   return (
     <header className="flex h-14 min-w-0 shrink-0 items-center gap-2 border-b-hair border-line px-4 lg:px-6">
       {showMenu && (
-        <button
-          type="button"
-          aria-label="Open sidebar"
-          onClick={() =>
-            ui.set(
-              desktop
-                ? { sidebarCollapsed: false }
-                : { mobileSidebarOpen: true }
-            )
-          }
-          className="flex size-8 shrink-0 items-center justify-center rounded-md text-fg-3 outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
-        >
-          <Menu className="size-4" />
-        </button>
+        <ActionTooltip label="Open sidebar">
+          <button
+            type="button"
+            aria-label="Open sidebar"
+            onClick={() =>
+              ui.set(
+                desktop
+                  ? { sidebarCollapsed: false }
+                  : { mobileSidebarOpen: true }
+              )
+            }
+            className="flex size-8 shrink-0 items-center justify-center rounded-md text-fg-3 outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <Menu className="size-4" />
+          </button>
+        </ActionTooltip>
       )}
       <nav
         aria-label="Breadcrumb"
@@ -93,6 +95,7 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
       </nav>
       <div className="flex shrink-0 items-center gap-1">
         <Button
+          tooltip="Open comments"
           variant="ghost"
           size="icon-lg"
           aria-label={`Comments${unread ? `, ${unread} unread` : ""}`}
@@ -110,7 +113,6 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
         <Button
           variant="outline"
           size="sm"
-          title="Ask Ember (⌘E)"
           aria-label="Ask Ember"
           aria-expanded={pageChatOpen}
           onClick={() =>
@@ -130,14 +132,16 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
           <Bell className="size-[17px]" />
           <span className="absolute top-1.5 right-2 size-1 rounded-full bg-flame" />
         </InertControl>
-        <button
-          type="button"
-          aria-label="Search commands (⌘K)"
-          onClick={() => ui.set({ paletteOpen: true })}
-          className="flex size-8 items-center justify-center rounded-md text-fg-3 outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
-        >
-          <Search className="size-[17px]" />
-        </button>
+        <ActionTooltip label="Search commands" shortcut="⌘K">
+          <button
+            type="button"
+            aria-label="Search commands"
+            onClick={() => ui.set({ paletteOpen: true })}
+            className="flex size-8 items-center justify-center rounded-md text-fg-3 outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <Search className="size-[17px]" />
+          </button>
+        </ActionTooltip>
       </div>
     </header>
   )
@@ -153,7 +157,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const columnWidth = desktop && !collapsed ? width : 0
 
   return (
-    <TooltipProvider>
+    <>
       <div
         data-sidebar-width-scope
         data-dragging={dragging || undefined}
@@ -213,6 +217,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           <CommandPalette />
         </Suspense>
       )}
-    </TooltipProvider>
+    </>
   )
 }
