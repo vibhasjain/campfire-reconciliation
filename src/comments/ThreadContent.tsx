@@ -18,7 +18,8 @@ import { ThreadMessage } from "./ThreadMessage"
 export type ThreadViewProps = {
   itemId?: string
   chatId?: string
-  variant?: "popover" | "docked" | "sheet"
+  /** inline: embedded in a container that already owns the gutter (e.g. the review sheet). */
+  variant?: "popover" | "docked" | "sheet" | "inline"
   className?: string
 }
 export function ThreadView({
@@ -66,7 +67,9 @@ export function ThreadView({
       <div
         ref={scroller}
         className={cn(
-          "min-h-24 flex-1 [scrollbar-width:thin] overflow-y-auto overscroll-contain px-4",
+          "min-h-24 flex-1 [scrollbar-width:thin] overflow-y-auto overscroll-contain",
+          // Inline threads use their container's gutter; floating variants pad themselves.
+          variant === "inline" ? "px-0" : "px-4",
           variant === "popover" && "max-h-[min(50vh,360px)]"
         )}
       >
@@ -87,7 +90,12 @@ export function ThreadView({
           ))
         )}
       </div>
-      <div className="flex shrink-0 flex-col gap-2 border-t-hair border-line p-3">
+      <div
+        className={cn(
+          "flex shrink-0 flex-col gap-2",
+          variant === "inline" ? "pt-2" : "border-t-hair border-line p-3"
+        )}
+      >
         {question && <AskUserQuestion chatId={chatId} q={question} />}
         <Composer
           key={`${chatId}:${draft ?? ""}`}

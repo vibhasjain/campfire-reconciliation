@@ -274,12 +274,12 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           <SuggestionCarousel itemId={item.id} size="compact" />
         )}
       </div>
-      <div className="flex flex-col gap-sheet-group border-t-hair border-line pt-sheet-header-gap">
+      <div className="flex flex-col gap-1 border-t-hair border-line pt-sheet-header-gap">
         <h3 className="m-0 text-xs font-medium">Conversation</h3>
         <ThreadView
           key={item.id}
           itemId={item.id}
-          variant="sheet"
+          variant="inline"
           className="wb-thread"
         />
       </div>

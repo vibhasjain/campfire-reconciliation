@@ -1,4 +1,4 @@
-import { Check, LockKeyhole, X } from "lucide-react"
+import { Check, LockKeyhole } from "lucide-react"
 import { AiMark } from "./AiMark"
 import { Button } from "@/components/ui/button"
 import { Kbd } from "@/components/ui/kbd"
@@ -80,7 +80,8 @@ export function Suggestion({
             Needs Daniel’s approval
           </div>
         )}
-        <div className="flex flex-wrap items-center gap-1.5">
+        {/* Actions and attachments always share one line; attachments shrink first. */}
+        <div className="flex items-center gap-1.5">
           <Button
             type="button"
             variant="brand"
@@ -118,14 +119,13 @@ export function Suggestion({
               else rejectSuggestion(suggestion.itemId, suggestion.id)
             }}
           >
-            <X className="size-4" />
             {rejectLabel}
             <Kbd className="ml-1 h-4 min-w-4 bg-fill-subtle px-1 text-[10px] text-fg-4">
               X
             </Kbd>
           </Button>
           {Boolean(suggestion.attachmentIds?.length) && (
-            <div className="ml-auto flex flex-wrap justify-end gap-1.5">
+            <div className="ml-auto flex min-w-0 justify-end gap-1.5">
               {suggestion.attachmentIds?.map((id) => (
                 <EvidenceChip key={id} attachmentId={id} />
               ))}
