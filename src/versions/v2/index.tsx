@@ -251,11 +251,7 @@ function Group({
               <Suggestion
                 size="compact"
                 active={selected}
-                suggestion={{
-                  ...suggestion,
-                  entries: undefined,
-                  attachmentIds: suggestion.attachmentIds?.slice(0, 1),
-                }}
+                suggestion={suggestion}
               />
               {item.suggestions.length > 1 && (
                 <div className="paired-alternatives">

@@ -310,10 +310,10 @@ function validateSuggestion(
   }
   if (
     !candidate.reasoning ||
-    candidate.reasoning.length > 110 ||
+    candidate.reasoning.length > 300 ||
     /[\r\n]/.test(candidate.reasoning)
   )
-    return "Reasoning must be one line of at most 110 characters"
+    return "Summary must be one paragraph of at most 300 characters"
   if (
     !candidate.factors.length ||
     candidate.factors.some(

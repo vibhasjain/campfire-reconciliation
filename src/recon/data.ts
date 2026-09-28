@@ -512,7 +512,7 @@ propose(
   "match",
   "match",
   "Match to Google Workspace — Sep seats",
-  "The amount matches; this Google alias matched Google Workspace in each of the last 11 months.",
+  "The bank payment and Google Workspace invoice both total $2,640, booked September 2 and cleared September 3. This Google bank description has matched Workspace payments for the past 11 months.",
   [
     "The bank payment and Google invoice both total $2,640.",
     "The payment was booked September 2 and cleared September 3.",
@@ -551,7 +551,7 @@ propose(
   "fees",
   "create_je",
   "Record September bank service charges",
-  "Recurring monthly analysis fee (Jul $271.10, Aug $279.85)",
+  "Chase charged $285.40 on September 30. The same monthly fee was $271.10 in July and $279.85 in August, both posted to Bank Service Charges.",
   [
     "Chase charged $285.40 on September 30.",
     "The same monthly fee was $271.10 in July and $279.85 in August.",
@@ -578,7 +578,7 @@ propose(
   "other-fees",
   "create_je",
   "Record as Bank Fees – Other",
-  "The cash fee is certain; a general bank-fee account is a weaker classification.",
+  "Chase charged $285.40 on September 30. Bank Fees – Other records the charge, but the July and August fees were posted to Bank Service Charges.",
   [
     "Chase charged $285.40 on September 30.",
     "Recent monthly fees were posted to Bank Service Charges, not Bank Fees – Other."
@@ -597,7 +597,7 @@ propose(
   "interest",
   "create_je",
   "Record September interest income",
-  "Monthly interest credit; the effective rate is consistent with August.",
+  "Chase credited $3,912.07 in interest on September 30. Record the credit as Interest Income.",
   [
     "Chase credited $3,912.07 in interest on September 30.",
     "The interest rate is consistent with August."
@@ -619,7 +619,7 @@ propose(
   "prepaid",
   "create_bill",
   "Create Notion annual prepaid software bill",
-  "No AP bill found; the amount matches last September’s annual renewal and prepaid treatment.",
+  "Notion charged $9,600 on September 19 and no bill is recorded. Last September’s renewal was also $9,600, recorded as prepaid software over 12 months.",
   [
     "Notion charged $9,600 on September 19; no bill is recorded.",
     "Last September’s renewal was also $9,600.",
@@ -647,7 +647,7 @@ propose(
   "expense",
   "create_je",
   "Expense Notion renewal now",
-  "Record the $9,600 payment as software expense; this differs from last year’s prepaid treatment.",
+  "Notion charged $9,600 on September 19. Expensing it now puts the full annual cost in September, while last year’s renewal was spread over 12 months.",
   [
     "Notion charged $9,600 on September 19.",
     "Expensing it now puts the full annual cost in September.",
@@ -671,7 +671,7 @@ const hiddenNotion = propose(
   "invoice-NTN-88213",
   "create_bill",
   "Create bill from NTN-88213",
-  "The unprocessed AP invoice confirms Notion Plus: 40 seats, annual service, and a $9,600 total.",
+  "Unprocessed Notion invoice NTN-88213 matches the $9,600 payment on September 19. It covers 40 seats from September 2026 through August 2027, so record prepaid software over 12 months.",
   [
     "Notion invoice NTN-88213 totals $9,600, matching the September 19 payment.",
     "It covers 40 seats from September 2026 through August 2027.",
@@ -706,7 +706,7 @@ propose(
   "outstanding",
   "outstanding",
   "Carry check #4127 as outstanding",
-  "Evergreen checks take a median of 6 business days to clear; only 3 have elapsed.",
+  "Check #4127 for $3,850 to Evergreen Movers was issued September 30 and is absent from the September bank statement. Carry it as outstanding at month-end.",
   [
     "Check #4127 for $3,850 to Evergreen Movers was issued September 30.",
     "It does not appear on the September bank statement.",
@@ -725,7 +725,7 @@ propose(
   "transit",
   "in_transit",
   "Carry Meridian wire as a deposit in transit",
-  "Chase’s live feed shows the $86,400 wire on October 1, after the statement cutoff.",
+  "The $86,400 Meridian wire was booked September 30. Chase’s live feed shows it posted October 1, so carry it as a deposit in transit at the September cutoff.",
   [
     "The $86,400 Meridian wire was booked September 30.",
     "Chase’s live feed shows it posted October 1, after the September cutoff."
@@ -747,7 +747,7 @@ propose(
   "fix",
   "fix_amount",
   "Fix AWS bill payment to $18,240.00",
-  "The invoice and bank agree on $18,240; the bill’s $18,420 appears to have swapped digits.",
+  "The AWS invoice and September 8 bank payment both total $18,240. The bill was entered as $18,420, so correcting it removes the $180 difference.",
   [
     "The AWS invoice and September 8 bank payment both total $18,240.",
     "The bill was entered as $18,420; the swapped digits explain the $180 difference."
@@ -772,7 +772,7 @@ propose(
   "adjust",
   "match_adjust",
   "Match AWS and adjust Cloud Hosting by $180.00",
-  "Match the cash payment and credit Cloud Hosting for the $180 difference.",
+  "AWS was paid $18,240 on September 8, but the books show $18,420. A $180 credit to Cloud Hosting balances cash and leaves the incorrect bill amount unchanged.",
   [
     "AWS was paid $18,240 on September 8; the books show $18,420.",
     "A $180 adjustment balances cash but leaves the incorrect bill amount unchanged."
@@ -798,7 +798,7 @@ propose(
   "fee",
   "match_adjust",
   "Match Northstar and record the $25.00 wire fee",
-  "The wire advice shows $48,000 sent, less a $25 incoming-wire fee.",
+  "Northstar’s wire advice shows $48,000 sent against INV-1162, less a $25 bank fee. The net $47,975 matches the September 22 deposit, so record the fee and match the receipt.",
   [
     "Northstar’s wire advice shows $48,000 sent and a $25 bank fee.",
     "The remaining $47,975 matches the September 22 deposit.",
@@ -825,7 +825,7 @@ propose(
   "short-pay",
   "match",
   "Match Northstar and leave $25.00 receivable",
-  "Treat the $25 difference as a customer short-pay, although the wire advice identifies a fee.",
+  "The $47,975 deposit is $25 short of Northstar invoice INV-1162. Leaving $25 receivable treats it as unpaid by Northstar, although the wire advice identifies a bank fee.",
   [
     "The $47,975 deposit is $25 less than Northstar invoice INV-1162.",
     "The wire advice identifies a bank fee, so it does not support leaving $25 owed by Northstar."
@@ -851,7 +851,7 @@ propose(
   "fx",
   "match_adjust",
   "Match Harbour and record $62.98 realized FX loss",
-  "The £10,000 invoice was booked at 1.264958; Chase converted at 1.271256.",
+  "Harbour’s £10,000 invoice was booked at $12,649.58, and Chase paid $12,712.56 on September 17. Record the $62.98 exchange loss to match the payment.",
   [
     "Harbour’s £10,000 invoice was recorded at $12,649.58.",
     "Chase paid $12,712.56 on September 17 using its exchange rate.",
@@ -877,7 +877,7 @@ propose(
   "match",
   "match",
   "Match Kestrel’s Q3 retainer wire",
-  "Daniel released the wire on September 16 after it spent five days in dual approval.",
+  "The bank and books both show a $12,500 payment to Kestrel Partners. It was booked September 11 and released by Daniel on September 16 after five days in approval.",
   [
     "The bank and books both show a $12,500 payment to Kestrel Partners.",
     "It was booked September 11; Daniel released it September 16 after approval."
@@ -898,7 +898,7 @@ propose(
   "reverse-je",
   "reverse_dup",
   "Match Datadog bill payment and reverse JE-7712",
-  "Priya confirms JE-7712 was posted by hand before the same August Datadog bill synced.",
+  "The books have two $6,840 Datadog payments but the bank shows one, on September 12. Priya entered JE-7712 by hand before the bill synced, so reversing it leaves the synced payment matched.",
   [
     "The books show two $6,840 Datadog payments; the bank shows one on September 12.",
     "Priya confirms she entered JE-7712 before the same bill synced.",
@@ -933,7 +933,7 @@ propose(
   "void-bill",
   "reverse_dup",
   "Match JE-7712 and void the Datadog bill payment",
-  "Keep the manual journal and void the synced payment; cash is the same but the bill trail is weaker.",
+  "Two $6,840 Datadog entries match a single bank payment on September 12. Voiding the synced payment removes the duplicate but leaves JE-7712 without the bill’s invoice detail.",
   [
     "Both Datadog book entries are $6,840, matching the single September 12 bank payment.",
     "Keeping JE-7712 removes the duplicate but loses the synced bill’s invoice detail."
@@ -964,7 +964,7 @@ propose(
   "many",
   "match_many",
   "Match Cascade receipt to three invoices",
-  "The remittance lists INV-2041, INV-2044, and INV-2047; their amounts total the $61,250 deposit.",
+  "Cascade’s September 24 deposit is $61,250. Its remittance lists INV-2041, INV-2044, and INV-2047 for $24,500, $18,750, and $18,000, which total the deposit.",
   [
     "Cascade deposited $61,250 on September 24.",
     "Its remittance lists INV-2041, INV-2044, and INV-2047.",
@@ -991,7 +991,7 @@ propose(
   "names",
   "match",
   "Pair contractor payments by payee name",
-  "Both payments have the same date and amount; CHEN matches Lin Chen and OKAFOR matches Emeka Okafor.",
+  "Both contractor payments are $4,000 and dated September 15. The bank descriptions name CHEN and OKAFOR, matching Lin Chen and Emeka Okafor.",
   [
     "Both contractor payments are $4,000 and dated September 15.",
     "The bank descriptions name CHEN and OKAFOR, matching Lin Chen and Emeka Okafor."
@@ -1027,7 +1027,7 @@ propose(
   "rows",
   "match",
   "Pair contractor payments by row order",
-  "Row order pairs Chen with Okafor and Okafor with Chen: equal cash amounts, but the payees are wrong.",
+  "Both contractor payments are $4,000 and dated September 15. Pairing by row order matches Chen to Okafor and Okafor to Chen, so the amounts agree but the payees are wrong.",
   [
     "Both contractor payments are $4,000 and dated September 15.",
     "Row order pairs Chen with Okafor and Okafor with Chen, so the payee names do not match."
@@ -1058,7 +1058,7 @@ propose(
   "reverse-void",
   "reverse_void",
   "Reverse the backdated void of check #4098 in September",
-  "Check #4098 cleared August 26; reversing its backdated void in September corrects the $1,150 overstatement.",
+  "Pinecrest check #4098 for $1,150 cleared August 26, but J. Alvarez voided it on September 12 with an August 28 date after August closed. Reverse the void in September to correct the $1,150 overstatement.",
   [
     "Pinecrest check #4098 for $1,150 cleared August 26.",
     "J. Alvarez voided it on September 12 with an August 28 date, after August closed.",
@@ -1316,7 +1316,7 @@ function auto(
     itemId: id,
     action: "match",
     title: `Match ${bookDescription}`,
-    reasoning: "The bank and books show the same amount and payee.",
+    reasoning: `The bank and books both show $${(Math.abs(amount) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} for ${payee}. ${bookDay === day ? `Both entries are dated September ${day}.` : `It was booked September ${bookDay} and cleared September ${day}.`}`,
     reasons: [
       `The bank and books both show $${(Math.abs(amount) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} for ${payee}.`,
       bookDay === day
@@ -1703,4 +1703,11 @@ export function suggestionReasons(suggestion: Suggestion): string[] {
   const item = seed.items[suggestion.itemId]
   const current = item && [...item.suggestions, ...item.hidden].find(candidate => candidate.id === suggestion.id)
   return current?.reasons ?? suggestion.reasons ?? [suggestion.reasoning]
+}
+
+/** Refresh card copy for saved sessions without changing their accounting data. */
+export function suggestionSummary(suggestion: Suggestion): string {
+  const item = seed.items[suggestion.itemId]
+  const current = item && [...item.suggestions, ...item.hidden].find(candidate => candidate.id === suggestion.id)
+  return current?.reasoning ?? suggestion.reasoning
 }

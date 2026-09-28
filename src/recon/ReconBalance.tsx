@@ -96,21 +96,21 @@ export function ReconBalance({
         />
         {afterDifference}
         <span>·</span>
-        <span>
-          <span data-testid="items-left">{left}</span> left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}
-        </span>
         <span
           role="progressbar"
           aria-label="Exceptions resolved"
           aria-valuenow={summary.resolved}
           aria-valuemin={0}
           aria-valuemax={summary.total}
-          className="ml-1 h-1.5 w-20 overflow-hidden rounded-full bg-fill-selected"
+          className="h-1.5 w-20 overflow-hidden rounded-full bg-fill-selected"
         >
           <span
             className="block h-full rounded-full bg-brand transition-[width] duration-200"
             style={{ width: `${progress}%` }}
           />
+        </span>
+        <span>
+          <span data-testid="items-left">{left}</span> left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}
         </span>
       </div>
     )

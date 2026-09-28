@@ -278,14 +278,10 @@
   margin: 4px 72px 16px 16px;
   max-width: 640px;
 }
-.paired-detail [data-suggestion-id] h3 {
-  padding-right: 62px;
-}
 .paired-alternatives {
-  position: absolute;
-  right: 54px;
-  top: 4px;
   display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
 }
 .paired-alternatives button {
   padding: 4px;
@@ -474,13 +470,6 @@
   }
   .paired-detail {
     margin: 4px 8px 12px;
-  }
-  .paired-detail [data-suggestion-id] h3 {
-    padding-right: 0;
-  }
-  .paired-alternatives {
-    position: static;
-    justify-content: flex-end;
   }
   .paired-alternatives button {
     min-width: 36px;

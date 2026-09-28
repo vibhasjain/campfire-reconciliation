@@ -18,7 +18,7 @@ The three versions in `src/versions/v1|v2|v3` are the reference compositions.
   items last; includes touched exceptions
   and reopened auto pairs. Resolved exceptions precede auto pairs in Reconciled.
 - `reconUi.get()/set(updater)/subscribe`, `useReconUi(selector)` own selection,
-  `selectedLines: {bank,book}`, `suggestionIndex`, `expandedWhy`, `threadFor`,
+  `selectedLines: {bank,book}`, `suggestionIndex`, `threadFor`,
   `threadDraft`, `pageChatOpen`, `inboxOpen`, `shortcutsOpen`, `completed`.
 - `window.__recon = { store: recon, ui: reconUi, summary: () => ... }` is the test API.
 - `?fast` uses the single timing switch in `speed.ts`; tests can `setFastMode(true)`.

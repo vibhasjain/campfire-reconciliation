@@ -99,25 +99,21 @@
 .flow-suggestion {
   padding: 0 28px 20px;
 }
-.flow-suggestion section > div > div:last-child {
-  display: none;
-}
 .flow-suggestion section button {
   min-height: 36px;
   font-size: 12px;
 }
-.flow-suggestion section span {
+.flow-suggestion section span:not([data-confidence]) {
   font-size: 12px;
+}
+.flow-actions:empty {
+  display: none;
 }
 .flow-actions {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 0 32px 28px;
-}
-.flow-accept {
-  min-width: 160px;
-  min-height: 44px !important;
 }
 .flow-thread {
   margin-top: 12px;
@@ -237,15 +233,6 @@
   }
   .flow-actions {
     padding: 0 16px 12px;
-  }
-  .flow-accept {
-    position: fixed;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
-    width: calc(100% - 24px);
-    z-index: 30;
-    box-shadow: 0 0 0 12px var(--c-page);
   }
   .flow-stage > div {
     transform: none !important;

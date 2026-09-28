@@ -17,7 +17,6 @@ export interface ReconUIState {
   selectedItemId: string | null
   selectedLines: { bank: string[]; book: string[] }
   suggestionIndex: Record<string, number>
-  expandedWhy: Record<string, boolean>
   threadFor: string | null
   threadDraft: Record<string, string>
   pageChatOpen: boolean
@@ -29,7 +28,6 @@ export const reconUi = createStore<ReconUIState>({
   selectedItemId: null,
   selectedLines: { bank: [], book: [] },
   suggestionIndex: {},
-  expandedWhy: {},
   threadFor: null,
   threadDraft: {},
   pageChatOpen: false,

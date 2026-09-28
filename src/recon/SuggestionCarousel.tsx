@@ -76,7 +76,7 @@ export function SuggestionCarousel({
               className="min-w-12 text-center text-[11px] text-fg-3 tabular-nums"
               aria-live="polite"
             >
-              {index + 1} of {suggestions.length}
+              Suggestion {index + 1} of {suggestions.length}
             </span>
             <Button
               type="button"

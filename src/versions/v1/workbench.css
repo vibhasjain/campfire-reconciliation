@@ -67,19 +67,10 @@
 .wb-detail [data-line-id] .text-xxs {
   display: none;
 }
-.wb-detail [data-suggestion-id] table {
-  display: none;
-}
-.wb-detail [data-suggestion-id] div:has(> table) {
-  display: none;
-}
-.wb-detail [data-suggestion-id] .flex.flex-wrap.gap-1\.5 > :not(:first-child) {
-  display: none;
-}
 .wb-detail [aria-label="Choose suggestion"] {
   display: none;
 }
-.wb-detail [class*="text-[11px]"],
+.wb-detail [class*="text-[11px]"]:not([data-confidence]),
 .wb-detail [class*="text-[10px]"] {
   font-size: 12px;
 }

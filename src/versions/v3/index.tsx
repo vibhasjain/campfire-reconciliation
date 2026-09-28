@@ -48,7 +48,6 @@ import {
   activeSuggestion,
   cycleSuggestion,
   matchSelection,
-  rejectSuggestion,
   unreconcileItem,
   useFlash,
 } from "@/recon/actions"
@@ -232,11 +231,7 @@ function FocusCard({ item }: { item: ReconItem }) {
         {suggestion && item.status !== "resolved" && (
           <div className="flow-suggestion">
             <Suggestion
-              suggestion={{
-                ...suggestion,
-                entries: undefined,
-                attachmentIds: suggestion.attachmentIds?.slice(0, 1),
-              }}
+              suggestion={suggestion}
               size="full"
               active
             />
@@ -268,7 +263,7 @@ function FocusCard({ item }: { item: ReconItem }) {
           </div>
         )}
         <footer className="flow-actions">
-          {item.status === "resolved" ? (
+          {item.status === "resolved" && (
             <Button
               data-action="unreconcile"
               variant="ghost"
@@ -277,29 +272,6 @@ function FocusCard({ item }: { item: ReconItem }) {
               <RotateCcw className="size-4" />
               Unreconcile
             </Button>
-          ) : (
-            <>
-              <Button
-                data-action="accept"
-                variant="brand"
-                className="flow-accept"
-                disabled={item.status !== "open" || !suggestion}
-                onClick={() => acceptSuggestion(item.id)}
-              >
-                <Check className="size-4" />
-                {item.status === "awaiting_approval"
-                  ? "Awaiting approval"
-                  : "Accept"}
-              </Button>
-              <Button
-                data-action="reject"
-                variant="ghost"
-                disabled={item.status !== "open" || !suggestion}
-                onClick={() => rejectSuggestion(item.id)}
-              >
-                Reject
-              </Button>
-            </>
           )}
           {!!(selected.bank.length + selected.book.length) && (
             <Button

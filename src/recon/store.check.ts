@@ -1,4 +1,4 @@
-import { balancingTransferAmount, seed, suggestionReasons } from "./data.ts"
+import { balancingTransferAmount, seed, suggestionReasons, suggestionSummary } from "./data.ts"
 import {
   createReconStore,
   findAuto,
@@ -251,9 +251,16 @@ function checkSuggestions(): void {
         )
       }
       assert(
-        suggestion.reasoning.length <= 110 &&
+        suggestion.reasoning.length <= 300 &&
+          suggestion.reasoning.endsWith(".") &&
+          !/;|consistent with|appears to/i.test(suggestion.reasoning) &&
           !suggestion.reasoning.includes("\n"),
-        `${suggestion.id} reasoning is one concise line`
+        `${suggestion.id} summary is a concise factual paragraph`
+      )
+      equal(
+        suggestionSummary({ ...suggestion, reasoning: "Old saved summary" }),
+        suggestion.reasoning,
+        `${suggestion.id} saved sessions use current summary copy`
       )
       assert(
         Math.abs(sum(suggestion.factors.map((factor) => factor.weight)) - 1) <=
