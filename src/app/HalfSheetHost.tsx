@@ -101,8 +101,12 @@ export function HalfSheetHost() {
         <span className={cn("mx-auto block h-full w-px bg-line-strong opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100", dragging && "opacity-100")} />
       </button>}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-hair border-line bg-surface shadow-composer">
-        <HalfSheetHeader left={<span className="text-sm font-medium text-fg">{target.title ?? "Details"}</span>} onClose={close} />
-        <div className="min-h-0 flex-1 overflow-y-auto px-sheet-gutter">{target.content}</div>
+        {/* One scrollport and gutter for chrome + content: even classic scrollbars
+            reserve the same width for both. The header remains sticky. */}
+        <div className="min-h-0 flex-1 overflow-y-auto px-sheet-gutter">
+          <HalfSheetHeader left={<span className="w-full text-sm font-medium text-fg">{target.title ?? "Details"}</span>} onClose={close} />
+          {target.content}
+        </div>
       </div>
     </div>
   )

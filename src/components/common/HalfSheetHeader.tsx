@@ -3,7 +3,7 @@ import { ArrowUpRight, Link2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "./toast"
 
-/** 44px header; shares the body gutter token owned by the sheet containers. */
+/** 44px sticky header; horizontal padding belongs to the shared scroll container. */
 export function HalfSheetHeader({
   left,
   right,
@@ -18,12 +18,12 @@ export function HalfSheetHeader({
   copyHref?: string
 }) {
   return (
-    <div className="flex h-11 shrink-0 items-center gap-5 px-sheet-gutter py-2.5">
+    <div className="sticky top-0 z-10 flex h-11 shrink-0 items-center gap-5 bg-surface">
       <div className="flex min-w-0 flex-1 items-center gap-1">{left}</div>
       <div className="flex shrink-0 items-center gap-0.5">
         {right}
         {(copyHref ?? expandHref) && (
-          <Button variant="ghost" size="icon" aria-label="Copy link" className="text-fg-3"
+          <Button variant="ghost" size="icon-sheet" aria-label="Copy link" className="text-fg-3"
             onClick={() => {
               const href = new URL((copyHref ?? expandHref)!, window.location.href).href
               void navigator.clipboard.writeText(href).then(() => toast("Link copied"), () => toast("Couldn't copy link", { tone: "error" }))
@@ -32,13 +32,13 @@ export function HalfSheetHeader({
           </Button>
         )}
         {expandHref && (
-          <Button asChild variant="ghost" size="icon" tooltip="Open full page" className="text-fg-3">
+          <Button asChild variant="ghost" size="icon-sheet" tooltip="Open full page" className="text-fg-3">
             <a href={expandHref}>
               <ArrowUpRight />
             </a>
           </Button>
         )}
-        <Button variant="ghost" size="icon" tooltip="Close" onClick={onClose} className="text-fg-3">
+        <Button variant="ghost" size="icon-sheet" edge="end" tooltip="Close" onClick={onClose} className="text-fg-3">
           <X />
         </Button>
       </div>

@@ -29,11 +29,15 @@ const buttonVariants = cva(
         // shadcn "default" kept for generated components; renders as brand
         default: "bg-brand-soft text-white hover:bg-brand",
       },
+      edge: {
+        end: "sheet-edge-end",
+      },
       size: {
         xs: "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
         sm: "h-7 gap-1.5 px-2 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
         md: "h-8 gap-1.5 px-2.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
         lg: "h-11 gap-2 px-3 text-base [&_svg:not([class*='size-'])]:size-5",
+        "icon-sheet": "sheet-icon-button border-0",
         icon: "size-6 [&_svg:not([class*='size-'])]:size-4",
         "icon-xs": "size-5 rounded-sm [&_svg:not([class*='size-'])]:size-3.5",
         "icon-sm": "size-7 [&_svg:not([class*='size-'])]:size-4",
@@ -55,6 +59,7 @@ function Button({
   variant = "outline",
   size = "xs",
   asChild = false,
+  edge,
   tooltip,
   shortcut,
   title,
@@ -79,7 +84,7 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, edge, className }))}
       {...props}
       aria-label={
         props["aria-label"] ?? (typeof label === "string" ? label : undefined)

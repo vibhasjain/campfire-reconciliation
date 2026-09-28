@@ -202,19 +202,19 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
   }, [id])
   if (!item) return null
   return (
-    <div className="wb-detail" data-workbench-detail>
-      <div className="flex items-start gap-3 py-5">
+    <div className="wb-detail flex flex-col gap-sheet-section pt-sheet-header-gap pb-sheet-section" data-workbench-detail>
+      <div className="flex items-center gap-sheet-group">
         <h2
           ref={heading}
           tabIndex={-1}
-          className="min-w-0 flex-1 text-lg font-medium outline-none"
+          className="m-0 min-w-0 flex-1 text-lg font-medium outline-none"
         >
           {item.title}
         </h2>
-        <div className="flex">
+        <div className="flex shrink-0 items-center">
           <Button
             variant="ghost"
-            size="icon"
+            size="icon-sheet"
             aria-label="Previous item"
             onClick={() => move(-1)}
           >
@@ -222,7 +222,8 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           </Button>
           <Button
             variant="ghost"
-            size="icon"
+            size="icon-sheet"
+            edge="end"
             aria-label="Next item"
             onClick={() => move(1)}
           >
@@ -230,13 +231,17 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           </Button>
         </div>
       </div>
-      <div className="space-y-1 pb-4">
-        {item.bankIds.map((lineId) => (
-          <LineRow key={lineId} side="bank" lineId={lineId} />
-        ))}
-        {item.bookIds.map((lineId) => (
-          <LineRow key={lineId} side="book" lineId={lineId} />
-        ))}
+      <div className="flex flex-col gap-sheet-group">
+        {(["bank", "book"] as const).map((side) => {
+          const ids = side === "bank" ? item.bankIds : item.bookIds
+          return ids.length > 0 ? (
+            <div key={side} role="group" aria-label={side === "bank" ? "Bank lines" : "Books lines"} className="flex flex-col gap-sheet-row">
+              {ids.map((lineId) => (
+                <LineRow key={lineId} side={side} lineId={lineId} className="px-sheet-row-inset" />
+              ))}
+            </div>
+          ) : null
+        })}
         {!item.bankIds.length && !item.bookIds.length && (
           <div className="text-xs text-fg-3">
             Beginning balance{" "}
@@ -247,7 +252,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           </div>
         )}
       </div>
-      <div className="pb-5">
+      <div>
         {item.status === "resolved" ? (
           <div className="flex items-center justify-between gap-3">
             <span className="flex items-center gap-2 text-xs text-brand">
@@ -267,8 +272,8 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           <SuggestionCarousel itemId={item.id} size="compact" />
         )}
       </div>
-      <div className="border-t-hair border-line pt-4">
-        <h3 className="pb-3 text-xs font-medium">Conversation</h3>
+      <div className="flex flex-col gap-sheet-group border-t-hair border-line pt-sheet-header-gap">
+        <h3 className="m-0 text-xs font-medium">Conversation</h3>
         <ThreadView
           key={item.id}
           itemId={item.id}

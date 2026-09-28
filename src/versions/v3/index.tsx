@@ -202,9 +202,9 @@ function FocusCard({ item }: { item: ReconItem }) {
             />
           </div>
         </header>
-        <div className="flow-lines">
+        <div className="flow-lines flex flex-col gap-sheet-group">
           {(["bank", "book"] as const).map((side) => (
-            <div key={side}>
+            <div key={side} role="group" aria-label={side === "bank" ? "Bank lines" : "Books lines"} className="flex flex-col gap-sheet-row">
               {(side === "bank" ? bankIds : bookIds).length ? (
                 (side === "bank" ? bankIds : bookIds).map((id) => (
                   <LineRow
