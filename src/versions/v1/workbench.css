@@ -77,9 +77,6 @@
 .wb-thread > div:first-child:has(> .min-h-28) {
   display: none;
 }
-.wb-thread > div:first-child {
-  max-height: 360px;
-}
 body:has(.wb-page) [data-testid="toast"]:not(:last-child) {
   display: none;
 }

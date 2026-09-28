@@ -67,9 +67,10 @@ export function ThreadView({
       <div
         ref={scroller}
         className={cn(
-          "min-h-24 flex-1 [scrollbar-width:thin] overflow-y-auto overscroll-contain",
+          "min-h-24 flex-1",
           // Inline threads use their container's gutter; floating variants pad themselves.
-          variant === "inline" ? "px-0" : "px-4",
+          // Inline threads grow with the sheet, which does the scrolling; floating ones scroll themselves.
+          variant === "inline" ? "px-0" : "[scrollbar-width:thin] overflow-y-auto overscroll-contain px-4",
           variant === "popover" && "max-h-[min(50vh,360px)]"
         )}
       >
