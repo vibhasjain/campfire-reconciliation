@@ -23,6 +23,7 @@ import {
   useComments,
 } from "./store"
 import { ThreadView } from "./ThreadView"
+import "./thread-popover.css"
 
 export type ThreadPopoverProps = { itemId: string; children: ReactElement }
 export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
@@ -78,7 +79,7 @@ export function ThreadPopover({ itemId, children }: ThreadPopoverProps) {
         side="bottom"
         sideOffset={8}
         onOpenAutoFocus={(event) => event.preventDefault()}
-        className="w-[400px] max-w-[calc(100vw-24px)] overflow-hidden rounded-[12px] border-hair border-line bg-surface p-0 shadow-menu data-open:animate-none data-closed:animate-none"
+        className="thread-popover w-[400px] max-w-[calc(100vw-24px)] overflow-hidden rounded-[12px] border-hair border-line bg-surface p-0 shadow-menu data-open:animate-none"
       >
         <ThreadCard
           itemId={itemId}
@@ -117,6 +118,10 @@ function ThreadCard({
       ref={motionRef}
       className="flex min-h-0 flex-1 flex-col overflow-hidden"
       data-layer="thread"
+      // Portal events still bubble through the React tree to the transaction row.
+      // Keep every card interaction (including close/resolve) local to the card.
+      onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => event.stopPropagation()}
     >
       <div className="flex min-h-11 items-center gap-2 border-b-hair border-line px-3">
         <h2 className="min-w-0 flex-1 text-sm font-medium break-words">

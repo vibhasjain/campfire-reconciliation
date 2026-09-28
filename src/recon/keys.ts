@@ -65,7 +65,8 @@ export function useReconKeys({
               ? editor.value
               : editor.textContent
           editor.blur()
-          if (text?.trim()) {
+          // Quick comments dismiss on Escape even with a draft (kept in store).
+          if (text?.trim() && !editor.closest('[data-layer="thread"]')) {
             event.preventDefault()
             event.stopImmediatePropagation()
             return
