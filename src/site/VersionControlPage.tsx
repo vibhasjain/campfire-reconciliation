@@ -261,13 +261,13 @@ export default function VersionControlPage() {
                 <span className="min-w-0 max-w-24 truncate text-sm text-fg-3 tabular-nums">
                   {version.version}
                 </span>
-                <h2 title={copy?.title ?? version.title} className="min-w-0 truncate text-sm font-medium">
+                <h2 className="min-w-0 truncate text-sm font-medium">
                   {copy?.title ?? version.title}
                 </h2>
               </div>
               <ul className="mt-3 mb-5 space-y-1 text-xs text-fg-3">
                 {(copy?.lines ?? version.changes).slice(0, 4).map((line) => (
-                  <li key={line} title={line} className="truncate">{line}</li>
+                  <li key={line} className="truncate">{line}</li>
                 ))}
               </ul>
               <div className="mt-auto flex min-w-0 items-center gap-1.5">

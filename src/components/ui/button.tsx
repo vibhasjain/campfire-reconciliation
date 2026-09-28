@@ -96,7 +96,6 @@ function Button({
       data-size={size}
       className={cn(buttonVariants({ variant, size, edge, className }))}
       {...props}
-      title={title}
       children={content}
       aria-label={
         props["aria-label"] ?? (typeof label === "string" ? label : undefined)

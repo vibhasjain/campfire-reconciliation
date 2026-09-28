@@ -60,7 +60,7 @@ function BalanceLine({
           : "text-fg-3"
       )}
     >
-      <span className="min-w-0 truncate" title={label}>
+      <span className="min-w-0 truncate">
         {label}
       </span>
       <AnimatedMoney cents={cents} />

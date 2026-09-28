@@ -202,13 +202,12 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
   if (!item) return null
   return (
     <div
-      className="wb-detail flex flex-col gap-sheet-section pt-sheet-header-gap pb-sheet-section"
+      className="wb-detail flex min-h-full flex-col gap-sheet-section pt-sheet-header-gap"
       data-workbench-detail
     >
       <div className="flex items-center gap-sheet-group">
         <h2
           ref={heading}
-          title={item.title}
           tabIndex={-1}
           className="m-0 min-w-0 flex-1 truncate text-lg font-medium outline-none"
         >
@@ -295,7 +294,8 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           <SuggestionCarousel itemId={item.id} size="compact" />
         )}
       </div>
-      <div className="flex flex-col">
+      {/* The thread takes the remaining height so the composer always sits at the sheet's bottom. */}
+      <div className="flex flex-1 flex-col border-t-hair border-line">
         <ThreadView
           key={item.id}
           itemId={item.id}
@@ -673,7 +673,6 @@ export default function Workbench() {
                       </td>
                       <td
                         className={cn(TABLE_CELL, "wb-name")}
-                        title={item.title}
                       >
                         <span>{item.title}</span>
                       </td>

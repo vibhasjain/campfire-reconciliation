@@ -35,7 +35,7 @@ export function EntityChip({ entity, variant = "plain", onClick, className }: {
     {entity.type === "member" ? <Avatar name={label} size={size} /> : entity.type === "agent" ? <AiMark /> : (
       <FileText className="shrink-0 text-fg-3" style={{ width: size, height: size }} />
     )}
-    <span className="min-w-0 truncate" title={label}>{label}</span>
+    <span className="min-w-0 truncate">{label}</span>
   </>
   const base = cn("inline-flex min-w-0 max-w-full items-center gap-1 text-fg", {
     "text-sm": variant === "plain" || variant === "link",

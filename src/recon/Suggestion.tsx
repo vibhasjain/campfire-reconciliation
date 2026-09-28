@@ -50,7 +50,7 @@ export function Suggestion({
           <span className="flex h-5 shrink-0 whitespace-nowrap items-center">
             <AiMark />
           </span>
-          <h3 title={suggestion.title} className="min-w-0 flex-1 truncate text-xs leading-5 font-medium text-fg">
+          <h3 className="min-w-0 flex-1 truncate text-xs leading-5 font-medium text-fg">
             {suggestion.title}
           </h3>
           <span
@@ -68,7 +68,7 @@ export function Suggestion({
             {suggestion.confidence}%
           </span>
         </div>
-        <p title={suggestionSummary(suggestion)} className={cn("min-w-0 line-clamp-3 text-xs leading-5 [overflow-wrap:anywhere] text-fg-3")}>
+        <p className={cn("min-w-0 line-clamp-3 text-xs leading-5 [overflow-wrap:anywhere] text-fg-3")}>
           {suggestionSummary(suggestion)}
         </p>
         {suggestion.approval && (

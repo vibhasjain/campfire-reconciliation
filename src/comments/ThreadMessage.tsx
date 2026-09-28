@@ -28,7 +28,7 @@ export function ThreadMessage({
       <ParticipantAvatar actor={actor} />
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex min-h-5 items-center gap-2 pr-14">
-          <span title={name} className="min-w-0 truncate text-xs font-medium text-fg">{name}</span>
+          <span className="min-w-0 truncate text-xs font-medium text-fg">{name}</span>
           <time
             dateTime={message.createdAt}
             title={new Date(message.createdAt).toLocaleString()}

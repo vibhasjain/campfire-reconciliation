@@ -123,7 +123,7 @@ function ThreadCard({
       onPointerDown={(event) => event.stopPropagation()}
     >
       <div className="flex min-h-11 items-center gap-2 border-b-hair border-line px-3">
-        <h2 title={title} className="min-w-0 flex-1 truncate text-sm font-medium">
+        <h2 className="min-w-0 flex-1 truncate text-sm font-medium">
           {title}
         </h2>
         <Button

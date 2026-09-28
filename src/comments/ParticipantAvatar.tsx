@@ -20,7 +20,7 @@ export function ParticipantAvatar({
   const teammate = recon.getState().teammates[actor]
   return (
     // Tints are translucent; the solid base keeps stacked avatars from showing through each other.
-    <Avatar size="sm" className={cn("size-6 overflow-hidden bg-surface", className)} title={teammate.name}>
+    <Avatar size="sm" className={cn("size-6 overflow-hidden bg-surface", className)}>
       <AvatarFallback className={cn("text-[9px] font-medium", colors[actor])}>
         {actor === "ember" ? (
           <EmberIcon className="size-4" />
