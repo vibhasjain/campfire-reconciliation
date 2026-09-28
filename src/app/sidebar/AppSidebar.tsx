@@ -29,21 +29,27 @@ export const AppSidebar = memo(function AppSidebar() {
   return (
     <SidebarFrame resizable={desktop}>
       <div className="flex h-[66px] shrink-0 items-center gap-2.5 px-5">
-        {/* The one live control in the inert shell: home to version control. */}
-        <ActionTooltip label="Open version control">
-          <a
-            href="/version-control"
-            className="rounded outline-none focus-visible:ring-2 focus-visible:ring-focus"
+        {/* The one live control in the inert shell: home to version control.
+            Hover pops the logo slightly and surfaces the same "Version control" tag the canvases use. */}
+        <a
+          href="/version-control"
+          className="group/home relative rounded outline-none focus-visible:ring-2 focus-visible:ring-focus"
+        >
+          <img
+            src="/campfire-logo.svg"
+            alt="Campfire · back to version control"
+            width={128}
+            height={26}
+            className="h-[26px] w-auto transition-transform duration-150 ease-out group-hover/home:scale-[1.03] group-focus-visible/home:scale-[1.03] motion-reduce:transition-none"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-full left-0 z-20 mt-1.5 flex translate-y-[-2px] items-center gap-1.5 rounded-[7px] border border-[#484848] bg-[#292929] py-[5px] pr-[9px] pl-1.5 text-xs whitespace-nowrap text-[#ddd] opacity-0 transition duration-150 ease-out group-hover/home:translate-y-0 group-hover/home:opacity-100 group-focus-visible/home:translate-y-0 group-focus-visible/home:opacity-100 motion-reduce:transition-none"
           >
-            <img
-              src="/campfire-logo.svg"
-              alt="Campfire · back to version control"
-              width={128}
-              height={26}
-              className="h-[26px] w-auto"
-            />
-          </a>
-        </ActionTooltip>
+            <img src="/favicon.svg" width={16} height={16} alt="" />
+            Version control
+          </span>
+        </a>
         <span className="flex-1" />
         <ActionTooltip label={desktop ? "Collapse sidebar" : "Close sidebar"}>
           <button
