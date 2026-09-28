@@ -3,6 +3,7 @@
 # Builds from a temporary worktree of HEAD, so uncommitted edits never ship.
 # Runs from .git/hooks/post-commit on every commit on main; skip once with SKIP_DEPLOY=1 git commit ...
 set -e
+unset GIT_DIR GIT_INDEX_FILE GIT_WORK_TREE  # set by git inside hooks; they break worktree add
 cd "$(git rev-parse --show-toplevel)"
 [ "$(git branch --show-current)" = main ] || exit 0
 [ -n "$SKIP_DEPLOY" ] && exit 0
