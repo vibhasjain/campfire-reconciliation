@@ -4,7 +4,7 @@ import { resetDemo } from "@/data/persistence"
 import { useState } from "react"
 import { BookOpen, CircleHelp, Landmark, Search } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
-import { InertControl, PROTOTYPE_TOOLTIP } from "@/app/sidebar/parts"
+import { InertControl } from "@/app/sidebar/parts"
 import { ui, useUI } from "@/app/ui-store"
 
 const COMMANDS = [
@@ -21,7 +21,7 @@ export default function CommandPalette() {
     <Dialog open={open} onOpenChange={(next) => ui.set({ paletteOpen: next })}>
       <DialogContent onCloseAutoFocus={restorePageFocus} showCloseButton={false} placement="top" className="top-[15vh] max-w-[min(640px,calc(100%-2rem))]! gap-0 overflow-hidden p-0">
         <DialogTitle className="sr-only">Command palette</DialogTitle>
-        <DialogDescription className="sr-only">{PROTOTYPE_TOOLTIP}</DialogDescription>
+        <DialogDescription className="sr-only">Search commands</DialogDescription>
         <div className="flex items-center gap-2 border-b-hair border-line px-4 py-3">
           <Search className="size-4 shrink-0 text-fg-4" />
           <input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search commands…" aria-label="Search commands" className="h-8 min-w-0 flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-fg-hint" />

@@ -1,23 +1,12 @@
 import type { ComponentProps, ReactNode } from "react"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { LAYOUT } from "../layout"
 import { setWidth, useSidebarWidth, widthStore } from "./width"
 import { cn } from "@/lib/utils"
 
-export const PROTOTYPE_TOOLTIP = "Prototype: only this reconciliation is live"
 
-/** Keep unavailable destinations focusable so the same explanation is available to everyone. */
-export function InertControl({ children, className, ...props }: Omit<ComponentProps<"button">, "onClick" | "disabled">) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button type="button" {...props} aria-disabled="true" className={cn("cursor-default outline-none focus-visible:ring-2 focus-visible:ring-focus", className)}>
-          {children}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="right">{PROTOTYPE_TOOLTIP}</TooltipContent>
-    </Tooltip>
-  )
+/** Unavailable destinations: look real, do nothing. */
+export function InertControl({ className, ...props }: Omit<ComponentProps<"button">, "onClick" | "disabled">) {
+  return <button type="button" {...props} aria-disabled="true" className={cn("cursor-default outline-none focus-visible:ring-2 focus-visible:ring-focus", className)} />
 }
 
 /** Sidebar width stays adjustable by pointer and keyboard. */
