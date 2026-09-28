@@ -8,6 +8,7 @@ const ghostStyle =
   "text-fg-2 hover:bg-fill-hover hover:text-fg aria-expanded:bg-fill-selected aria-expanded:text-fg active:bg-fill-selected"
 
 // spec §4.4 — dense 24px buttons, instant hovers (no transition), hairline borders.
+// Icon + label: a leading icon sits 2px into the padding (glyphs carry their own whitespace) so both sides read equal.
 const buttonVariants = cva(
   "group/button inline-flex min-w-0 max-w-full shrink items-center justify-center rounded-md border-hair border-transparent bg-clip-padding font-medium whitespace-nowrap outline-none select-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-focus disabled:pointer-events-none disabled:text-fg-disabled aria-invalid:border-danger [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
@@ -33,9 +34,9 @@ const buttonVariants = cva(
         end: "sheet-edge-end",
       },
       size: {
-        xs: "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
-        sm: "h-7 gap-1.5 px-2 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
-        md: "h-8 gap-1.5 px-2.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
+        xs: "h-6 gap-1 px-2 py-0.5 text-xs-medium [&>svg:first-child:not(:only-child)]:-ml-0.5 [&_svg:not([class*='size-'])]:size-4",
+        sm: "h-7 gap-1.5 px-2.5 text-xs-medium [&>svg:first-child:not(:only-child)]:-ml-0.5 [&_svg:not([class*='size-'])]:size-4",
+        md: "h-8 gap-1.5 px-3 text-sm [&>svg:first-child:not(:only-child)]:-ml-0.5 [&_svg:not([class*='size-'])]:size-4",
         lg: "h-11 gap-2 px-3 text-base [&_svg:not([class*='size-'])]:size-5",
         "icon-sheet": "shrink-0 sheet-icon-button border-0",
         icon: "shrink-0 size-6 [&_svg:not([class*='size-'])]:size-4",
@@ -43,7 +44,7 @@ const buttonVariants = cva(
         "icon-sm": "shrink-0 size-7 [&_svg:not([class*='size-'])]:size-4",
         "icon-lg": "shrink-0 size-8 [&_svg:not([class*='size-'])]:size-4",
         default:
-          "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
+          "h-6 gap-1 px-2 py-0.5 text-xs-medium [&>svg:first-child:not(:only-child)]:-ml-0.5 [&_svg:not([class*='size-'])]:size-4",
       },
     },
     compoundVariants: [{ variant: "ghost-inline", className: "px-0" }],

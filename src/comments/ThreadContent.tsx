@@ -93,7 +93,8 @@ export function ThreadView({
       <div
         className={cn(
           "flex shrink-0 flex-col gap-2",
-          variant === "inline" ? "pt-2" : "border-t-hair border-line p-3"
+          // Inline threads live in a scrolling sheet: the composer stays pinned to its bottom.
+          variant === "inline" ? "sticky bottom-0 z-10 bg-surface pt-2 pb-sheet-gutter" : "border-t-hair border-line p-3"
         )}
       >
         {question && <AskUserQuestion chatId={chatId} q={question} />}

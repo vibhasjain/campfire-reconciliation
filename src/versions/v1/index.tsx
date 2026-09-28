@@ -202,7 +202,10 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
   }, [id])
   if (!item) return null
   return (
-    <div className="wb-detail flex flex-col gap-sheet-section pt-sheet-header-gap pb-sheet-section" data-workbench-detail>
+    <div
+      className="wb-detail flex flex-col gap-sheet-section pt-sheet-header-gap pb-sheet-section"
+      data-workbench-detail
+    >
       <div className="flex items-center gap-sheet-group">
         <h2
           ref={heading}
@@ -246,9 +249,19 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
         {(["bank", "book"] as const).map((side) => {
           const ids = side === "bank" ? item.bankIds : item.bookIds
           return ids.length > 0 ? (
-            <div key={side} role="group" aria-label={side === "bank" ? "Bank lines" : "Books lines"} className="flex flex-col gap-sheet-row">
+            <div
+              key={side}
+              role="group"
+              aria-label={side === "bank" ? "Bank lines" : "Books lines"}
+              className="flex flex-col gap-sheet-row"
+            >
               {ids.map((lineId) => (
-                <LineRow key={lineId} side={side} lineId={lineId} className="px-sheet-row-inset" />
+                <LineRow
+                  key={lineId}
+                  side={side}
+                  lineId={lineId}
+                  className="px-sheet-row-inset"
+                />
               ))}
             </div>
           ) : null
@@ -313,11 +326,14 @@ function Balance() {
         <PopoverTrigger asChild>
           <button
             aria-label="Reconciliation bridge"
-            className="wb-balance flex min-w-0 min-h-9 flex-1 items-center rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
+            className="wb-balance flex min-h-9 min-w-0 flex-1 items-center rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
             <ReconBalance
               variant="compact"
-              afterDifference={<ChevronDown className="size-4 shrink-0 text-fg-3" />}
+              showProgress={false}
+              afterDifference={
+                <ChevronDown className="size-4 shrink-0 text-fg-3" />
+              }
             />
           </button>
         </PopoverTrigger>
@@ -344,7 +360,8 @@ function Balance() {
         </PopoverContent>
       </Popover>
       <Button
-        tooltip="Show keyboard shortcuts" shortcut="?"
+        tooltip="Show keyboard shortcuts"
+        shortcut="?"
         variant="ghost"
         size="icon"
         aria-label="Keyboard shortcuts"
@@ -367,12 +384,7 @@ export default function Workbench() {
   const [tab, setTab] = useState("To review")
   const [page, setPage] = useState(0)
   const pending = ordered(queue.filter((item) => item.status !== "resolved"))
-  const all =
-    tab === "To review"
-      ? pending
-      : tab === "Reconciled"
-        ? reconciled
-        : [...pending, ...reconciled]
+  const all = tab === "Reconciled" ? reconciled : pending
   const visible = all.slice(page * 50, page * 50 + 50)
   const itemsRef = useRef(all)
   const tabRef = useRef(tab)
@@ -541,7 +553,7 @@ export default function Workbench() {
           aria-label="Transaction status"
           className="flex shrink-0 rounded-md border-hair border-line bg-segment p-1"
         >
-          {["To review", "Reconciled", "All"].map((name) => (
+          {["To review", "Reconciled"].map((name) => (
             <button
               key={name}
               role="tab"
@@ -551,18 +563,16 @@ export default function Workbench() {
                 setPage(0)
               }}
               className={cn(
-                "flex shrink-0 items-center min-h-9 rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
+                "flex min-h-9 shrink-0 items-center rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
                 tab === name
                   ? "bg-segment-active font-medium text-fg"
                   : "text-fg-3"
               )}
             >
               <span>{name}</span>
-              {name !== "All" && (
-                <span className="ml-2 shrink-0 whitespace-nowrap text-fg-3 tabular-nums">
-                  {name === "To review" ? pending.length : reconciled.length}
-                </span>
-              )}
+              <span className="ml-2 shrink-0 whitespace-nowrap text-fg-3 tabular-nums">
+                {name === "To review" ? pending.length : reconciled.length}
+              </span>
             </button>
           ))}
         </div>
@@ -723,7 +733,8 @@ export default function Workbench() {
                               size="sm"
                               data-action="unreconcile"
                               aria-label={`Unreconcile ${item.title}`}
-                              tooltip="Unreconcile" shortcut="U"
+                              tooltip="Unreconcile"
+                              shortcut="U"
                               className="wb-unreconcile h-7 px-1.5 text-fg-3"
                               onClick={(event) => {
                                 event.stopPropagation()
