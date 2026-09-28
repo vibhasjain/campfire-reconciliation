@@ -6,7 +6,6 @@ import {
   Keyboard,
   ChevronRight,
   Menu,
-  MessageSquare,
   Search,
 } from "lucide-react"
 import {
@@ -99,46 +98,19 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
       </nav>
       <div className="flex shrink-0 items-center gap-1">
         <Button
-          tooltip="Open comments"
+          tooltip="Comments"
           variant="ghost"
           size="icon-lg"
           aria-label={`Comments${unread ? `, ${unread} unread` : ""}`}
           aria-expanded={inboxOpen}
           onClick={toggleInbox}
-          className="relative"
-        >
-          <MessageSquare />
-          {unread > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex min-w-3.5 items-center justify-center rounded-full bg-brand px-1 text-[9px] text-primary-foreground tabular-nums">
-              {unread}
-            </span>
-          )}
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="max-w-28"
-          aria-label="Ask Ember"
-          tooltip="Ask Ember"
-          shortcut="⌘E"
-          aria-expanded={pageChatOpen}
-          onClick={() =>
-            reconUi.set((state) => ({
-              ...state,
-              pageChatOpen: !state.pageChatOpen,
-            }))
-          }
-        >
-          <EmberIcon className="size-4" />
-          <span className="hidden min-w-0 truncate sm:block">Ask Ember</span>
-        </Button>
-        <InertControl
-          aria-label="Notifications"
-          className="relative flex size-8 items-center justify-center rounded-md text-fg-3"
+          className="relative text-fg-3"
         >
           <Bell className="size-[17px]" />
-          <span className="absolute top-1.5 right-2 size-1 rounded-full bg-flame" />
-        </InertControl>
+          {unread > 0 && (
+            <span className="absolute top-1.5 right-2 size-1.5 rounded-full bg-flame" />
+          )}
+        </Button>
         <ActionTooltip label="Search commands" shortcut="⌘K">
           <button
             type="button"
@@ -161,6 +133,24 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
             <Keyboard className="size-[17px]" />
           </button>
         </ActionTooltip>
+        <Button
+          variant="outline"
+          size="sm"
+          className="max-w-28"
+          aria-label="Ask Ember"
+          tooltip="Ask Ember"
+          shortcut="⌘E"
+          aria-expanded={pageChatOpen}
+          onClick={() =>
+            reconUi.set((state) => ({
+              ...state,
+              pageChatOpen: !state.pageChatOpen,
+            }))
+          }
+        >
+          <EmberIcon className="size-4" />
+          <span className="hidden min-w-0 truncate sm:block">Ask Ember</span>
+        </Button>
       </div>
     </header>
   )

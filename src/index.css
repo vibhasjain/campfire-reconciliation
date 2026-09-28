@@ -373,6 +373,20 @@
     overscroll-behavior: none;
   }
 
+  /* Focus rings are for Tab navigation only (main.tsx sets data-tab-focus on Tab, clears it on pointer).
+     Shortcut keys and clicks never paint a focus state. */
+  :root:not([data-tab-focus]) *:focus-visible {
+    outline: none !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+  }
+  :root:not([data-tab-focus]) [data-slot="button"]:focus-visible {
+    border-color: transparent !important;
+  }
+  :root:not([data-tab-focus]) [data-slot="button"][data-variant="outline"]:focus-visible {
+    border-color: var(--c-line) !important;
+  }
+
   * {
     @apply border-border outline-ring/50;
     /* one subtle scrollbar everywhere: thin, no track */

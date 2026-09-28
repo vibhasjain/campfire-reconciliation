@@ -44,7 +44,11 @@ export function CommentsInbox() {
       .querySelector(`[data-item-id="${itemId}"]`)
       ?.scrollIntoView({ block: "nearest", behavior: "smooth" })
     await waitFor(200)
-    focusThread(itemId)
+    // A version that shows items in a review sheet opens it (with the thread) instead of the quick popover.
+    const handled = !window.dispatchEvent(
+      new CustomEvent("recon:open-item", { detail: itemId, cancelable: true })
+    )
+    if (!handled) focusThread(itemId)
   }
   return (
     <Sheet
@@ -120,7 +124,7 @@ export function CommentsInbox() {
                       />
                     )}
                   </span>
-                  <span className="min-w-0 max-w-full truncate text-xs leading-4 text-fg-3">
+                  <span className="max-w-full min-w-0 truncate text-xs leading-4 text-fg-3">
                     {messageSnippet(last) || "No comments yet"}
                   </span>
                   <span className="mt-0.5 flex w-full items-center justify-between">
@@ -133,7 +137,7 @@ export function CommentsInbox() {
                     />
                     <time
                       dateTime={last?.createdAt}
-                      className="shrink-0 whitespace-nowrap tabular-nums text-xxs text-fg-4"
+                      className="shrink-0 text-xxs whitespace-nowrap text-fg-4 tabular-nums"
                     >
                       {last
                         ? new Date(last.createdAt).toLocaleDateString("en-US", {

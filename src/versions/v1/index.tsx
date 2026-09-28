@@ -465,6 +465,20 @@ export default function Workbench() {
     if (id) cycleSuggestion(id, delta)
   }, [])
   useReconKeys({ move, enter, cycle })
+  // Comments inbox: open the item's review sheet with the cursor in its conversation.
+  useEffect(() => {
+    const onOpenItem = (event: Event) => {
+      event.preventDefault()
+      open((event as CustomEvent<string>).detail)
+      // After the sheet's own focus-on-open (its title), move focus into the conversation.
+      setTimeout(
+        () => document.querySelector<HTMLElement>(".wb-thread .ProseMirror")?.focus(),
+        250
+      )
+    }
+    addEventListener("recon:open-item", onOpenItem)
+    return () => removeEventListener("recon:open-item", onOpenItem)
+  }, [open])
   useEffect(() => {
     let lastAction = recon.getState().actions.at(-1)
     return recon.subscribe(() => {
@@ -576,7 +590,7 @@ export default function Workbench() {
             <colgroup>
               <col className="wb-date w-20" />
               <col />
-              <col className="w-40" />
+              <col className="w-32" />
               <col className="wb-suggestion w-40" />
               <col className="wb-pin w-20" />
             </colgroup>
@@ -671,9 +685,7 @@ export default function Workbench() {
                         )}
                         {line ? fmtDate(line.date) : "Sep 1"}
                       </td>
-                      <td
-                        className={cn(TABLE_CELL, "wb-name")}
-                      >
+                      <td className={cn(TABLE_CELL, "wb-name")}>
                         <span>{item.title}</span>
                       </td>
                       <td className={cn(TABLE_CELL, "text-right")}>
