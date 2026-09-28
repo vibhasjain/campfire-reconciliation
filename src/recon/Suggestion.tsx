@@ -71,13 +71,6 @@ export function Suggestion({
         <p className="text-xs leading-5 break-words text-fg-3">
           {suggestionSummary(suggestion)}
         </p>
-        {Boolean(suggestion.attachmentIds?.length) && (
-          <div className="flex flex-wrap gap-1.5">
-            {suggestion.attachmentIds?.map((id) => (
-              <EvidenceChip key={id} attachmentId={id} />
-            ))}
-          </div>
-        )}
         {suggestion.approval && (
           <div
             className="flex items-center gap-1.5 text-xs text-fg-3"
@@ -131,6 +124,13 @@ export function Suggestion({
               X
             </Kbd>
           </Button>
+          {Boolean(suggestion.attachmentIds?.length) && (
+            <div className="ml-auto flex flex-wrap justify-end gap-1.5">
+              {suggestion.attachmentIds?.map((id) => (
+                <EvidenceChip key={id} attachmentId={id} />
+              ))}
+            </div>
+          )}
         </div>
         {footer}
       </div>
