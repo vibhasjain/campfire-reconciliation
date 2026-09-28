@@ -114,6 +114,8 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
           variant="outline"
           size="sm"
           aria-label="Ask Ember"
+          tooltip="Ask Ember"
+          shortcut="⌘E"
           aria-expanded={pageChatOpen}
           onClick={() =>
             reconUi.set((state) => ({

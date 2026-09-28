@@ -216,6 +216,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
             variant="ghost"
             size="icon-sheet"
             aria-label="Previous item"
+            shortcut="K"
             onClick={() => move(-1)}
           >
             <ChevronLeft />
@@ -225,6 +226,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
             size="icon-sheet"
             edge="end"
             aria-label="Next item"
+            shortcut="J"
             onClick={() => move(1)}
           >
             <ChevronRight />

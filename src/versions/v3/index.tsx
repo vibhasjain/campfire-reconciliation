@@ -244,7 +244,7 @@ function FocusCard({ item }: { item: ReconItem }) {
             {item.suggestions.length > 1 && (
               <div className="mt-2 flex items-center justify-end gap-1">
                 <Button
-                  tooltip="Previous suggestion"
+                  tooltip="Previous suggestion" shortcut="←"
                   variant="ghost"
                   aria-label="Previous suggestion"
                   onClick={() => cycleSuggestion(item.id, -1)}
@@ -256,7 +256,7 @@ function FocusCard({ item }: { item: ReconItem }) {
                   {item.suggestions.length}
                 </span>
                 <Button
-                  tooltip="Next suggestion"
+                  tooltip="Next suggestion" shortcut="→"
                   variant="ghost"
                   aria-label="Next suggestion"
                   onClick={() => cycleSuggestion(item.id, 1)}

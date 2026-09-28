@@ -64,6 +64,7 @@ export function SuggestionCarousel({
               variant="ghost"
               size="icon"
               aria-label="Previous suggestion"
+              shortcut="←"
               onClick={(event) => {
                 event.stopPropagation()
                 select(index - 1)
@@ -82,6 +83,7 @@ export function SuggestionCarousel({
               variant="ghost"
               size="icon"
               aria-label="Next suggestion"
+              shortcut="→"
               onClick={(event) => {
                 event.stopPropagation()
                 select(index + 1)

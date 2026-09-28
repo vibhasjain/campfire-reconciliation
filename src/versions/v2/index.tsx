@@ -260,7 +260,7 @@ function Group({
               {item.suggestions.length > 1 && (
                 <div className="paired-alternatives">
                   <Button
-                    tooltip="Previous suggestion"
+                    tooltip="Previous suggestion" shortcut="←"
                     variant="ghost"
                     aria-label="Previous suggestion"
                     onClick={() => cycleSuggestion(item.id, -1)}
@@ -268,7 +268,7 @@ function Group({
                     <ChevronLeft />
                   </Button>
                   <Button
-                    tooltip="Next suggestion"
+                    tooltip="Next suggestion" shortcut="→"
                     variant="ghost"
                     aria-label="Next suggestion"
                     onClick={() => cycleSuggestion(item.id, 1)}

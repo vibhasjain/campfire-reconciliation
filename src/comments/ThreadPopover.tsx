@@ -142,7 +142,7 @@ function ThreadCard({
         <Button
           variant="ghost"
           size="icon-sm"
-          tooltip="Close thread"
+          tooltip="Close thread" shortcut="Esc"
           aria-label="Close thread"
           onClick={onClose}
         >

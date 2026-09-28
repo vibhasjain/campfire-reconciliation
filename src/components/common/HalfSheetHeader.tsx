@@ -38,7 +38,7 @@ export function HalfSheetHeader({
             </a>
           </Button>
         )}
-        <Button variant="ghost" size="icon-sheet" edge="end" tooltip="Close" onClick={onClose} className="text-fg-3">
+        <Button variant="ghost" size="icon-sheet" edge="end" tooltip="Close" shortcut="Esc" onClick={onClose} className="text-fg-3">
           <X />
         </Button>
       </div>
