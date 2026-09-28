@@ -16,7 +16,7 @@ at the row box edge; row icons and text remain inset for readability.
   cannot shrink. A one-line title has a 28px line box in a 36px row; wrapping
   grows the row and keeps navigation centered.
 - Bank comes before Books. Rows within each group have 4px gaps (`sheet-row`);
-  nonempty groups have 12px gaps (`sheet-group`). No empty group adds a gap.
+  nonempty groups have 20px gaps (`sheet-group`). No empty group adds a gap.
 - Conversation uses 16px above its heading and 12px between heading and thread.
 - `Button size="icon-sheet"` owns a borderless 36px square, 10px padding, and a
   16px SVG. `edge="end"` cancels the 10px padding with a shared negative end
@@ -62,7 +62,7 @@ the top border are: header 0–44, title row 60–96 (center 78), first Bank row
 v1 is the transaction HalfSheetHost consumer. v2 renders its own paired inline
 ledger detail, with separate Books/Bank columns and its own suggestion controls;
 it does not use this header or LineRow. v3 renders a focus card, reusing LineRow
-but not HalfSheetHost. Its stacked Bank/Books groups now use the same 4px/12px
+but not HalfSheetHost. Its stacked Bank/Books groups now use the same 4px/20px
 gap tokens. LineRow's defaults and the unrelated suggestion controls are unchanged.
 
 Validation is source/CSS derivation plus TypeScript, lint, and reconciliation
