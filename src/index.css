@@ -364,6 +364,9 @@
 
   * {
     @apply border-border outline-ring/50;
+    /* one subtle scrollbar everywhere: thin, no track */
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-line-strong) transparent;
   }
   html {
     color-scheme: light;
