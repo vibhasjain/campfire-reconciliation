@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import { animate, useReducedMotion } from "motion/react"
 import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -66,8 +66,10 @@ function BalanceLine({
 export function ReconBalance({
   variant = "full",
   className,
+  afterDifference,
 }: {
   variant?: "full" | "compact"
+  afterDifference?: ReactNode
   className?: string
 }) {
   const summary = useSummary()
@@ -92,6 +94,7 @@ export function ReconBalance({
               : "font-medium text-fg"
           }
         />
+        {afterDifference}
         <span>·</span>
         <span>
           <span data-testid="items-left">{left}</span> left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}

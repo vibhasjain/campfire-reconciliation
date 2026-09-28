@@ -294,15 +294,17 @@ function Balance() {
     ["Adjusted book", s.adjustedBook],
   ]
   return (
-    <div className="border-y-hair sticky top-0 z-10 border-line bg-page py-4">
+    <div className="border-y-hair sticky top-0 z-10 flex items-center gap-2 border-line bg-page py-4">
       <Popover>
         <PopoverTrigger asChild>
           <button
             aria-label="Reconciliation bridge"
-            className="wb-balance flex min-h-9 w-full items-center gap-2 rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
+            className="wb-balance flex min-h-9 flex-1 items-center rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
-            <ReconBalance variant="compact" className="flex-1" />
-            <ChevronDown className="size-4 text-fg-3" />
+            <ReconBalance
+              variant="compact"
+              afterDifference={<ChevronDown className="size-4 text-fg-3" />}
+            />
           </button>
         </PopoverTrigger>
         <PopoverContent
@@ -327,6 +329,14 @@ function Balance() {
           </div>
         </PopoverContent>
       </Popover>
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label="Keyboard shortcuts"
+        onClick={() => reconUi.set((s) => ({ ...s, shortcutsOpen: true }))}
+      >
+        <Keyboard />
+      </Button>
     </div>
   )
 }
@@ -715,15 +725,7 @@ export default function Workbench() {
           </table>
         </div>
       )}
-      <footer className="mt-4 flex items-center justify-between">
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Keyboard shortcuts"
-          onClick={() => reconUi.set((s) => ({ ...s, shortcutsOpen: true }))}
-        >
-          <Keyboard />
-        </Button>
+      <footer className="mt-4 flex items-center justify-end">
         {all.length > 50 && (
           <div className="flex items-center gap-2 text-xs text-fg-3">
             <Button
