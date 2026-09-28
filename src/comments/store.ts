@@ -1,4 +1,3 @@
-import { restoreSlice, persistSlice } from "@/data/persistence"
 import { useSyncExternalStore } from "react"
 import { createStore, db, insert, nextId, patch } from "@/data/store"
 import type { EntityRef, Message } from "@/data/types"
@@ -8,15 +7,12 @@ import { waitFor } from "@/recon/speed"
 import { toast } from "@/components/common/toast"
 import type { CommentsState } from "./types"
 
-export const comments = createStore<CommentsState>(
-  restoreSlice("comments", {
-    threads: {},
-    reactions: {},
-    unread: {},
-    emberUnread: {},
-  })
-)
-persistSlice("comments", comments.get, comments.subscribe)
+export const comments = createStore<CommentsState>({
+  threads: {},
+  reactions: {},
+  unread: {},
+  emberUnread: {},
+})
 const viewing = new Set<string>()
 const observed = new Set<string>(Object.keys(db.get().messages))
 export const threadChatId = (itemId: string) => `thread:${itemId}`

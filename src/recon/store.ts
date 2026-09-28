@@ -67,7 +67,6 @@ export interface ReconStore {
     actor?: Actor
   ): Result
   revert(actionId: string, actor?: Actor): Result
-  restore(state: ReconState): void
   reset(): void
   ember: { search(itemId: string): Suggestion[] }
   findAuto(query: AutoQuery): ReconItem[]
@@ -532,7 +531,6 @@ export function createReconStore(seed: ReconState = defaultSeed): ReconStore {
 
   const store: ReconStore = {
     getState: () => state,
-    restore: (next) => publish(clone(next)),
     subscribe(listener) {
       listeners.add(listener)
       return () => {

@@ -1,5 +1,4 @@
 import { restorePageFocus } from "@/recon/focus"
-import { resetDemo } from "@/data/persistence"
 // Working command search with inert prototype destinations.
 import { useState } from "react"
 import { BookOpen, CircleHelp, Landmark, Search } from "lucide-react"
@@ -29,7 +28,7 @@ export default function CommandPalette() {
         </div>
         <div className="p-2">
           <div className="px-2 py-2 text-xs text-fg-4">Commands</div>
-          {(!query || "reset demo".includes(query.toLowerCase())) && <button type="button" className="flex w-full rounded-md px-3 py-3 text-left text-sm hover:bg-fill-subtle" onClick={resetDemo}>Reset demo</button>}
+          {(!query || "reset demo".includes(query.toLowerCase())) && <button type="button" className="flex w-full rounded-md px-3 py-3 text-left text-sm hover:bg-fill-subtle" onClick={() => window.location.reload()}>Reset demo</button>}
           {commands.length === 0 && <p className="px-2 py-7 text-center text-sm text-fg-3">No commands found.</p>}
           {commands.map(({ label, detail, icon: Icon }) => <InertControl key={label} className="flex w-full items-center gap-3 rounded-md px-3 py-3 text-left hover:bg-fill-subtle">
             <Icon className="size-4 shrink-0 text-fg-3" />

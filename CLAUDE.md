@@ -14,7 +14,7 @@ Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfired
 
 ## Build and checks
 - `npm run build` (tsc, vite, then `scripts/seo.mjs`, which writes per-page titles, favicons and OG tags, and app-route HTML files). `npm run lint`.
-- `npx tsx src/recon/store.check.ts`, `npx tsx src/recon/flows.check.ts`, `npx tsx src/recon/persistence.check.ts`.
+- `npx tsx src/recon/store.check.ts`, `npx tsx src/recon/flows.check.ts`.
 - `node tests/flows.mjs --base <url>`: 24 browser flow runs across the three versions (dev-browser).
 
 ## Rules

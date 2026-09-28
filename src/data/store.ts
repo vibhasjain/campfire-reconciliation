@@ -1,4 +1,3 @@
-import { restoreSlice, persistSlice } from "./persistence"
 import { useRef, useSyncExternalStore } from 'react'
 import type { DB, ID, Row, TableName } from './types'
 
@@ -21,22 +20,8 @@ export function createStore<S>(init: S) {
   }
 }
 
-const restored = restoreSlice<DB>("db", { chats: {}, messages: {}, approvals: {} }, value =>
-  Object.values(value.chats).every(c => typeof c.id === 'string' && Array.isArray(c.context)) &&
-  Object.values(value.messages).every(m => typeof m.id === 'string' && typeof m.chatId === 'string' && Array.isArray(m.parts) && m.parts.every(p =>
-    p.type === 'text' ? typeof p.markdown === 'string' : p.type === 'steps' ? Array.isArray(p.steps) && p.steps.every(s => typeof s.id === 'string') : p.type === 'card' && !!p.card?.kind)) &&
-  Object.values(value.approvals).every(a => Array.isArray(a.rows) && a.rows.every(r => typeof r.id === 'string'))
-)
-// A reload ends interrupted runs; their partial output remains readable.
-for (const chat of Object.values(restored.chats)) { chat.status = 'idle'; delete chat.pendingQuestion }
-for (const message of Object.values(restored.messages)) message.parts = message.parts.map(part =>
-  part.type === 'text' ? { ...part, streaming: false } : part.type === 'steps' ? {
-    ...part, live: false, open: false, steps: part.steps.map(step => step.state === 'running' ? { ...step, state: 'done' as const } : step),
-  } : part)
-for (const approval of Object.values(restored.approvals)) approval.rows = approval.rows.map(row =>
-  row.state === 'pending' || row.state === 'approving' ? { ...row, state: 'dismissed' as const } : row)
-export const db = createStore<DB>(restored)
-persistSlice("db", db.get, db.subscribe)
+// Every load starts the demo fresh; nothing is saved between visits.
+export const db = createStore<DB>({ chats: {}, messages: {}, approvals: {} })
 
 /** Subscribe to a narrow slice. Result is kept referentially stable while `isEqual` says it didn't change. */
 export function useDB<T>(selector: (db: DB) => T, isEqual: (a: T, b: T) => boolean = Object.is): T {
@@ -80,7 +65,7 @@ export function hardDelete(table: TableName, ids: ID[]): void {
   }))
 }
 
-let sequence = Math.max(0, ...[...Object.keys(restored.chats), ...Object.keys(restored.messages), ...Object.keys(restored.approvals)].map(id => Number(id.match(/_(\d+)$/)?.[1] ?? 0)))
+let sequence = 0
 export function nextId(prefix: string): ID {
   return `${prefix}_${++sequence}`
 }

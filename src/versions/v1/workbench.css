@@ -42,7 +42,7 @@
   height: 38px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 20px 0 12px;
   background: var(--c-page);
   border-bottom: var(--hair) solid var(--c-line);
   font-size: 12px;
@@ -214,8 +214,6 @@ body:has(.wb-page .wb-selection) {
 /* Text slots shrink; numeric columns and controls retain their geometry. */
 .wb-header > div:first-child { min-width: 0; flex: 1; }
 .wb-header p, .wb-table th > span, .wb-detail h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wb-header [role="tablist"] { min-width: 0; width: 340px; max-width: 50%; }
-.wb-header [role="tab"] { flex: 1; }
 .wb-table th > span { display: block; }
 .wb-table col:nth-child(3) { width: 160px; }
 .wb-group-label { min-width: 0; }

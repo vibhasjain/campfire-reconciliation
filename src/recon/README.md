@@ -82,8 +82,7 @@ acceptLabel?, rejectLabel?, footer?})`: plain-English reasons, evidence and entr
   Difference contains just formatted money; done exists only while summary.done.
 - `npx tsx src/recon/store.check.ts` → ALL CHECKS PASSED.
 - `npx tsx src/recon/flows.check.ts` → ALL FLOW CHECKS PASSED (real headless engine).
-- `npx tsx src/recon/persistence.check.ts` checks reload, version isolation, fast
-  bypass, blocked/corrupt storage, interrupted output and ID continuity.
+- Nothing persists: every load starts the demo fresh.
 - Sandbox builds: export `CAMPFIRE_OUT_DIR=dist` for build and preview; deployment
   defaults to `dist`. `npm run build`, `npm run lint`.
 - Preview: `npm run preview -- --port 4802 --strictPort`; `/v1|2|3?fast`.

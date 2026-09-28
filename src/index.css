@@ -369,6 +369,8 @@
   html,
   body {
     touch-action: pan-x pan-y;
+    /* no rubber-band bounce: pinned edges (sheet composer, sticky bars) never drift */
+    overscroll-behavior: none;
   }
 
   * {

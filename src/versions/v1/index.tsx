@@ -668,7 +668,7 @@ export default function Workbench() {
                         {showGroup && (
                           <div className="wb-group-label">
                             <span className="min-w-0 truncate">{group}</span>
-                            <span className="ml-2 shrink-0 whitespace-nowrap tabular-nums">
+                            <span className="ml-auto shrink-0 pl-2 whitespace-nowrap tabular-nums">
                               {
                                 all.filter(
                                   (row) =>

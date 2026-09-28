@@ -1,4 +1,3 @@
-import { resetDemo } from "@/data/persistence"
 import { Check, CheckCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -100,7 +99,7 @@ export function DoneState({ compact = false }: { compact?: boolean }) {
           <button
             type="button"
             className="text-xs text-fg-4 hover:text-fg"
-            onClick={resetDemo}
+            onClick={() => window.location.reload()}
           >
             Start over
           </button>
