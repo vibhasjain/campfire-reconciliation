@@ -69,6 +69,12 @@ for (const itemId of Object.keys(recon.getState().items).filter(id => recon.getS
   await postToThread(itemId, "@Ember explain the confidence", [])
   await until(() => !isRunning(thread), `Second Ember reply for ${itemId}`)
   assert(recon.getState().items[itemId].suggestions.length === added.length, "Second exchange adds nothing")
+  const explanation = Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
+  assert(explanation?.parts.some(p => p.type === "text" && p.markdown === added[0].reasoning && !/\n|\*\*/.test(p.markdown)), "Confidence reply uses factual prose without a list")
+  await postToThread(itemId, "@Ember your recommendation?", [])
+  await until(() => !isRunning(thread), `Fallback reply for ${itemId}`)
+  const fallback = Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
+  assert(fallback?.parts.some(p => p.type === "text" && p.markdown === `I'd go with '${added[0].title}' at ${added[0].confidence}%.`), "Fallback names the top suggestion and confidence in one sentence")
   ok(acceptSuggestion(itemId), "Accept the new follow-up through the shared action")
   await flushApprovals()
   assert(recon.getState().items[itemId].status === "resolved", "Follow-up acceptance resolves the item")
@@ -117,9 +123,9 @@ assert(
   "Beginning discrepancy uses book delta"
 )
 assert(
-  compactItems(queue).split("\n").length === 7 &&
-    compactItems(queue).endsWith("and 8 more"),
-  "Lists show six items and remaining count"
+  compactItems(queue).startsWith("14 items remain, starting with ") &&
+    !compactItems(queue).includes("\n"),
+  "Remaining items use one sentence with a count and the next item"
 )
 reset()
 assert(
@@ -407,7 +413,7 @@ const closing = Object.values(db.get().messages)
   ?.parts.at(-1)
 assert(
   closing?.type === "text" &&
-    closing.markdown.startsWith("As of ") && closing.markdown.includes(`Accepted ${eligible.length - 1} suggestions.`),
+    closing.markdown.includes("(As of ") && closing.markdown.includes(`Accepted ${eligible.length - 1} suggestions.`),
   "Batch reports the actual number accepted"
 )
 assert(
@@ -423,7 +429,7 @@ reset()
 const summaryChat = send({ chatId: "page", text: "what's left?", mentions: [], attachments: [], context: [] })
 await until(() => !isRunning(summaryChat), "Live summary")
 const summaryPart = Object.values(db.get().messages).filter(m => m.chatId === summaryChat && m.role === "assistant").at(-1)?.parts.at(-1)
-assert(summaryPart?.type === "text" && /^As of \d{1,2}:\d{2} [AP]M/.test(summaryPart.markdown), "Live answer starts with local time")
+assert(summaryPart?.type === "text" && /\(As of \d{1,2}:\d{2} [AP]M\)$/.test(summaryPart.markdown), "Live answer ends with local time")
 assert(summaryPart.snapshot?.question === "what's left?" && summaryPart.snapshot.clock === recon.getState().clock, "Snapshot retains exact question and revision")
 ok(acceptSuggestion("r06"), "Change state after summary")
 assert(summaryPart.snapshot.clock !== recon.getState().clock, "Live answer becomes stale after a state change")

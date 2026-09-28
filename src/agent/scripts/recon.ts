@@ -1,8 +1,8 @@
 import type { ReconCandidateCard } from "@/recon/cards"
 import type { SendInput, RunCtx, Script } from "../types"
-import { emberFollowUps, suggestionReasons, type ActionRecord, type Suggestion } from "@/recon/data"
+import { emberFollowUps, suggestionSummary, type ActionRecord, type Suggestion } from "@/recon/data"
 import type { Result } from "@/recon/store"
-import { fmtDate, fmtMoney, summarize } from "@/recon/store"
+import { fmtMoney, summarize } from "@/recon/store"
 import { recon, reconUi, itemAmount, queueItems } from "@/recon/useRecon"
 import {
   acceptSuggestion,
@@ -261,7 +261,7 @@ async function tool(
     )
 }
 function confidenceExplanation(suggestion: Suggestion): string {
-  return suggestionReasons(suggestion).map(reason => `- ${reason}`).join("\n")
+  return suggestionSummary(suggestion)
 }
 
 function openItems() {
@@ -270,18 +270,15 @@ function openItems() {
   )
 }
 export function compactItems(items: ReturnType<typeof openItems>): string {
-  const lines = items.slice(0, 6).map((item) => {
-    const top = item.suggestions[0]
-    return `- **${item.title}** · ${fmtMoney(itemAmount(item))} · ${item.status === "awaiting_approval" ? "Awaiting Daniel" : top ? `${top.title} (${top.confidence}%)` : "Review needed"}`
-  })
-  if (items.length > 6) lines.push(`and ${items.length - 6} more`)
-  return lines.join("\n")
+  const first = items[0]
+  if (!first) return "All items are reconciled."
+  return `${items.length} ${items.length === 1 ? "item remains" : "items remain"}, starting with ${first.title} for ${fmtMoney(itemAmount(first))}.`
 }
 
 async function saySnapshot(ctx: RunCtx, markdown: string) {
   const clock = recon.getState().clock
   const time = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
-  await ctx.say(`As of ${time}\n\n${markdown}`, { snapshot: { clock, question: ctx.input.text } })
+  await ctx.say(`${markdown} (As of ${time})`, { snapshot: { clock, question: ctx.input.text } })
 }
 
 export const reconciliationScript: Script = {
@@ -309,7 +306,7 @@ export const reconciliationScript: Script = {
         ctx.card({ kind: "recon-item", itemId: match.id })
       await ctx.say(
         found.length
-          ? "Here is the Stripe payout from September 28."
+          ? "Found the September 28 Stripe payout."
           : "No reconciled Stripe payout is dated September 28."
       )
       return
@@ -319,7 +316,7 @@ export const reconciliationScript: Script = {
       const items = openItems()
       const summary = summarize(recon.getState())
       await saySnapshot(ctx,
-        `${items.length ? compactItems(items) : "All items are reconciled."}\n\nDifference: ${fmtMoney(summary.difference)}`
+        `${compactItems(items)} The difference is ${fmtMoney(summary.difference)}.`
       )
       return
     }
@@ -366,7 +363,7 @@ export const reconciliationScript: Script = {
       }
       await flushApprovals()
       await saySnapshot(ctx,
-        `Accepted ${acceptedCount} suggestions. The difference is now **${fmtMoney(summarize(recon.getState()).difference)}**.`
+        `Accepted ${acceptedCount} suggestions. The difference is now ${fmtMoney(summarize(recon.getState()).difference)}.`
       )
       return
     }
@@ -424,7 +421,7 @@ export const reconciliationScript: Script = {
       const suggestion = activeSuggestion(itemId)
       if (!suggestion) {
         await ctx.say(
-          "There are no visible suggestions to explain. I can search for another candidate."
+          "No suggestions are visible. Want me to search for a match?"
         )
         return
       }
@@ -438,7 +435,7 @@ export const reconciliationScript: Script = {
         ctx,
         bookFee(itemId),
         itemId === "r08"
-          ? "Recorded the proposed wire-fee adjustment and requested Daniel’s approval."
+          ? "Recorded the $25 wire-fee adjustment for Daniel’s approval."
           : "Booked the bank fee to 6820 · Bank Service Charges."
       )
       return
@@ -449,7 +446,7 @@ export const reconciliationScript: Script = {
       )
       if (!suggestion) {
         await ctx.say(
-          "This item has no supported many-to-one match. Select the bank line and the invoice lines to compare their totals."
+          "No invoice-group suggestion is available. Select the bank and invoice lines to compare totals."
         )
         return
       }
@@ -490,7 +487,7 @@ export const reconciliationScript: Script = {
       )
       if (!suggestion) {
         await ctx.say(
-          "This item has no outstanding-check suggestion. I can explain its timing treatment."
+          "There’s no outstanding-check suggestion for this item."
         )
         return
       }
@@ -530,27 +527,15 @@ export const reconciliationFallback: Script = {
   async run(ctx) {
     const itemId = contextItemId(ctx.input)
     const item = itemId ? recon.getState().items[itemId] : undefined
-    if (!item) {
-      await ctx.say(
-        "- Show what’s left and the current difference.\n- Find a reconciled payout or explain a suggestion.\n- Accept high-confidence suggestions after your review."
-      )
-      return
-    }
-    const state = recon.getState()
-    const summarizeSide = (side: "bank" | "book") => {
-      const ids = side === "bank" ? item.bankIds : item.bookIds
-      const lines = ids.map((id) =>
-        side === "bank" ? state.bankLines[id] : state.bookLines[id]
-      )
-      return lines.length
-        ? `${side === "bank" ? "Bank" : "Books"}: ${fmtMoney(lines.reduce((total, line) => total + line.amount, 0))} · ${[...new Set(lines.map((line) => fmtDate(line.date)))].join(", ")}`
-        : `No ${side === "bank" ? "bank" : "book"} line`
-    }
-    const suggestion = activeSuggestion(item.id)
-    const awaiting =
-      item.status === "awaiting_approval" ? "\n\nAwaiting Daniel." : ""
+    const suggestion = item?.suggestions[0] ?? (!item ? openItems()[0]?.suggestions[0] : undefined)
     await ctx.say(
-      `**${item.title}**\n\n${summarizeSide("bank")} · ${summarizeSide("book")}.${awaiting}\n\n${suggestion ? `Top suggestion: **${suggestion.title}** (${suggestion.confidence}%).` : "There are no visible suggestions."}\n\n- Search for another candidate.\n- Explain this suggestion.\n- ${!item.bankIds.length && item.bookIds.length ? "Mark the check outstanding." : "Edit the description or date."}`
+      suggestion
+        ? `I'd go with '${suggestion.title}' at ${suggestion.confidence}%.`
+        : item
+          ? "No suggestions are visible. Want me to search for a match?"
+          : openItems().length
+            ? "No suggestions are visible for the next open item."
+            : "All items are reconciled."
     )
   },
 }
