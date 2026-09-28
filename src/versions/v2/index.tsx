@@ -1,4 +1,3 @@
-import { ActionTooltip } from "@/components/ui/tooltip"
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import {
@@ -6,7 +5,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
-  Keyboard,
   RotateCcw,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -87,7 +85,9 @@ function LedgerLine({
           {line.date.slice(5).replace("-", "/")}
         </time>
       </span>
-      <span title={line.description} className="paired-description">{line.description}</span>
+      <span title={line.description} className="paired-description">
+        {line.description}
+      </span>
       <Money cents={line.amount} />
     </button>
   )
@@ -233,7 +233,8 @@ function Group({
               className="paired-unreconcile"
               data-action="unreconcile"
               aria-label={`Unreconcile ${item.title}`}
-              tooltip="Unreconcile" shortcut="U"
+              tooltip="Unreconcile"
+              shortcut="U"
               onClick={() => {
                 selectItem(item.id)
                 unreconcileItem(item.id)
@@ -256,7 +257,8 @@ function Group({
               {item.suggestions.length > 1 && (
                 <div className="paired-alternatives">
                   <Button
-                    tooltip="Previous suggestion" shortcut="←"
+                    tooltip="Previous suggestion"
+                    shortcut="←"
                     variant="ghost"
                     aria-label="Previous suggestion"
                     onClick={() => cycleSuggestion(item.id, -1)}
@@ -264,7 +266,8 @@ function Group({
                     <ChevronLeft />
                   </Button>
                   <Button
-                    tooltip="Next suggestion" shortcut="→"
+                    tooltip="Next suggestion"
+                    shortcut="→"
                     variant="ghost"
                     aria-label="Next suggestion"
                     onClick={() => cycleSuggestion(item.id, 1)}
@@ -430,11 +433,13 @@ export default function V2() {
       </header>
       <div className="paired-summary">
         <div>
-          <span className="min-w-0 truncate">Books (adjusted)</span> <Money cents={summary.adjustedBook} />
+          <span className="min-w-0 truncate">Books (adjusted)</span>{" "}
+          <Money cents={summary.adjustedBook} />
         </div>
         <ReconBalance variant="compact" className="paired-balance" />
         <div>
-          <span className="min-w-0 truncate">Statement (adjusted)</span> <Money cents={summary.adjustedBank} />
+          <span className="min-w-0 truncate">Statement (adjusted)</span>{" "}
+          <Money cents={summary.adjustedBank} />
         </div>
       </div>
       <div className="paired-ledger-surface">
@@ -451,16 +456,11 @@ export default function V2() {
             }}
           >
             <ChevronRight className={showResolved ? "rotate-90" : ""} />
-            <span className="shrink-0 whitespace-nowrap tabular-nums">{reconciled.length}</span><span className="min-w-0 truncate">reconciled</span>
+            <span className="shrink-0 whitespace-nowrap tabular-nums">
+              {reconciled.length}
+            </span>
+            <span className="min-w-0 truncate">reconciled</span>
           </button>
-          <ActionTooltip label="Show keyboard shortcuts" shortcut="?">
-            <button
-              aria-label="Keyboard shortcuts"
-              onClick={() => reconUi.set((s) => ({ ...s, shortcutsOpen: true }))}
-            >
-              <Keyboard />
-            </button>
-          </ActionTooltip>
         </div>
         {showResolved && (
           <div className="paired-resolved">

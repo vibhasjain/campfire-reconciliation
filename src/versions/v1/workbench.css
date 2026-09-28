@@ -212,7 +212,7 @@ body:has(.wb-page .wb-selection) {
 }
 
 /* Text slots shrink; numeric columns and controls retain their geometry. */
-.wb-header > div:first-child { min-width: 0; flex: 1; }
+.wb-header > div:first-child { min-width: 0; }
 .wb-header p, .wb-table th > span, .wb-detail h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wb-table th > span { display: block; }
 .wb-table col:nth-child(3) { width: 160px; }

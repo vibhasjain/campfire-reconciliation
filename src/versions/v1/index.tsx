@@ -12,7 +12,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock3,
-  Keyboard,
   RotateCcw,
   X,
 } from "lucide-react"
@@ -320,55 +319,43 @@ function Balance() {
     ["Adjusted book", s.adjustedBook],
   ]
   return (
-    <div className="border-y-hair sticky top-0 z-10 flex items-center gap-2 border-line bg-page py-4">
-      <Popover>
-        <PopoverTrigger asChild>
-          <button
-            aria-label="Reconciliation bridge"
-            className="wb-balance flex min-h-9 min-w-0 flex-1 items-center rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
-          >
-            <ReconBalance
-              variant="compact"
-              showProgress={false}
-              afterDifference={
-                <ChevronDown className="size-4 shrink-0 text-fg-3" />
-              }
-            />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          align="start"
-          className="w-80 max-w-[calc(100vw-2rem)] p-4"
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          aria-label="Reconciliation bridge"
+          className="wb-balance flex min-h-0! min-w-0 items-center rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
         >
-          <h2 className="mb-4 text-sm font-medium">Balance bridge</h2>
-          <div className="space-y-3">
-            {lines.map(([label, cents], index) => (
-              <div
-                key={label}
-                className={cn(
-                  "flex justify-between gap-4 text-xs text-fg-3",
-                  (index === 3 || index === 6) &&
-                    "border-t-hair border-line pt-3 font-medium text-fg"
-                )}
-              >
-                <span>{label}</span>
-                <Money cents={cents} />
-              </div>
-            ))}
-          </div>
-        </PopoverContent>
-      </Popover>
-      <Button
-        tooltip="Show keyboard shortcuts"
-        shortcut="?"
-        variant="ghost"
-        size="icon"
-        aria-label="Keyboard shortcuts"
-        onClick={() => reconUi.set((s) => ({ ...s, shortcutsOpen: true }))}
+          <ReconBalance
+            variant="compact"
+            showProgress={false}
+            afterDifference={
+              <ChevronDown className="size-4 shrink-0 text-fg-3" />
+            }
+          />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        className="w-80 max-w-[calc(100vw-2rem)] p-4"
       >
-        <Keyboard />
-      </Button>
-    </div>
+        <h2 className="mb-4 text-sm font-medium">Balance bridge</h2>
+        <div className="space-y-3">
+          {lines.map(([label, cents], index) => (
+            <div
+              key={label}
+              className={cn(
+                "flex justify-between gap-4 text-xs text-fg-3",
+                (index === 3 || index === 6) &&
+                  "border-t-hair border-line pt-3 font-medium text-fg"
+              )}
+            >
+              <span>{label}</span>
+              <Money cents={cents} />
+            </div>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -539,13 +526,16 @@ export default function Workbench() {
   }
   return (
     <section className="wb-page px-4 py-6 lg:px-7" data-version="1">
-      <header className="wb-header mb-2 flex items-center justify-between gap-5">
-        {/* The title gives way; the tabs are fixed UI and never shrink. */}
-        <div className="min-w-0 flex-1">
+      {/* Tabs wrap under the title when space runs out, so the title never truncates early. */}
+      <header className="wb-header mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3">
+        <div className="max-w-full min-w-0 flex-auto">
           <h1 className="truncate text-xl font-semibold tracking-tight">
             Chase Operating ••4821
           </h1>
-          <p className="mt-1.5 text-xs text-fg-3">September 2026</p>
+          <div className="mt-1.5 flex min-w-0 items-center gap-6 text-xs">
+            <p className="shrink-0 text-fg-3">September 2026</p>
+            <Balance />
+          </div>
         </div>
         <div
           role="tablist"
@@ -576,7 +566,6 @@ export default function Workbench() {
           ))}
         </div>
       </header>
-      <Balance />
       {summary.done && tab === "To review" ? (
         <div className="wb-done mt-8">
           <DoneState compact />

@@ -3,6 +3,7 @@ import { lazy, Suspense, type ReactNode } from "react"
 import {
   Bell,
   House,
+  Keyboard,
   ChevronRight,
   Menu,
   MessageSquare,
@@ -82,7 +83,10 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
           className="hidden size-3 shrink-0 text-fg-4 md:block"
         />
         <InertControl className="min-w-0 truncate rounded px-1 py-1.5">
-          <span className="hidden sm:inline">1010 · Chase Operating ••4821</span><span className="sm:hidden">••4821</span>
+          <span className="hidden sm:inline">
+            1010 · Chase Operating ••4821
+          </span>
+          <span className="sm:hidden">••4821</span>
         </InertControl>
         <ChevronRight
           aria-hidden="true"
@@ -145,6 +149,18 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
             <Search className="size-[17px]" />
           </button>
         </ActionTooltip>
+        <ActionTooltip label="Keyboard shortcuts" shortcut="?">
+          <button
+            type="button"
+            aria-label="Keyboard shortcuts"
+            onClick={() =>
+              reconUi.set((state) => ({ ...state, shortcutsOpen: true }))
+            }
+            className="flex size-8 items-center justify-center rounded-md text-fg-3 outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <Keyboard className="size-[17px]" />
+          </button>
+        </ActionTooltip>
       </div>
     </header>
   )
@@ -184,7 +200,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <div className="flex h-full min-w-0 flex-col">
           <PageHeader showMenu={!desktop || collapsed} />
-          <main tabIndex={-1} data-recon-focus className="relative flex min-h-0 min-w-0 flex-1">
+          <main
+            tabIndex={-1}
+            data-recon-focus
+            className="relative flex min-h-0 min-w-0 flex-1"
+          >
             <div
               data-slot="workspace-content"
               className="@container/workspace-content relative min-h-0 min-w-0 flex-1 overflow-y-auto"
