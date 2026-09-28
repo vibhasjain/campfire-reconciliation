@@ -1,12 +1,13 @@
 // Thread turns (agent §2): user bubble, assistant turn (label, steps, streamed text, cards), thinking indicators.
 import { Fragment, useEffect, useState, type ReactNode } from "react"
-import { Check, Copy, FileText, Sparkles } from "lucide-react"
+import { Check, Copy, FileText } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { EntityRef, EntityType, Message } from "@/data/types"
 import { db } from "@/data/store"
 import { labelFor } from "@/data/selectors"
 import type { RunView } from "@/agent/engine"
 import { cn } from "@/lib/utils"
+import { AiMark } from "@/recon/AiMark"
 import { ChatMarkdown } from "./ChatMarkdown"
 import { ChatSteps } from "./ChatSteps"
 import { ChatCard } from "./cards"
@@ -114,7 +115,7 @@ export function ThinkingDots({ label = "Thinking" }: { label?: string }) {
   }, [])
   return (
     <div className="flex h-5 items-center gap-1 text-sm text-fg-3">
-      <Sparkles size={14} className="text-ai-ink" />
+      <AiMark />
       <span>
         {label}
         {".".repeat(n)}
@@ -129,7 +130,7 @@ export function AssistantMessage({ m, run }: { m: Message; run?: RunView }) {
   return (
     <div className="group/msg flex flex-col gap-3 px-[18px]" data-role="assistant" data-message-id={m.id}>
       <div className="flex h-5 items-center gap-1 text-sm leading-[145%] font-[450] text-fg-3">
-        <Sparkles size={14} className="text-ai-ink" />
+        <AiMark />
         Campfire
       </div>
       {run && m.parts.length === 0 && <div className="text-sm text-fg-4">Thinking...</div>}

@@ -1,15 +1,20 @@
-// Campfire's Ember agent glyph (flame + spark), traced from the live app's icon.
+import { EMBER_PATHS } from "./ember-paths"
+import { cn } from "@/lib/utils"
+
+// Ember's flame + spark, rendered as restrained line work at every entry point.
 export function EmberIcon({ className }: { className?: string }) {
   return (
-    <svg aria-hidden="true" viewBox="20 20 118 138" className={className}>
-      <path
-        fill="#EA580C"
-        d="M111.713 154C107.821 140.546 103.59 135.193 90 132.107C103.781 128.295 108.56 123.462 111.926 110C114.45 123.459 119.598 127.847 133 132.107C119.65 135.124 115.208 140.155 111.713 154Z"
-      />
-      <path
-        fill="#EA580C"
-        d="M44.625 85.125C48.106 85.125 51.444 83.742 53.906 81.281C56.367 78.819 57.75 75.481 57.75 72C57.75 64.755 55.125 61.5 52.5 56.25C46.872 44.999 51.324 34.967 63 24.75C65.625 37.875 73.5 50.475 84 58.875C94.5 67.275 99.75 77.25 99.75 87.75C99.75 92.576 98.799 97.355 96.953 101.814C95.106 106.272 92.399 110.324 88.986 113.736C85.574 117.149 81.522 119.856 77.064 121.703C72.605 123.549 67.826 124.5 63 124.5C58.174 124.5 53.395 123.549 48.936 121.703C44.478 119.856 40.426 117.149 37.014 113.736C33.601 110.324 30.894 106.272 29.047 101.814C27.201 97.355 26.25 92.576 26.25 87.75C26.25 81.697 28.523 75.707 31.5 72C31.5 75.481 32.883 78.819 35.344 81.281C37.806 83.742 41.144 85.125 44.625 85.125Z"
-      />
+    <svg
+      aria-hidden="true"
+      viewBox="18 18 124 142"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={9}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn("text-ai drop-shadow-[0_0_2px_var(--c-ai-glow)]", className)}
+    >
+      {EMBER_PATHS.map((d) => <path key={d} d={d} />)}
     </svg>
   )
 }

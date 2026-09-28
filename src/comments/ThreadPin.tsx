@@ -74,7 +74,7 @@ export function ThreadPin({
         {emberUnread && (
           <span
             aria-label="Unread reply from Ember"
-            className="absolute top-0.5 right-0.5 size-1.5 rounded-full bg-ai ring-2 ring-surface"
+            className="absolute top-0.5 right-0.5 size-1.5 rounded-full border border-ai-ink bg-ai-tint shadow-[0_0_3px_var(--c-ai-glow)] ring-2 ring-surface"
           />
         )}
       </Button>

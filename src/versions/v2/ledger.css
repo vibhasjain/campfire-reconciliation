@@ -230,7 +230,8 @@
   height: 6px;
   border-radius: 50%;
   background: var(--c-surface);
-  border: 1px solid var(--c-ai);
+  border: 1px solid var(--c-ai-ink);
+  box-shadow: 0 0 3px var(--c-ai-glow);
 }
 .paired-ai-mark {
   display: none;
@@ -253,7 +254,7 @@
   stroke-dasharray: none;
 }
 .paired-group[data-resolved] .paired-node {
-  background: var(--c-ai);
+  background: var(--c-ai-tint);
 }
 .paired-tools {
   display: flex;

@@ -3,7 +3,7 @@ import { ArrowUpRight, Link2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "./toast"
 
-/** 44px half-sheet header: left content, then copy link / ↗ Expand / ✕ Close. */
+/** 44px header; shares the body gutter token owned by the sheet containers. */
 export function HalfSheetHeader({
   left,
   right,
@@ -18,7 +18,7 @@ export function HalfSheetHeader({
   copyHref?: string
 }) {
   return (
-    <div className="flex h-11 shrink-0 items-center gap-5 p-2.5">
+    <div className="flex h-11 shrink-0 items-center gap-5 px-sheet-gutter py-2.5">
       <div className="flex min-w-0 flex-1 items-center gap-1">{left}</div>
       <div className="flex shrink-0 items-center gap-0.5">
         {right}

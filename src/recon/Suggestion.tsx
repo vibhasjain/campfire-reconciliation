@@ -67,7 +67,7 @@ export function Suggestion({
       className={cn(
         "min-w-0 rounded-lg border-hair border-line bg-surface",
         active &&
-          "shadow-[0_0_0_3px_color-mix(in_oklch,var(--c-ai-glow)_24%,transparent)]"
+          "shadow-[0_0_8px_var(--c-ai-glow)]"
       )}
     >
       <div className={cn("flex flex-col gap-2.5", compact ? "p-3" : "p-4")}>
@@ -176,9 +176,9 @@ export function Suggestion({
           <CollapsibleTrigger asChild>
             <Button
               type="button"
-              variant="ghost"
+              variant="ghost-inline"
               size="xs"
-              className="-ml-1.5 gap-1 text-[11px] font-normal text-fg-3"
+              className="gap-1 text-[11px] font-normal text-fg-3"
               onClick={(event) => event.stopPropagation()}
             >
               Why {suggestion.confidence}%?
@@ -255,7 +255,7 @@ export function Suggestion({
                 : suggestion.approval
                   ? "Send to Daniel"
                   : acceptLabel}
-            <Kbd className="ml-1 h-4 min-w-4 bg-surface/10 px-1 text-[10px] text-ai">
+            <Kbd className="ml-1 h-4 min-w-4 bg-surface/10 px-1 text-[10px] text-white">
               A
             </Kbd>
           </Button>

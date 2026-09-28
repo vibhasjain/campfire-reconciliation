@@ -40,10 +40,10 @@
   --c-brand-tint: #E7EFEA;
   --c-focus: rgb(10 71 51 / 0.35);
 
-  --c-ai: #B2EC96;
-  --c-ai-ink: #0A4733;
-  --c-ai-tint: rgb(178 236 150 / 0.18);
-  --c-ai-glow: rgb(178 236 150 / 0.45);
+  --c-ai: var(--c-flame);
+  --c-ai-ink: #9A3D0A;
+  --c-ai-tint: color-mix(in srgb, var(--c-ai) 6%, transparent);
+  --c-ai-glow: color-mix(in srgb, var(--c-ai) 18%, transparent);
   --c-flame: #F26B1D;
   --c-table-head: #F9F8F6;
   --c-segment: #F3F1EB;
@@ -133,6 +133,8 @@
 
 
 @theme inline static {
+  /* Half-sheet chrome and body share a single container-owned gutter. */
+  --spacing-sheet-gutter: 1.25rem;
   --font-heading: var(--font-sans);
   --font-sans: "Geist Variable", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;

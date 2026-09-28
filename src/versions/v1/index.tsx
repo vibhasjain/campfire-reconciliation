@@ -204,7 +204,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
   if (!item) return null
   return (
     <div className="wb-detail" data-workbench-detail>
-      <div className="flex items-start gap-3 px-5 py-5">
+      <div className="flex items-start gap-3 py-5">
         <h2
           ref={heading}
           tabIndex={-1}
@@ -231,7 +231,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           </Button>
         </div>
       </div>
-      <div className="space-y-1 px-3 pb-4">
+      <div className="space-y-1 pb-4">
         {item.bankIds.map((lineId) => (
           <LineRow key={lineId} side="bank" lineId={lineId} />
         ))}
@@ -239,7 +239,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           <LineRow key={lineId} side="book" lineId={lineId} />
         ))}
         {!item.bankIds.length && !item.bookIds.length && (
-          <div className="px-2 text-xs text-fg-3">
+          <div className="text-xs text-fg-3">
             Beginning balance{" "}
             <Money
               className="float-right"
@@ -248,7 +248,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           </div>
         )}
       </div>
-      <div className="px-5 pb-5">
+      <div className="pb-5">
         {item.status === "resolved" ? (
           <div className="flex items-center justify-between gap-3">
             <span className="flex items-center gap-2 text-xs text-brand">
@@ -270,7 +270,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
         )}
       </div>
       <div className="border-t-hair border-line pt-4">
-        <h3 className="px-5 pb-3 text-xs font-medium">Conversation</h3>
+        <h3 className="pb-3 text-xs font-medium">Conversation</h3>
         <ThreadView
           key={item.id}
           itemId={item.id}

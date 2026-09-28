@@ -116,7 +116,7 @@ export function CommentsInbox() {
                     {(state.unread[thread.id] ?? 0) > 0 && (
                       <span
                         aria-label="Unread"
-                        className="size-1.5 rounded-full bg-ai"
+                        className="size-1.5 rounded-full border border-ai-ink bg-ai-tint shadow-[0_0_3px_var(--c-ai-glow)]"
                       />
                     )}
                   </span>

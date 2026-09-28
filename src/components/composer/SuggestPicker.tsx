@@ -1,7 +1,7 @@
 // Generic @ mention picker, anchored above the caret.
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react"
 import { createPortal } from "react-dom"
-import { Sparkles } from "lucide-react"
+import { AiMark } from "@/recon/AiMark"
 import { Avatar } from "@/components/common"
 import { cn } from "@/lib/utils"
 import type { SuggestBridge } from "./editor"
@@ -23,7 +23,7 @@ function mentionGroups(sources: MentionSource[], query: string): Group[] {
     {
       label: "Agent",
       items: items.filter((source) => source.type === "agent").map((source) => ({
-        id: `${source.type}:${source.id}`, label: source.label, icon: <Sparkles className="text-ai-ink!" />,
+        id: `${source.type}:${source.id}`, label: source.label, icon: <AiMark />,
       })),
     },
     {
@@ -95,7 +95,7 @@ export function SuggestPicker({ bridge, sources = DEFAULT_MENTIONS }: { bridge: 
                 onMouseMove={() => setActive(idx)}
                 onClick={() => s.command({ id: it.id, label: it.label })}
                 className={cn(
-                  "flex h-7 items-center gap-2 rounded-md px-2 text-fg-2 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-fg-3",
+                  "flex h-7 items-center gap-2 rounded-md px-2 text-fg-2 [&>svg]:size-3.5 [&>svg]:shrink-0 [&>svg]:text-fg-3",
                   idx === active && "bg-fill-hover text-fg"
                 )}
               >

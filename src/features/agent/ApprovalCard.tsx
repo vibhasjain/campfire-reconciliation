@@ -1,11 +1,12 @@
 // Generic approval card: individual and bulk decisions are returned to the script.
 import { useState } from "react"
-import { Check, ShieldCheck, X } from "lucide-react"
+import { Check, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useDB } from "@/data/store"
 import type { Approval } from "@/data/types"
 import { isAwaitingApproval, resolveApproval } from "@/agent/engine"
 import { Arc } from "@/components/composer/Arc"
+import { AiMark } from "@/recon/AiMark"
 import { cn } from "@/lib/utils"
 
 type Row = Approval["rows"][number]
@@ -21,7 +22,7 @@ export function ApprovalCard({ approvalId }: { approvalId: string }) {
   return (
     <div className="flex flex-col rounded-lg border-hair border-line bg-surface shadow-button-lg">
       <div className="flex min-h-11 items-center gap-2 px-4 text-sm font-medium text-fg">
-        <ShieldCheck className="size-4 text-ai-ink" />
+        <AiMark />
         <span className="break-words">{approval.title}</span>
       </div>
       <div className={cn("flex flex-col px-2", !open && "pb-2")}>
@@ -72,7 +73,7 @@ export function ApprovalCard({ approvalId }: { approvalId: string }) {
             {pending > 1 ? "Dismiss all" : "Dismiss"}
           </Button>
           <Button
-            className="bg-ai text-ai-ink hover:bg-ai"
+            className="border-ai/25 bg-ai-tint text-ai-ink hover:bg-ai/10"
             disabled={approving || !pending}
             onClick={() => resolveApproval(approval.id, "all", "approve")}
           >
@@ -111,7 +112,7 @@ function Actions({ approval, row }: { approval: Approval; row: Row }) {
       <Button
         size="icon-sm"
         aria-label={`Approve ${row.label}`}
-        className="h-6 w-7 bg-ai text-ai-ink hover:bg-ai"
+        className="h-6 w-7 border-ai/25 bg-ai-tint text-ai-ink hover:bg-ai/10"
         disabled={busy}
         onClick={() => resolveApproval(approval.id, row.id, "approve")}
       >

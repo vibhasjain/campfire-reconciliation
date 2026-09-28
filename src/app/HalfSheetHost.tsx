@@ -102,7 +102,7 @@ export function HalfSheetHost() {
       </button>}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-hair border-line bg-surface shadow-composer">
         <HalfSheetHeader left={<span className="text-sm font-medium text-fg">{target.title ?? "Details"}</span>} onClose={close} />
-        <div className="min-h-0 flex-1 overflow-y-auto">{target.content}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-sheet-gutter">{target.content}</div>
       </div>
     </div>
   )

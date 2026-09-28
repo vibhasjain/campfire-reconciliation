@@ -3,6 +3,8 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Slot } from "radix-ui"
 
+const ghostStyle = "text-fg-2 hover:bg-fill-hover hover:text-fg aria-expanded:bg-fill-selected aria-expanded:text-fg active:bg-fill-selected"
+
 // spec §4.4 — dense 24px buttons, instant hovers (no transition), hairline borders.
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-md border-hair border-transparent bg-clip-padding font-medium whitespace-nowrap outline-none select-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-focus disabled:pointer-events-none disabled:text-fg-disabled aria-invalid:border-danger [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -11,7 +13,9 @@ const buttonVariants = cva(
       variant: {
         outline:
           "border-line bg-surface text-fg shadow-button hover:bg-[color-mix(in_oklch,var(--c-surface),var(--c-fg)_2%)] aria-expanded:bg-fill-hover dark:bg-fill-subtle dark:hover:bg-fill-hover",
-        ghost: "text-fg-2 hover:bg-fill-hover hover:text-fg aria-expanded:bg-fill-selected aria-expanded:text-fg active:bg-fill-selected",
+        ghost: ghostStyle,
+        // Content toggles align their text and background with the container edge.
+        "ghost-inline": `${ghostStyle} border-0`,
         selected: "border-line bg-fill-hover text-fg",
         brand: "bg-brand-soft text-white hover:bg-brand disabled:bg-brand-soft/50 disabled:text-white/80",
         destructive: "bg-danger text-white hover:bg-danger-strong",
@@ -33,6 +37,9 @@ const buttonVariants = cva(
         default: "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&>svg]:mx-0.5 [&_svg:not([class*='size-'])]:size-4",
       },
     },
+    compoundVariants: [
+      { variant: "ghost-inline", className: "px-0" },
+    ],
     defaultVariants: {
       variant: "outline",
       size: "xs",
