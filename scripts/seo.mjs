@@ -199,5 +199,5 @@ for (const p of PAGES) {
   )
 }
 // "/" serves v1 (the latest v1 always lives on the homepage).
-writeFileSync("dist/index.html", apply(shell, { ...PAGES.find((p) => p.path === "/v1"), path: "/" }))
+writeFileSync("dist/index.html", apply(shell, { ...PAGES.find((p) => p.path === "/v1"), path: "/", title: "Campfire" }))
 console.log(`seo: tagged ${PAGES.length + 1} pages`)
