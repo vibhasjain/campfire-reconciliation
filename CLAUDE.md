@@ -1,6 +1,6 @@
 # Campfire reconciliation take-home
 
-Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfiredesign`, renamed from `campfire-reconciliation`). Netlify's own builds are stopped (`stop_builds`) to save build minutes: every commit on `main` builds locally (from a clean worktree of the commit) and deploys to production through `scripts/deploy.sh`, run by `.git/hooks/post-commit` (re-create that hook on a fresh clone; `SKIP_DEPLOY=1` skips one). The owner reviews on the live site, not locally. Push straight to `main`; no feature branches or PRs. Commits use the GitHub noreply address (set in this repo's git config).
+Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfiredesign`, renamed from `campfire-reconciliation`). Netlify's own builds are stopped (`stop_builds`) to save build minutes: every commit on `main` builds locally (from a clean worktree of the commit) and deploys to production through `scripts/deploy.sh`, run by `.git/hooks/post-commit`, which first folds in the latest transcript (re-create that hook on a fresh clone; `SKIP_DEPLOY=1` skips one). The owner reviews on the live site, not locally. Push straight to `main`; no feature branches or PRs. Commits use the GitHub noreply address (set in this repo's git config).
 
 ## What lives where
 - `/`: the latest v1 prototype, always (same bundle as `/v1`).
@@ -9,7 +9,7 @@ Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfired
 - `/story/`: the storyboard deck (static, `public/story/`); its working docs and image briefs live in `story-src/` (not served).
 - `/concepts/<slug>/`: the Brilliant (A, B) and Paper (C, D) canvases as static HTML exports in `public/concepts/`. Never hand-edit those exports; page-level fixes (dark canvas, labels, zoom, home pill, legibility) are applied at build time by `scripts/seo.mjs`. `scripts/paper-to-html.mjs` re-renders Paper pages.
 - `/references`: curated screenshots (`public/references`, data in `src/site/references.ts`). No personal info in any image.
-- `transcript/session.md`: exported with `scripts/export-transcript.py`; private redaction terms live in the gitignored `private/redact-terms.txt`.
+- `transcript/session.md`: re-exported on every commit by the post-commit hook (`scripts/backup-transcript.sh` → `scripts/export-transcript.py`, amended into that commit before deploy); private redaction terms live in the gitignored `private/redact-terms.txt`.
 - `private/`: gitignored local-only material. Never commit it.
 
 ## Build and checks
