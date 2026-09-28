@@ -9,7 +9,13 @@ if (!mode) {
     return child.stdout.trim()
   }
   const snapshot = run("save")
+  assert.equal(JSON.parse(snapshot).schema, 2)
   run("restore", snapshot)
+  const stale = JSON.parse(snapshot)
+  stale.schema = 1
+  stale.slices.comments.threads = {}
+  stale.slices.db.messages = {}
+  run("stale", JSON.stringify(stale))
   run("fast", snapshot)
   run("other", snapshot)
   run("broken", "{invalid")
@@ -29,8 +35,48 @@ if (!mode) {
   } })
   const { recon, reconUi } = await import("./useRecon")
   const { db, nextId } = await import("@/data/store")
-  const { comments, appendThreadMessage, setThreadResolved } = await import("@/comments/store")
+  const { comments, appendThreadMessage, setThreadResolved, seedThreads, messageSnippet } = await import("@/comments/store")
   const { flushDemo } = await import("@/data/persistence")
+  // Coverage and idempotence apply to fresh, restored and invalidated snapshots.
+  const before = JSON.stringify({ db: db.get(), comments: comments.get() })
+  seedThreads()
+  assert.equal(JSON.stringify({ db: db.get(), comments: comments.get() }), before)
+  let exchanges = 0
+  let seedCount = 0
+  for (const item of Object.values(recon.getState().items)) {
+    const chatId = `thread:${item.id}`
+    const messages = Object.values(db.get().messages).filter(m =>
+      m.chatId === chatId && (m.id.startsWith("seed-") || m.id.startsWith("message-r")))
+    assert(messages.length >= 1 && messages.length <= 4, `${item.id}: missing or overlong seed`)
+    assert(comments.get().threads[chatId])
+    seedCount += messages.length
+    if (messages.length > 1) {
+      exchanges++
+      assert(new Set(messages.map(m => m.author)).size > 1)
+    }
+    let previous = 0
+    for (const message of messages) {
+      const at = Date.parse(message.createdAt)
+      assert(at > previous && at >= Date.parse("2026-09-01") && at < Date.parse("2026-10-06"))
+      previous = at
+      assert(message.author && recon.getState().teammates[message.author])
+      assert(messageSnippet(message).length > 0)
+      if (message.author === "ember") {
+        const text = message.parts.filter(p => p.type === "text").map(p => p.markdown).join(" ")
+        assert(text.length < 200 && !text.includes("\n"))
+      }
+      for (const [, type, id] of (message.text ?? "").matchAll(/\[\[(agent|member):([^\]]+)\]\]/g))
+        assert(message.mentions?.some(ref => ref.type === type && ref.id === id))
+    }
+  }
+  assert.equal(Object.keys(comments.get().threads).length, 221)
+  assert.equal(seedCount, 333)
+  assert.equal(exchanges, 111)
+  if (mode === "stale") {
+    assert.equal(comments.get().threads["thread:r04"].resolved, false)
+    assert(!Object.values(db.get().messages).some(m => m.text === "Persist this comment"))
+    assert.equal(db.get().chats.page, undefined)
+  }
   if (mode === "save") {
     recon.accept("r06", recon.getState().items.r06.suggestions[0].id)
     recon.reject("r08", recon.getState().items.r08.suggestions[0].id)

@@ -1,6 +1,6 @@
 # Campfire reconciliation take-home
 
-Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfiredesign`, renamed from `campfire-reconciliation`). Netlify's own builds are stopped (`stop_builds`) to save build minutes: every commit on `main` builds locally and deploys to production through `scripts/deploy.sh`, run by `.git/hooks/post-commit` (re-create that hook on a fresh clone; `SKIP_DEPLOY=1` skips one). The owner reviews on the live site, not locally. Push straight to `main`; no feature branches or PRs. Commits use the GitHub noreply address (set in this repo's git config).
+Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfiredesign`, renamed from `campfire-reconciliation`). Netlify's own builds are stopped (`stop_builds`) to save build minutes: every commit on `main` builds locally (from a clean worktree of the commit) and deploys to production through `scripts/deploy.sh`, run by `.git/hooks/post-commit` (re-create that hook on a fresh clone; `SKIP_DEPLOY=1` skips one). The owner reviews on the live site, not locally. Push straight to `main`; no feature branches or PRs. Commits use the GitHub noreply address (set in this repo's git config).
 
 ## What lives where
 - `/`: the latest v1 prototype, always (same bundle as `/v1`).

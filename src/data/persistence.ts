@@ -1,3 +1,5 @@
+// Version 2 refreshes the September close conversations across all saved slices.
+const SCHEMA_VERSION = 2
 /** One atomic snapshot per demo path; fast fixtures never touch storage. */
 function storageKey(): string | undefined {
   if (typeof window === "undefined" || new URLSearchParams(window.location.search).has("fast")) return
@@ -7,7 +9,7 @@ let saved: Record<string, unknown> = {}
 try {
   const key = storageKey()
   const value = key ? JSON.parse(window.localStorage.getItem(key) ?? "null") : null
-  if (value?.schema === 1 && value.slices && typeof value.slices === "object") saved = value.slices
+  if (value?.schema === SCHEMA_VERSION && value.slices && typeof value.slices === "object") saved = value.slices
 } catch { /* Use fixtures when storage is unavailable or corrupt. */ }
 const readers = new Map<string, () => unknown>()
 let timer: ReturnType<typeof setTimeout> | undefined
@@ -37,7 +39,7 @@ export function flushDemo() {
   try {
     const key = storageKey()
     if (!key || resetting) return
-    window.localStorage.setItem(key, JSON.stringify({ schema: 1, slices: Object.fromEntries([...readers].map(([name, read]) => [name, read()])) }))
+    window.localStorage.setItem(key, JSON.stringify({ schema: SCHEMA_VERSION, slices: Object.fromEntries([...readers].map(([name, read]) => [name, read()])) }))
   } catch { /* Storage quota/privacy settings must not interrupt the demo. */ }
 }
 export function resetDemo() {
