@@ -55,7 +55,6 @@
 }
 .wb-unreconcile {
   opacity: 0;
-  background: var(--c-surface);
 }
 .wb-table tr:is(:hover, :focus-within) .wb-unreconcile {
   opacity: 1;

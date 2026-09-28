@@ -698,24 +698,26 @@ export default function Workbench() {
                           </span>
                         </span>
                       </td>
-                      <td className={cn(TABLE_CELL, "wb-pin relative")}>
-                        <ThreadPin itemId={item.id} />
-                        {item.status === "resolved" && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            data-action="unreconcile"
-                            aria-label={`Unreconcile ${item.title}`}
-                            title="Unreconcile (U)"
-                            className="wb-unreconcile absolute top-1 right-1"
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              unreconcileItem(item.id)
-                            }}
-                          >
-                            <RotateCcw />
-                          </Button>
-                        )}
+                      <td className={cn(TABLE_CELL, "wb-pin")}>
+                        <div className="flex items-center justify-end gap-0.5">
+                          <ThreadPin itemId={item.id} />
+                          {item.status === "resolved" && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              data-action="unreconcile"
+                              aria-label={`Unreconcile ${item.title}`}
+                              title="Unreconcile (U)"
+                              className="wb-unreconcile h-7 px-1.5 text-fg-3"
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                unreconcileItem(item.id)
+                              }}
+                            >
+                              <RotateCcw />
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </motion.tr>
                   )
