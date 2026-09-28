@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react"
-import { GitBranch, House } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { GitBranch } from "lucide-react"
+import { CampfireTag } from "@/components/common/CampfireTag"
 import { REPO } from "./versions"
 import { prefetch } from "./loaders"
 
@@ -17,38 +17,22 @@ export default function SiteFrame({
   return (
     <main className="min-h-screen bg-page text-fg">
       <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-12">
-        <header className="mb-8 flex items-start justify-between gap-4">
-          <div className="min-w-0 flex-1">
-            <a
-              href="/version-control"
-              onMouseEnter={() => prefetch("/version-control")}
-              onFocus={() => prefetch("/version-control")}
-              className="block truncate rounded-md text-xs text-fg-3 focus-visible:outline-2 focus-visible:outline-focus"
-            >
-              Campfire reconciliation
-            </a>
-            <h1 className="mt-2 truncate text-2xl font-medium tracking-tight">
-              {title}
-            </h1>
-          </div>
-          <div className="flex shrink-0 items-center gap-1">
-            <Button asChild variant="ghost" size="sm">
-              <a
-                href="/"
-                onMouseEnter={() => prefetch("/")}
-                onFocus={() => prefetch("/")}
-              >
-                <House />
-                Live
-              </a>
-            </Button>
-            <Button className="max-w-28" asChild variant="ghost" size="sm">
-              <a href={REPO}>
-                <GitBranch />
-                <span className="min-w-0 truncate">GitHub</span>
-              </a>
-            </Button>
-          </div>
+        <header className="mb-8 flex items-center justify-between gap-4">
+          <h1 className="sr-only">{title}</h1>
+          <a
+            href="/"
+            onMouseEnter={() => prefetch("/")}
+            onFocus={() => prefetch("/")}
+            className="rounded-[7px] outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <CampfireTag label="Home" size="lg" />
+          </a>
+          <a
+            href={REPO}
+            className="rounded-[7px] outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <CampfireTag label="GitHub" size="lg" icon={<GitBranch />} />
+          </a>
         </header>
         {children}
       </div>
