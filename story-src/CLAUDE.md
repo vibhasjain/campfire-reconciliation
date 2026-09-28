@@ -1,6 +1,6 @@
 # /story — Maya's close
 
-A 12-frame illustrated opening for Vibhas's Campfire take-home presentation, before the bank-reconciliation prototypes. Intended URL: https://campfire-reconciliation.netlify.app/story/. Vite publishes `public/story/`; working sources live in `story-src/`. Work only inside those story folders. No git writes. Never `rm -rf`.
+A 12-frame illustrated opening for Vibhas's Campfire take-home presentation, before the bank-reconciliation prototypes. Intended URL: https://firecamp-recon.netlify.app/story/. Vite publishes `public/story/`; working sources live in `story-src/`. Work only inside those story folders. No git writes. Never `rm -rf`.
 
 Maya Patel is the staff accountant at Arbor Analytics. It is business day 3 of the September close for Chase Operating ••4821: about 200 transactions already auto-matched, 14 unmatched, difference ($82,741.31). Daniel Kim is the controller waiting to sign off; Priya Shah is in AP; Ember is Campfire's AI agent. The arc follows the owner's voice notes: pleasure at having only fourteen left, control, checkable reasoning, shared context, freedom to change her mind, momentum, certainty, and release. The shut laptop is the final frame. No generic tagline after it.
 

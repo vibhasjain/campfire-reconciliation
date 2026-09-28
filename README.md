@@ -2,7 +2,7 @@
 
 A take-home for [Campfire](https://campfire.ai). Maya, a staff accountant, opens the September bank reconciliation on business day 3 of close. 207 lines are auto-matched and 14 are exceptions. The prototype helps her clear the exceptions quickly and confidently, and makes it obvious when she's done.
 
-- **Live:** [campfire-reconciliation.netlify.app](https://campfire-reconciliation.netlify.app/version-control) — everything, versioned: [/v1](https://campfire-reconciliation.netlify.app/v1) Workbench · [/v2](https://campfire-reconciliation.netlify.app/v2) Paired ledger · [/v3](https://campfire-reconciliation.netlify.app/v3) Flow · [/story](https://campfire-reconciliation.netlify.app/story) · [/concepts](https://campfire-reconciliation.netlify.app/version-control#concepts) (Brilliant + Paper canvases) · [/references](https://campfire-reconciliation.netlify.app/references)
+- **Live:** [firecamp-recon.netlify.app](https://firecamp-recon.netlify.app/version-control) — everything, versioned: [/v1](https://firecamp-recon.netlify.app/v1) Workbench · [/v2](https://firecamp-recon.netlify.app/v2) Paired ledger · [/v3](https://firecamp-recon.netlify.app/v3) Flow · [/story](https://firecamp-recon.netlify.app/story) · [/concepts](https://firecamp-recon.netlify.app/version-control#concepts) (Brilliant + Paper canvases) · [/references](https://firecamp-recon.netlify.app/references)
 - **Notes:** [NOTES.md](NOTES.md) covers the time log, what I wouldn't ship, and what I don't fully understand.
 - **Testing:** [UX-TEST.md](UX-TEST.md) has the automated flows and four usability rounds.
 - **Transcript:** [transcript/](transcript/)
