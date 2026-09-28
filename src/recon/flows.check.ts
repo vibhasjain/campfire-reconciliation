@@ -65,7 +65,7 @@ for (const itemId of Object.keys(recon.getState().items).filter(id => recon.getS
   assert(added.slice(1).every((candidate, i) => candidate.id === original[i].id), "Original suggestions retain their order")
   assert(reconUi.get().suggestionIndex[itemId] === 0, "New follow-up is selected")
   const reply = Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
-  assert(reply?.parts.some(p => p.type === "text" && p.markdown === `Here's a new suggestion: ${added[0].title}. It's up top.`), "Ember points to the new suggestion")
+  assert(reply?.parts.some(p => p.type === "text" && p.markdown === `Got it. Here's a new suggestion: ${added[0].title}. It's up top.`), "Ember points to the new suggestion")
   await postToThread(itemId, "@Ember explain the confidence", [])
   await until(() => !isRunning(thread), `Second Ember reply for ${itemId}`)
   assert(recon.getState().items[itemId].suggestions.length === added.length, "Second exchange adds nothing")

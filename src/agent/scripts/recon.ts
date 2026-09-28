@@ -292,7 +292,7 @@ export const reconciliationScript: Script = {
     if (itemId && ctx.input.chatId?.startsWith("thread:")) {
       const followUp = addEmberFollowUp(itemId)
       if (followUp) {
-        await ctx.say(`Here's a new suggestion: ${followUp.title}. It's up top.`)
+        await ctx.say(`Got it. Here's a new suggestion: ${followUp.title}. It's up top.`)
         return
       }
     }
