@@ -3,9 +3,9 @@
 > Draft for Vibhas to edit before sending.
 
 ## Links
-- **Everything, versioned:** https://firecamp-recon.netlify.app/version-control
-- **Prototypes:** https://firecamp-recon.netlify.app/v1 (Workbench) · /v2 (Paired ledger) · /v3 (Flow).
-- **Storyboard (the opener):** https://firecamp-recon.netlify.app/story
+- **Everything, versioned:** https://campfiredesign.netlify.app/version-control
+- **Prototypes:** https://campfiredesign.netlify.app/v1 (Workbench) · /v2 (Paired ledger) · /v3 (Flow).
+- **Storyboard (the opener):** https://campfiredesign.netlify.app/story
 - **Vector concepts:** the full Brilliant and Paper canvases under /concepts, and references at /references.
 - **Source with commit history:** github.com/vibhasjain/campfire-reconciliation. It began inside my site repo and was split out with `git subtree`, so every commit is the real one. All later work happens here. The session transcript is in `transcript/`.
 - **How I tested:** `UX-TEST.md` has automated flows plus usability rounds, with scores for each version.

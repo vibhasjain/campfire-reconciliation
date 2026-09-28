@@ -1,11 +1,11 @@
 # Campfire reconciliation take-home
 
-Public repo, live at https://firecamp-recon.netlify.app (Netlify site `firecamp-recon`, renamed from `campfire-reconciliation`). Netlify's own builds are stopped (`stop_builds`) to save build minutes: every commit on `main` builds locally and deploys to production through `scripts/deploy.sh`, run by `.git/hooks/post-commit` (re-create that hook on a fresh clone; `SKIP_DEPLOY=1` skips one). The owner reviews on the live site, not locally. Push straight to `main`; no feature branches or PRs. Commits use the GitHub noreply address (set in this repo's git config).
+Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfiredesign`, renamed from `campfire-reconciliation`). Netlify's own builds are stopped (`stop_builds`) to save build minutes: every commit on `main` builds locally and deploys to production through `scripts/deploy.sh`, run by `.git/hooks/post-commit` (re-create that hook on a fresh clone; `SKIP_DEPLOY=1` skips one). The owner reviews on the live site, not locally. Push straight to `main`; no feature branches or PRs. Commits use the GitHub noreply address (set in this repo's git config).
 
 ## What lives where
 - `/`: the latest v1 prototype, always (same bundle as `/v1`).
 - `/version-control`: the index of every artifact, newest first, design-system cards, arrow keys + Enter. **Every new artifact gets an entry in `src/site/versions.ts`.**
-- `/v1`, `/v2`, `/v3`: the coded prototypes (Workbench, Paired ledger, Flow) built on the shared core in `src/recon`, `src/comments`, `src/agent`; each version in `src/versions/v1|v2|v3`. Older Code versions are frozen alias deploys (`code-1-0--firecamp-recon.netlify.app/campfire1` …).
+- `/v1`, `/v2`, `/v3`: the coded prototypes (Workbench, Paired ledger, Flow) built on the shared core in `src/recon`, `src/comments`, `src/agent`; each version in `src/versions/v1|v2|v3`. Older Code versions are frozen alias deploys (`code-1-0--campfiredesign.netlify.app/campfire1` …).
 - `/story/`: the storyboard deck (static, `public/story/`); its working docs and image briefs live in `story-src/` (not served).
 - `/concepts/<slug>/`: the Brilliant (A, B) and Paper (C, D) canvases as static HTML exports in `public/concepts/`. Never hand-edit those exports; page-level fixes (dark canvas, labels, zoom, home pill, legibility) are applied at build time by `scripts/seo.mjs`. `scripts/paper-to-html.mjs` re-renders Paper pages.
 - `/references`: curated screenshots (`public/references`, data in `src/site/references.ts`). No personal info in any image.

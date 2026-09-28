@@ -3,7 +3,7 @@
 // static pages (story, concept canvases) are patched in dist, so re-exported canvases stay covered.
 import { readFileSync, writeFileSync } from "node:fs"
 
-const SITE = "https://firecamp-recon.netlify.app"
+const SITE = "https://campfiredesign.netlify.app"
 const APP = "Campfire reconciliation"
 
 const PAGES = [
