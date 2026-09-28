@@ -3,7 +3,7 @@ export const loadVersions = () => import("./VersionControlPage")
 export const loadReferences = () => import("./ReferencesPage")
 
 export function prefetch(href: string) {
-  if (/^\/v[123](\/|$)/.test(href)) void loadPrototype()
+  if (href === "/" || /^\/v[123](\/|$)/.test(href)) void loadPrototype()
   else if (href === "/references") void loadReferences()
   else if (href === "/version-control") void loadVersions()
   else if (/^\/(concepts|story)\//.test(href)) prefetchDocument(href)

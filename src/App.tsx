@@ -2,7 +2,8 @@ import { loadPrototype, loadReferences, loadVersions } from "@/site/loaders"
 
 // Resolve the entry route before rendering so React never mounts a throttled fallback.
 export async function loadApp() {
-  const route = location.pathname.match(/^\/v([123])(\/|$)/)
+  // "/" is always the latest v1.
+  const route = location.pathname === "/" ? ["/", "1"] : location.pathname.match(/^\/v([123])(\/|$)/)
   if (route) {
     const { default: Page } = await loadPrototype()
     const version = Number(route[1]) as 1 | 2 | 3
