@@ -18,23 +18,23 @@ export default function SiteFrame({
     <main className="min-h-screen bg-page text-fg">
       <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-12">
         <header className="mb-8 flex items-start justify-between gap-4">
-          <div>
+          <div className="min-w-0 flex-1">
             <a
               href="/version-control"
               onMouseEnter={() => prefetch("/version-control")}
               onFocus={() => prefetch("/version-control")}
-              className="rounded-md text-xs text-fg-3 focus-visible:outline-2 focus-visible:outline-focus"
+              className="block truncate rounded-md text-xs text-fg-3 focus-visible:outline-2 focus-visible:outline-focus"
             >
               Campfire reconciliation
             </a>
-            <h1 className="mt-2 text-2xl font-medium tracking-tight">
+            <h1 className="mt-2 truncate text-2xl font-medium tracking-tight">
               {title}
             </h1>
           </div>
-          <Button asChild variant="ghost" size="sm">
+          <Button className="max-w-28" asChild variant="ghost" size="sm">
             <a href={REPO}>
               <GitBranch />
-              GitHub
+              <span className="min-w-0 truncate">GitHub</span>
             </a>
           </Button>
         </header>

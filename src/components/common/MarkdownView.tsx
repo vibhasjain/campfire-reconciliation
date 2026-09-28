@@ -51,7 +51,7 @@ export function MarkdownView({ markdown, size = "doc", className }: { markdown: 
   )
   return (
     <>
-      <div ref={attach} className={cn(PROSE, SIZE[size], className)} dangerouslySetInnerHTML={{ __html: html }} />
+      <div ref={attach} className={cn(PROSE, "min-w-0 [overflow-wrap:anywhere]", SIZE[size], className)} dangerouslySetInnerHTML={{ __html: html }} />
       {slots.map((s, i) => createPortal(<EntityChip entity={s.ref} variant="mention" />, s.el, i))}
     </>
   )

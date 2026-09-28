@@ -28,16 +28,16 @@ export function ThreadMessage({
       <ParticipantAvatar actor={actor} />
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex min-h-5 items-center gap-2 pr-14">
-          <span className="text-xs font-medium text-fg">{name}</span>
+          <span title={name} className="min-w-0 truncate text-xs font-medium text-fg">{name}</span>
           <time
             dateTime={message.createdAt}
             title={new Date(message.createdAt).toLocaleString()}
-            className="text-xxs whitespace-nowrap text-fg-4"
+            className="shrink-0 tabular-nums text-xxs whitespace-nowrap text-fg-4"
           >
             {relativeTime(message.createdAt)}
           </time>
         </div>
-        <div className="[container-type:inline-size] flex min-w-0 flex-col gap-2 [&_table]:text-xs [&_td]:px-2 [&_th]:px-2">
+        <div className="[overflow-wrap:anywhere] [container-type:inline-size] flex min-w-0 flex-col gap-2 [&_table]:text-xs [&_td]:px-2 [&_th]:px-2">
           {message.role === "user" && (
             <ChatMarkdown
               markdown={message.text ?? ""}

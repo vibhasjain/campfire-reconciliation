@@ -28,16 +28,16 @@ export function EntityChip({ entity, variant = "plain", onClick, className }: {
   if (variant === "mention" && (entity.type === "member" || entity.type === "agent")) {
     // People and Ember read as "@Full Name" in their color: no avatar, no chip.
     const teammate = recon.getState().teammates[entity.id as Actor]
-    return <span className={cn("font-medium", mentionColor[entity.id as Actor] ?? "text-fg", className)}>@{teammate?.name ?? label}</span>
+    return <span className={cn("inline-block min-w-0 max-w-full truncate align-bottom font-medium", mentionColor[entity.id as Actor] ?? "text-fg", className)}>@{teammate?.name ?? label}</span>
   }
   const size = variant === "context" ? 12 : variant === "mention" ? 14 : 16
   const content = <>
     {entity.type === "member" ? <Avatar name={label} size={size} /> : entity.type === "agent" ? <AiMark /> : (
       <FileText className="shrink-0 text-fg-3" style={{ width: size, height: size }} />
     )}
-    <span className="truncate">{label}</span>
+    <span className="min-w-0 truncate" title={label}>{label}</span>
   </>
-  const base = cn("inline-flex min-w-0 items-center gap-1 text-fg", {
+  const base = cn("inline-flex min-w-0 max-w-full items-center gap-1 text-fg", {
     "text-sm": variant === "plain" || variant === "link",
     "h-6 rounded-md border-hair border-line bg-surface px-1.5 text-sm shadow-button": variant === "outline",
     "h-[18px] rounded-sm border-hair border-line px-1 text-xxs text-fg-3": variant === "context",

@@ -427,10 +427,10 @@
     border-left-color: var(--c-brand);
   }
   .paired-description {
-    display: -webkit-box;
+    display: block;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    white-space: normal;
+    white-space: nowrap;
     overflow-wrap: anywhere;
   }
   .paired-tools {
@@ -482,7 +482,7 @@
     font-size: 12px;
   }
   .paired-detail p {
-    white-space: normal;
+    white-space: nowrap;
   }
   .paired-ghost {
     min-height: 36px;
@@ -493,4 +493,25 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+.paired-ledger, .paired-header > div, .paired-summary > div { min-width: 0; }
+.paired-header > div:first-child { flex: 1; }
+.paired-header :is(h1, p), .paired-columns > span,
+.paired-filters button, .paired-ghost, .paired-connector-cue,
+.paired-side-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.paired-filters { min-width: 0; max-width: 45%; }
+.paired-filters button { flex: 1; }
+.paired-summary { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr); }
+.paired-summary > div:first-child, .paired-summary > div:last-child { gap: 8px; }
+.paired-line { grid-template-columns: max-content minmax(0, 1fr) auto; }
+.paired-line time { white-space: nowrap; }
+.paired-strip button { min-width: 0; }
+.paired-strip button:last-child { flex-shrink: 0; }
+.paired-strip svg { flex-shrink: 0; }
+.paired-connector-cue { max-width: 160px; }
+@media (max-width: 767px) {
+  .paired-header > div { max-width: 100%; width: 100%; }
+  .paired-summary { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .paired-side-label { width: 36px; }
 }

@@ -8,7 +8,7 @@ export function Money({ cents, className, ...props }: MoneyProps) {
   return (
     <span
       className={cn(
-        "inline-block text-right whitespace-nowrap tabular-nums",
+        "inline-block shrink-0 text-right whitespace-nowrap tabular-nums",
         cents === 0 && "text-fg-4",
         className
       )}
@@ -23,7 +23,7 @@ export function Delta({ cents, className, ...props }: MoneyProps) {
   return (
     <span
       className={cn(
-        "inline-block text-right whitespace-nowrap tabular-nums",
+        "inline-block shrink-0 text-right whitespace-nowrap tabular-nums",
         cents === 0 ? "text-fg-4" : "text-fg-2",
         className
       )}

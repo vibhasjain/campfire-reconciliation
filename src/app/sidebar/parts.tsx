@@ -84,7 +84,7 @@ export function SidebarRow({ icon, label, active = false, trailing, className }:
   return (
     <InertControl aria-current={active ? "page" : undefined} data-active={active} className={cn(rowClass, className)}>
       {icon && <RowIcon>{icon}</RowIcon>}
-      <span className="min-w-0 flex-1 truncate">{label}</span>
+      <span title={label} className="min-w-0 flex-1 truncate">{label}</span>
       {trailing}
     </InertControl>
   )

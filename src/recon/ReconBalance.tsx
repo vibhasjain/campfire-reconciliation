@@ -32,7 +32,7 @@ function AnimatedMoney({
   return (
     <span
       data-testid={testId}
-      className={cn("text-right whitespace-nowrap tabular-nums", className)}
+      className={cn("shrink-0 text-right whitespace-nowrap tabular-nums", className)}
     >
       {fmtMoney(shown)}
     </span>
@@ -51,13 +51,13 @@ function BalanceLine({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 text-xs",
+        "flex min-w-0 items-center justify-between gap-4 text-xs",
         strong
           ? "border-t-hair border-line pt-3 font-medium text-fg"
           : "text-fg-3"
       )}
     >
-      <span>{label}</span>
+      <span className="min-w-0 truncate" title={label}>{label}</span>
       <AnimatedMoney cents={cents} />
     </div>
   )
@@ -79,12 +79,12 @@ export function ReconBalance({
     return (
       <div
         className={cn(
-          "flex flex-wrap items-center gap-2 text-xs text-fg-3",
+          "recon-balance-compact flex min-w-0 items-center gap-2 text-xs text-fg-3",
           className
         )}
         aria-live="polite"
       >
-        <span>Difference</span>
+        <span className="w-16 shrink-0 truncate">Difference</span>
         <AnimatedMoney
           cents={summary.difference}
           testId="difference"
@@ -95,22 +95,23 @@ export function ReconBalance({
           }
         />
         {afterDifference}
-        <span>·</span>
+        <span className="w-1 shrink-0 truncate">·</span>
         <span
           role="progressbar"
           aria-label="Exceptions resolved"
           aria-valuenow={summary.resolved}
           aria-valuemin={0}
           aria-valuemax={summary.total}
-          className="h-1.5 w-20 overflow-hidden rounded-full bg-fill-selected"
+          className="h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-fill-selected"
         >
           <span
             className="block h-full rounded-full bg-brand transition-[width] duration-200"
             style={{ width: `${progress}%` }}
           />
         </span>
-        <span>
-          <span data-testid="items-left">{left}</span> left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}
+        <span className="flex min-w-0 items-center gap-1">
+          <span className="shrink-0 whitespace-nowrap tabular-nums" data-testid="items-left">{left}</span>
+          <span className="min-w-0 truncate">left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}</span>
         </span>
       </div>
     )
@@ -120,7 +121,7 @@ export function ReconBalance({
       className={cn("rounded-lg border-hair border-line bg-surface", className)}
     >
       <div className="grid gap-5 p-4 sm:grid-cols-2 sm:gap-8">
-        <div className="flex flex-col gap-3">
+        <div className="flex min-w-0 flex-col gap-3">
           <BalanceLine
             label="Statement ending"
             cents={summary.statementEnding}
@@ -139,7 +140,7 @@ export function ReconBalance({
             strong
           />
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex min-w-0 flex-col gap-3">
           <BalanceLine label="GL balance" cents={summary.glBalance} />
           <BalanceLine label="± Adjustments" cents={summary.bookAdjustments} />
           <div className="hidden h-4 sm:block" aria-hidden="true" />
@@ -151,12 +152,12 @@ export function ReconBalance({
         </div>
       </div>
       <div
-        className="flex flex-wrap items-center justify-between gap-3 border-t-hair border-line px-4 py-3"
+        className="flex min-w-0 items-center justify-between gap-3 border-t-hair border-line px-4 py-3"
         aria-live="polite"
       >
-        <div className="flex items-center gap-2 text-xs">
-          <span className="font-medium">Difference</span>
-          <span className="text-fg-4">
+        <div className="flex min-w-0 items-center gap-2 text-xs">
+          <span className="w-16 shrink-0 truncate font-medium">Difference</span>
+          <span className="min-w-0 truncate text-fg-4">
             · <span data-testid="items-left">{left}</span> left{summary.awaitingApproval > 0 && ` · ${summary.awaitingApproval} with Daniel`}
           </span>
         </div>

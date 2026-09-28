@@ -60,21 +60,21 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
         aria-label="Breadcrumb"
         className="flex min-w-0 flex-1 items-center gap-1 text-xs text-fg-3"
       >
-        <InertControl className="hidden shrink-0 rounded px-1 py-1.5 lg:block">
+        <InertControl className="hidden min-w-0 truncate rounded px-1 py-1.5 lg:block">
           <House aria-label="Home" className="size-3.5" />
         </InertControl>
         <ChevronRight
           aria-hidden="true"
           className="hidden size-3 shrink-0 text-fg-4 lg:block"
         />
-        <InertControl className="hidden shrink-0 rounded px-1 py-1.5 lg:block">
+        <InertControl className="hidden min-w-0 truncate rounded px-1 py-1.5 lg:block">
           Close Management
         </InertControl>
         <ChevronRight
           aria-hidden="true"
           className="hidden size-3 shrink-0 text-fg-4 lg:block"
         />
-        <InertControl className="hidden shrink-0 rounded px-1 py-1.5 md:block">
+        <InertControl className="hidden min-w-0 truncate rounded px-1 py-1.5 md:block">
           Bank Reconcile
         </InertControl>
         <ChevronRight
@@ -89,7 +89,7 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
           className="hidden size-3 shrink-0 text-fg-4 sm:block"
         />
         <span className="sm:hidden">·</span>
-        <span aria-current="page" className="shrink-0 px-1 text-fg">
+        <span aria-current="page" className="min-w-0 truncate px-1 text-fg">
           Sep 2026
         </span>
       </nav>
@@ -113,6 +113,7 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
         <Button
           variant="outline"
           size="sm"
+          className="max-w-28"
           aria-label="Ask Ember"
           tooltip="Ask Ember"
           shortcut="⌘E"
@@ -125,7 +126,7 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
           }
         >
           <EmberIcon className="size-4" />
-          <span className="hidden sm:inline">Ask Ember</span>
+          <span className="hidden min-w-0 truncate sm:block">Ask Ember</span>
         </Button>
         <InertControl
           aria-label="Notifications"

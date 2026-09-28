@@ -104,7 +104,7 @@ export function HalfSheetHost() {
         {/* One scrollport and gutter for chrome + content: even classic scrollbars
             reserve the same width for both. The header remains sticky. */}
         <div className="min-h-0 flex-1 overflow-y-auto px-sheet-gutter">
-          <HalfSheetHeader left={<span className="w-full text-sm font-medium text-fg">{target.title ?? "Details"}</span>} onClose={close} />
+          <HalfSheetHeader left={<span className="w-full truncate text-sm font-medium text-fg">{target.title ?? "Details"}</span>} onClose={close} />
           {target.content}
         </div>
       </div>

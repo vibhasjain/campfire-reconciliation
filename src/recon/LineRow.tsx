@@ -65,19 +65,19 @@ export function LineRow({
         className
       )}
     >
-      <span className="flex items-center gap-1 text-fg-3">
+      <span className="flex shrink-0 items-center gap-1 whitespace-nowrap text-fg-3">
         <Icon className="size-4 shrink-0" />
         <span>{side === "bank" ? "Bank" : "Books"}</span>
       </span>
       <time
         dateTime={line.date}
-        className="hidden text-fg-3 tabular-nums sm:block"
+        className="hidden whitespace-nowrap text-fg-3 tabular-nums sm:block"
       >
         {fmtDate(line.date)}
       </time>
       <span className="flex min-w-0 flex-col gap-0.5">
-        <span className="break-words text-fg-2">{line.description}</span>
-        <span className="text-xxs break-words text-fg-4">
+        <span title={line.description} className="truncate text-fg-2">{line.description}</span>
+        <span className="truncate text-xxs text-fg-4">
           <span className="sm:hidden">{fmtDate(line.date)} · </span>
           {reference ?? line.payee ?? "Statement transaction"}
           {line.reference && side === "book" ? ` · ${line.reference}` : ""}

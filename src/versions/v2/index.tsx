@@ -87,7 +87,7 @@ function LedgerLine({
           {line.date.slice(5).replace("-", "/")}
         </time>
       </span>
-      <span className="paired-description">{line.description}</span>
+      <span title={line.description} className="paired-description">{line.description}</span>
       <Money cents={line.amount} />
     </button>
   )
@@ -146,7 +146,7 @@ function Group({
           {beginning ? (
             <button className="paired-beginning" onClick={onOpen}>
               <span className="paired-side-label">Books</span>
-              <span>Beginning balance</span>
+              <span className="min-w-0 truncate">Beginning balance</span>
               <Money
                 cents={suggestion?.bookDelta ?? item.resolution?.bookDelta ?? 0}
               />
@@ -158,7 +158,7 @@ function Group({
           ) : (
             <button className="paired-ghost" onClick={onOpen}>
               <span className="paired-side-label">Books</span>
-              <span>{ghost}</span>
+              <span className="min-w-0 truncate">{ghost}</span>
             </button>
           )}
         </div>
@@ -430,11 +430,11 @@ export default function V2() {
       </header>
       <div className="paired-summary">
         <div>
-          Books (adjusted) <Money cents={summary.adjustedBook} />
+          <span className="min-w-0 truncate">Books (adjusted)</span> <Money cents={summary.adjustedBook} />
         </div>
         <ReconBalance variant="compact" className="paired-balance" />
         <div>
-          Statement (adjusted) <Money cents={summary.adjustedBank} />
+          <span className="min-w-0 truncate">Statement (adjusted)</span> <Money cents={summary.adjustedBank} />
         </div>
       </div>
       <div className="paired-ledger-surface">
@@ -451,7 +451,7 @@ export default function V2() {
             }}
           >
             <ChevronRight className={showResolved ? "rotate-90" : ""} />
-            {reconciled.length} reconciled
+            <span className="shrink-0 whitespace-nowrap tabular-nums">{reconciled.length}</span><span className="min-w-0 truncate">reconciled</span>
           </button>
           <ActionTooltip label="Show keyboard shortcuts" shortcut="?">
             <button

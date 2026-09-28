@@ -62,7 +62,7 @@ export function CommentsInbox() {
         <SheetHeader className="h-12 justify-center border-b-hair border-line px-4 py-0">
           <SheetTitle className="flex items-center gap-2">
             <MessageSquare className="size-4 text-fg-3" />
-            Comments
+            <span className="min-w-0 truncate">Comments</span>
           </SheetTitle>
         </SheetHeader>
         <Tabs
@@ -109,7 +109,7 @@ export function CommentsInbox() {
                   className="flex w-full flex-col gap-1.5 border-b-hair border-line px-4 py-3 text-left hover:bg-fill-hover focus-visible:bg-fill-hover"
                 >
                   <span className="flex w-full items-center gap-2">
-                    <span className="min-w-0 flex-1 text-sm font-medium break-words text-fg">
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium text-fg">
                       {items[thread.anchor.itemId]?.title ??
                         thread.anchor.itemId}
                     </span>
@@ -120,7 +120,7 @@ export function CommentsInbox() {
                       />
                     )}
                   </span>
-                  <span className="text-xs leading-4 break-words text-fg-3">
+                  <span className="min-w-0 max-w-full truncate text-xs leading-4 text-fg-3">
                     {messageSnippet(last) || "No comments yet"}
                   </span>
                   <span className="mt-0.5 flex w-full items-center justify-between">
@@ -133,7 +133,7 @@ export function CommentsInbox() {
                     />
                     <time
                       dateTime={last?.createdAt}
-                      className="text-xxs text-fg-4"
+                      className="shrink-0 whitespace-nowrap tabular-nums text-xxs text-fg-4"
                     >
                       {last
                         ? new Date(last.createdAt).toLocaleDateString("en-US", {

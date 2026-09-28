@@ -141,7 +141,7 @@ export default function VersionControlPage() {
         <div
           role="group"
           aria-label="Medium"
-          className="flex max-w-full [scrollbar-width:none] gap-0.5 overflow-x-auto rounded-md border-hair border-line bg-segment p-1 [&>*]:shrink-0"
+          className="flex min-w-0 max-w-full [scrollbar-width:none] gap-0.5 overflow-x-auto rounded-md border-hair border-line bg-segment p-1 [&>*]:min-w-0 [&>*]:truncate"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault()
@@ -207,9 +207,9 @@ export default function VersionControlPage() {
             }
           }}
         />
-        <span className="ml-auto flex items-center gap-1 text-xs text-fg-4">
+        <span className="ml-auto flex min-w-0 truncate items-center gap-1 text-xs text-fg-4">
           <Kbd>↑↓←→</Kbd>
-          <span>·</span>
+          <span className="w-1 shrink-0 truncate">·</span>
           <Kbd>Enter</Kbd>
         </span>
       </div>
@@ -241,7 +241,7 @@ export default function VersionControlPage() {
                 if (!(e.target as HTMLElement).closest("a, button"))
                   openLink(version.links[0].href, e)
               }}
-              className="flex min-h-60 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
+              className="flex min-w-0 min-h-60 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
             >
               <div className="flex items-center gap-2">
                 <Chip tone={tone} icon={<Icon />}>
@@ -252,25 +252,25 @@ export default function VersionControlPage() {
                   title={new Date(version.at).toLocaleString("en-US", {
                     timeZone: "America/New_York",
                   })}
-                  className="ml-auto text-xs text-fg-4 tabular-nums"
+                  className="ml-auto shrink-0 whitespace-nowrap text-xs text-fg-4 tabular-nums"
                 >
                   {time.format(new Date(version.at))}
                 </time>
               </div>
               <div className="mt-5 flex items-baseline gap-2">
-                <span className="shrink-0 text-sm text-fg-3 tabular-nums">
+                <span className="min-w-0 max-w-24 truncate text-sm text-fg-3 tabular-nums">
                   {version.version}
                 </span>
-                <h2 className="text-sm font-medium">
+                <h2 title={copy?.title ?? version.title} className="min-w-0 truncate text-sm font-medium">
                   {copy?.title ?? version.title}
                 </h2>
               </div>
               <ul className="mt-3 mb-5 space-y-1 text-xs text-fg-3">
                 {(copy?.lines ?? version.changes).slice(0, 4).map((line) => (
-                  <li key={line}>{line}</li>
+                  <li key={line} title={line} className="truncate">{line}</li>
                 ))}
               </ul>
-              <div className="mt-auto flex flex-wrap items-center gap-1.5">
+              <div className="mt-auto flex min-w-0 items-center gap-1.5">
                 {version.links.map((link, i) => (
                   <Button
                     key={link.href}
@@ -284,14 +284,14 @@ export default function VersionControlPage() {
                       onMouseEnter={() => prefetch(link.href)}
                       onFocus={() => prefetch(link.href)}
                     >
-                      {version.links.length > 1
+                      <span className="min-w-0 truncate">{version.links.length > 1
                         ? `v${i + 1}`
                         : version.medium === "Brilliant" ||
                             version.medium === "Paper"
                           ? "Open canvas"
                           : version.medium === "Story"
                             ? "Open deck"
-                            : "Browse"}
+                            : "Browse"}</span>
                     </a>
                   </Button>
                 ))}
@@ -312,7 +312,7 @@ export default function VersionControlPage() {
                 {version.commit && (
                   <a
                     href={`${REPO}/commit/${version.commit}`}
-                    className="ml-auto rounded-md text-xs text-fg-4 tabular-nums hover:text-brand focus-visible:outline-2 focus-visible:outline-focus"
+                    className="ml-auto min-w-0 truncate rounded-md text-xs text-fg-4 tabular-nums hover:text-brand focus-visible:outline-2 focus-visible:outline-focus"
                     aria-label={`Commit ${version.commit}`}
                   >
                     {version.commit}

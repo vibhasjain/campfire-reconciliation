@@ -73,7 +73,7 @@ export function SuggestionCarousel({
               <ChevronLeft className="size-4" />
             </Button>
             <span
-              className="min-w-12 text-center text-[11px] text-fg-3 tabular-nums"
+              className="shrink-0 whitespace-nowrap min-w-12 text-center text-[11px] text-fg-3 tabular-nums"
               aria-live="polite"
             >
               Suggestion {index + 1} of {suggestions.length}

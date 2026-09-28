@@ -206,8 +206,9 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
       <div className="flex items-center gap-sheet-group">
         <h2
           ref={heading}
+          title={item.title}
           tabIndex={-1}
-          className="m-0 min-w-0 flex-1 text-lg font-medium outline-none"
+          className="m-0 min-w-0 flex-1 truncate text-lg font-medium outline-none"
         >
           {item.title}
         </h2>
@@ -312,11 +313,11 @@ function Balance() {
         <PopoverTrigger asChild>
           <button
             aria-label="Reconciliation bridge"
-            className="wb-balance flex min-h-9 flex-1 items-center rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
+            className="wb-balance flex min-w-0 min-h-9 flex-1 items-center rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
             <ReconBalance
               variant="compact"
-              afterDifference={<ChevronDown className="size-4 text-fg-3" />}
+              afterDifference={<ChevronDown className="size-4 shrink-0 text-fg-3" />}
             />
           </button>
         </PopoverTrigger>
@@ -527,9 +528,10 @@ export default function Workbench() {
   }
   return (
     <section className="wb-page px-4 py-6 lg:px-7" data-version="1">
-      <header className="wb-header mb-2 flex flex-wrap items-center justify-between gap-5">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">
+      <header className="wb-header mb-2 flex items-center justify-between gap-5">
+        {/* The title gives way; the tabs are fixed UI and never shrink. */}
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-xl font-semibold tracking-tight">
             Chase Operating ••4821
           </h1>
           <p className="mt-1.5 text-xs text-fg-3">September 2026</p>
@@ -537,7 +539,7 @@ export default function Workbench() {
         <div
           role="tablist"
           aria-label="Transaction status"
-          className="flex rounded-md border-hair border-line bg-segment p-1"
+          className="flex shrink-0 rounded-md border-hair border-line bg-segment p-1"
         >
           {["To review", "Reconciled", "All"].map((name) => (
             <button
@@ -549,15 +551,15 @@ export default function Workbench() {
                 setPage(0)
               }}
               className={cn(
-                "min-h-9 rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
+                "flex shrink-0 items-center min-h-9 rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
                 tab === name
                   ? "bg-segment-active font-medium text-fg"
                   : "text-fg-3"
               )}
             >
-              {name}
+              <span>{name}</span>
               {name !== "All" && (
-                <span className="ml-2 text-fg-3 tabular-nums">
+                <span className="ml-2 shrink-0 whitespace-nowrap text-fg-3 tabular-nums">
                   {name === "To review" ? pending.length : reconciled.length}
                 </span>
               )}
@@ -576,7 +578,7 @@ export default function Workbench() {
             <colgroup>
               <col className="wb-date w-20" />
               <col />
-              <col className="w-32" />
+              <col className="w-40" />
               <col className="wb-suggestion w-40" />
               <col className="wb-pin w-20" />
             </colgroup>
@@ -656,8 +658,8 @@ export default function Workbench() {
                       <td className={cn(TABLE_CELL, "wb-date text-fg-3")}>
                         {showGroup && (
                           <div className="wb-group-label">
-                            {group}
-                            <span className="ml-2 tabular-nums">
+                            <span className="min-w-0 truncate">{group}</span>
+                            <span className="ml-2 shrink-0 whitespace-nowrap tabular-nums">
                               {
                                 all.filter(
                                   (row) =>
@@ -695,14 +697,14 @@ export default function Workbench() {
                           ) : (
                             <AiMark />
                           )}
-                          <span className="wb-action-label">
+                          <span className="wb-action-label truncate">
                             {item.status === "resolved"
                               ? "Reconciled"
                               : item.status === "awaiting_approval"
                                 ? "Awaiting Daniel"
                                 : actionLabel(item)}
                           </span>
-                          <span className="wb-phone-action">
+                          <span className="wb-phone-action truncate">
                             {item.status === "resolved"
                               ? "Done"
                               : item.status === "awaiting_approval"

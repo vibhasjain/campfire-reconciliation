@@ -46,17 +46,17 @@ export function Suggestion({
     >
       <div className={cn("flex flex-col gap-2.5", compact ? "p-3" : "p-4")}>
         {/* Mark and tag sit in boxes one title line tall, so all three share the first line's center. */}
-        <div className="flex items-start gap-2">
-          <span className="flex h-5 shrink-0 items-center">
+        <div className="flex min-w-0 items-start gap-2">
+          <span className="flex h-5 shrink-0 whitespace-nowrap items-center">
             <AiMark />
           </span>
-          <h3 className="min-w-0 flex-1 text-xs leading-5 font-medium text-fg">
+          <h3 title={suggestion.title} className="min-w-0 flex-1 truncate text-xs leading-5 font-medium text-fg">
             {suggestion.title}
           </h3>
           <span
             data-confidence
             className={cn(
-              "inline-flex h-5 shrink-0 items-center rounded-md px-1.5 text-[11px] font-medium tabular-nums",
+              "inline-flex h-5 shrink-0 whitespace-nowrap items-center rounded-md px-1.5 text-[11px] font-medium tabular-nums",
               suggestion.confidence >= 90
                 ? "bg-brand-tint text-brand"
                 : suggestion.confidence >= 70
@@ -68,7 +68,7 @@ export function Suggestion({
             {suggestion.confidence}%
           </span>
         </div>
-        <p className="text-xs leading-5 break-words text-fg-3">
+        <p title={suggestionSummary(suggestion)} className="min-w-0 line-clamp-3 text-xs leading-5 [overflow-wrap:anywhere] text-fg-3">
           {suggestionSummary(suggestion)}
         </p>
         {suggestion.approval && (
@@ -77,7 +77,7 @@ export function Suggestion({
             title={suggestion.approval.reason}
           >
             <LockKeyhole className="size-4 shrink-0" />
-            Needs Daniel’s approval
+            <span className="min-w-0 truncate">Needs Daniel’s approval</span>
           </div>
         )}
         {/* Actions and attachments always share one line; attachments shrink first. */}

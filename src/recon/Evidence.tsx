@@ -47,7 +47,7 @@ export function DocumentPreview({ attachment }: { attachment: Attachment }) {
   return (
     <article
       data-attachment-id={attachment.id}
-      className="overflow-hidden rounded-lg border-hair border-line bg-surface text-xs"
+      className="min-w-0 [overflow-wrap:anywhere] overflow-hidden rounded-lg border-hair border-line bg-surface text-xs"
     >
       <header
         className={cn(
@@ -78,14 +78,14 @@ export function DocumentPreview({ attachment }: { attachment: Attachment }) {
             Chase Operating
           </div>
         )}
-        <table className="w-full table-fixed border-collapse">
+        <table className="w-full table-fixed border-collapse [&_th]:truncate [&_td]:truncate">
           <caption className="sr-only">{attachment.title} line items</caption>
           <thead>
             <tr className="border-b-hair border-line text-fg-3">
               <th scope="col" className="pb-2 text-left font-normal">
                 {attachment.kind === "audit" ? "Activity" : "Description"}
               </th>
-              <th scope="col" className="w-28 pb-2 text-right font-normal">
+              <th scope="col" className="w-36 pb-2 text-right font-normal">
                 Amount
               </th>
             </tr>

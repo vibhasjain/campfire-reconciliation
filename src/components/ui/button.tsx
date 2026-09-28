@@ -9,7 +9,7 @@ const ghostStyle =
 
 // spec §4.4 — dense 24px buttons, instant hovers (no transition), hairline borders.
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-md border-hair border-transparent bg-clip-padding font-medium whitespace-nowrap outline-none select-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-focus disabled:pointer-events-none disabled:text-fg-disabled aria-invalid:border-danger [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "group/button inline-flex min-w-0 max-w-full shrink items-center justify-center rounded-md border-hair border-transparent bg-clip-padding font-medium whitespace-nowrap outline-none select-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-focus disabled:pointer-events-none disabled:text-fg-disabled aria-invalid:border-danger [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -37,11 +37,11 @@ const buttonVariants = cva(
         sm: "h-7 gap-1.5 px-2 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
         md: "h-8 gap-1.5 px-2.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
         lg: "h-11 gap-2 px-3 text-base [&_svg:not([class*='size-'])]:size-5",
-        "icon-sheet": "sheet-icon-button border-0",
-        icon: "size-6 [&_svg:not([class*='size-'])]:size-4",
-        "icon-xs": "size-5 rounded-sm [&_svg:not([class*='size-'])]:size-3.5",
-        "icon-sm": "size-7 [&_svg:not([class*='size-'])]:size-4",
-        "icon-lg": "size-8 [&_svg:not([class*='size-'])]:size-4",
+        "icon-sheet": "shrink-0 sheet-icon-button border-0",
+        icon: "shrink-0 size-6 [&_svg:not([class*='size-'])]:size-4",
+        "icon-xs": "shrink-0 size-5 rounded-sm [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "shrink-0 size-7 [&_svg:not([class*='size-'])]:size-4",
+        "icon-lg": "shrink-0 size-8 [&_svg:not([class*='size-'])]:size-4",
         default:
           "h-6 gap-1 px-[7px] py-0.5 text-xs-medium [&_svg:not([class*='size-'])]:size-4 [&>svg]:mx-0.5",
       },
@@ -63,6 +63,7 @@ function Button({
   tooltip,
   shortcut,
   title,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -79,6 +80,14 @@ function Button({
       : (tooltip ??
         title ??
         (size?.startsWith("icon") ? props["aria-label"] : undefined))
+  const truncateText = (content: React.ReactNode) => React.Children.map(content, (child) =>
+    typeof child === "string" || typeof child === "number"
+      ? <span className="min-w-0 truncate">{child}</span>
+      : child
+  )
+  const content = asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+    ? React.cloneElement(children, {}, truncateText(children.props.children))
+    : truncateText(children)
   const button = (
     <Comp
       data-slot="button"
@@ -86,6 +95,8 @@ function Button({
       data-size={size}
       className={cn(buttonVariants({ variant, size, edge, className }))}
       {...props}
+      title={title}
+      children={content}
       aria-label={
         props["aria-label"] ?? (typeof label === "string" ? label : undefined)
       }

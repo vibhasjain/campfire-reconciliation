@@ -89,7 +89,7 @@ function ThreadDock({ id, focusCard }: { id: string; focusCard: () => void }) {
       onClick={() => focusThread(id)}
     >
       <MessageSquare className="size-4" />
-      <span>Ask Ember or @mention…</span>
+      <span className="min-w-0 truncate">Ask Ember or @mention…</span>
     </button>
   )
   if (phone) return <ThreadPopover itemId={id}>{trigger}</ThreadPopover>
@@ -193,7 +193,7 @@ function FocusCard({ item }: { item: ReconItem }) {
         <header className="flow-card-header">
           <p className="text-xs text-fg-3">{label}</p>
           <div className="mt-3 flex items-start justify-between gap-4">
-            <h1 className="text-2xl font-medium tracking-tight">
+            <h1 title={item.title} className="min-w-0 flex-1 truncate text-2xl font-medium tracking-tight">
               {item.title}
             </h1>
             <Money

@@ -179,7 +179,7 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
       )}
       <EditorContent
         editor={editor}
-        className="[&_.is-editor-empty:first-child]:before:pointer-events-none [&_.is-editor-empty:first-child]:before:float-left [&_.is-editor-empty:first-child]:before:h-0 [&_.is-editor-empty:first-child]:before:text-fg-hint [&_.is-editor-empty:first-child]:before:content-[attr(data-placeholder)] [&_p]:min-h-[22.5px]"
+        className="[&_.is-editor-empty:first-child]:before:pointer-events-none [&_.is-editor-empty:first-child]:before:float-left [&_.is-editor-empty:first-child]:before:h-0 [&_.is-editor-empty:first-child]:before:text-fg-hint [&_.is-editor-empty:first-child]:before:content-[attr(data-placeholder)] min-w-0 [overflow-wrap:anywhere] [&_p]:min-h-[22.5px]"
       />
       <SuggestPicker bridge={bridge} sources={mentionSources} />
       <div className="flex h-7 items-center justify-between">
