@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react"
-import { GitBranch } from "lucide-react"
+import { GitBranch, House } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { REPO } from "./versions"
 import { prefetch } from "./loaders"
@@ -31,12 +31,24 @@ export default function SiteFrame({
               {title}
             </h1>
           </div>
-          <Button className="max-w-28" asChild variant="ghost" size="sm">
-            <a href={REPO}>
-              <GitBranch />
-              <span className="min-w-0 truncate">GitHub</span>
-            </a>
-          </Button>
+          <div className="flex shrink-0 items-center gap-1">
+            <Button asChild variant="ghost" size="sm">
+              <a
+                href="/"
+                onMouseEnter={() => prefetch("/")}
+                onFocus={() => prefetch("/")}
+              >
+                <House />
+                Live
+              </a>
+            </Button>
+            <Button className="max-w-28" asChild variant="ghost" size="sm">
+              <a href={REPO}>
+                <GitBranch />
+                <span className="min-w-0 truncate">GitHub</span>
+              </a>
+            </Button>
+          </div>
         </header>
         {children}
       </div>
