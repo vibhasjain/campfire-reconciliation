@@ -503,7 +503,7 @@ export default function Workbench() {
   }
   return (
     <section className="wb-page px-4 py-6 lg:px-7" data-version="1">
-      <header className="wb-header mb-6 flex flex-wrap items-center justify-between gap-5">
+      <header className="wb-header mb-2 flex flex-wrap items-center justify-between gap-5">
         <div>
           <h1 className="text-xl font-semibold tracking-tight">
             Chase Operating ••4821
