@@ -68,7 +68,7 @@ export function Suggestion({
             {suggestion.confidence}%
           </span>
         </div>
-        <p title={suggestionSummary(suggestion)} className="min-w-0 line-clamp-3 text-xs leading-5 [overflow-wrap:anywhere] text-fg-3">
+        <p title={suggestionSummary(suggestion)} className={cn("min-w-0 line-clamp-3 text-xs leading-5 [overflow-wrap:anywhere] text-fg-3")}>
           {suggestionSummary(suggestion)}
         </p>
         {suggestion.approval && (

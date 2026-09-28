@@ -53,7 +53,7 @@ export interface ReconStore {
   reject(itemId: string, suggestionId: string, actor?: Actor): Result
   unreconcile(itemId: string, actor?: Actor): Result
   matchSelected(bankIds: string[], bookIds: string[], actor?: Actor): Result
-  addSuggestion(itemId: string, suggestion: Suggestion, actor?: Actor): Result
+  addSuggestion(itemId: string, suggestion: Suggestion, actor?: Actor, position?: "first"): Result
   removeSuggestion(itemId: string, suggestionId: string, actor?: Actor): Result
   editField(
     ref: { side: "bank" | "book"; id: string },
@@ -729,7 +729,7 @@ export function createReconStore(seed: ReconState = defaultSeed): ReconStore {
         ? { ...result, delta: 0, ...(warning ? { warning } : {}) }
         : result
     },
-    addSuggestion(itemId, suggestion, actor = "ember") {
+    addSuggestion(itemId, suggestion, actor = "ember", position) {
       const item = state.items[itemId]
       if (!item) return { ok: false, reason: "Item not found" }
       if (item.status !== "open")
@@ -756,9 +756,9 @@ export function createReconStore(seed: ReconState = defaultSeed): ReconStore {
           items: {
             [itemId]: {
               ...item,
-              suggestions: [...item.suggestions, candidate].sort(
-                (a, b) => b.confidence - a.confidence
-              ),
+              suggestions: position === "first"
+                ? [candidate, ...item.suggestions]
+                : [...item.suggestions, candidate].sort((a, b) => b.confidence - a.confidence),
               surfacedIds: item.hidden.some(
                 (hidden) => hidden.id === candidate.id
               )

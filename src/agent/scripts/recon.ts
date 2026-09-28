@@ -1,6 +1,6 @@
 import type { ReconCandidateCard } from "@/recon/cards"
 import type { SendInput, RunCtx, Script } from "../types"
-import { suggestionReasons, type ActionRecord, type Suggestion } from "@/recon/data"
+import { emberFollowUps, suggestionReasons, type ActionRecord, type Suggestion } from "@/recon/data"
 import type { Result } from "@/recon/store"
 import { fmtDate, fmtMoney, summarize } from "@/recon/store"
 import { recon, reconUi, itemAmount, queueItems } from "@/recon/useRecon"
@@ -109,6 +109,23 @@ export function discoverCandidates(itemId: string): {
   }
   return { candidates, actions: recon.getState().actions.slice(before) }
 }
+/** Action history survives rejection, undo and reload; demo reset clears it. */
+export function addEmberFollowUp(itemId: string): Suggestion | undefined {
+  const candidate = emberFollowUps[itemId]
+  const state = recon.getState()
+  if (!candidate || state.items[itemId]?.status !== "open" || state.actions.some(
+    action => action.itemId === itemId && action.kind === "addSuggestion" &&
+      action.label === `Added suggestion: ${candidate.title}`
+  )) return
+  const result = recon.addSuggestion(itemId, candidate, "ember", "first")
+  if (!result.ok) return
+  reconUi.set(state => ({
+    ...state,
+    suggestionIndex: { ...state.suggestionIndex, [itemId]: 0 },
+  }))
+  return candidate
+}
+
 export function bookFee(itemId: string): Result {
   const item = recon.getState().items[itemId]
   if (!item) return { ok: false, reason: "Item not found" }
@@ -275,6 +292,13 @@ export const reconciliationScript: Script = {
     const itemId = contextItemId(ctx.input)
     const item = itemId ? recon.getState().items[itemId] : undefined
     await ctx.thinking(420)
+    if (itemId && ctx.input.chatId?.startsWith("thread:")) {
+      const followUp = addEmberFollowUp(itemId)
+      if (followUp) {
+        await ctx.say(`Here's a new suggestion: ${followUp.title}. It's up top.`)
+        return
+      }
+    }
     if (intent === "stripe") {
       await tool(ctx, "Searching reconciled Stripe payouts", [
         ["Date", "September 28"],

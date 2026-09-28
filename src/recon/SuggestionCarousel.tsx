@@ -1,3 +1,5 @@
+import { useState } from "react"
+import { motion, useReducedMotion } from "motion/react"
 import { ActionTooltip } from "@/components/ui/tooltip"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { AiMark } from "./AiMark"
@@ -24,6 +26,15 @@ export function SuggestionCarousel({
 }: SuggestionCarouselProps) {
   const item = useItem(itemId)
   const storedIndex = useReconUi((state) => state.suggestionIndex[itemId] ?? 0)
+  const reducedMotion = useReducedMotion()
+  const [observed, setObserved] = useState({ itemId, suggestions: item?.suggestions, freshId: "" })
+  if (observed.itemId !== itemId || observed.suggestions !== item?.suggestions) {
+    const fresh = observed.itemId === itemId && item?.suggestions.find(candidate =>
+      candidate.id === `${itemId}-ember-follow-up` &&
+      !observed.suggestions?.some(previous => previous.id === candidate.id)
+    )
+    setObserved({ itemId, suggestions: item?.suggestions, freshId: fresh ? fresh.id : "" })
+  }
   if (!item) return null
   const suggestions = item.suggestions
   const index = Math.max(0, Math.min(storedIndex, suggestions.length - 1))
@@ -49,14 +60,31 @@ export function SuggestionCarousel({
       role="region"
       aria-label={`Suggestions for ${item.title}`}
     >
-      <Suggestion
-        suggestion={suggestion}
-        size={size}
-        active={active}
-        onAccept={onAccept ? () => onAccept(suggestion) : undefined}
-        onReject={onReject ? () => onReject(suggestion) : undefined}
-      />
-      {suggestions.length > 1 && (
+      <motion.div
+        key={suggestion.id}
+        className="rounded-lg"
+        initial={observed.freshId === suggestion.id && !reducedMotion ? { opacity: 0, scale: 0.98 } : false}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          boxShadow: observed.freshId === suggestion.id && !reducedMotion
+            ? ["0 0 0 1px var(--c-ai-glow)", "0 0 14px 2px var(--c-ai-glow)", "0 0 0 0px transparent"]
+            : "0 0 0 0px transparent",
+        }}
+        transition={{ duration: reducedMotion ? 0 : 0.2, boxShadow: { duration: reducedMotion ? 0 : 1 } }}
+        onAnimationComplete={() => {
+          if (observed.freshId) setObserved(current => ({ ...current, freshId: "" }))
+        }}
+      >
+        <Suggestion
+          suggestion={suggestion}
+          size={size}
+          active={active}
+          onAccept={onAccept ? () => onAccept(suggestion) : undefined}
+          onReject={onReject ? () => onReject(suggestion) : undefined}
+        />
+      </motion.div>
+      {suggestions.length > 0 && (
         <div className="mt-2 flex items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <Button
@@ -65,6 +93,7 @@ export function SuggestionCarousel({
               size="icon"
               aria-label="Previous suggestion"
               shortcut="←"
+              disabled={suggestions.length === 1}
               onClick={(event) => {
                 event.stopPropagation()
                 select(index - 1)
@@ -84,6 +113,7 @@ export function SuggestionCarousel({
               size="icon"
               aria-label="Next suggestion"
               shortcut="→"
+              disabled={suggestions.length === 1}
               onClick={(event) => {
                 event.stopPropagation()
                 select(index + 1)
@@ -94,9 +124,8 @@ export function SuggestionCarousel({
           </div>
           <div className="flex items-center" aria-label="Choose suggestion">
             {suggestions.map((candidate, candidateIndex) => (
-              <ActionTooltip label={`Suggestion ${candidateIndex + 1}: ${candidate.title}`}>
+              <ActionTooltip key={candidate.id} label={`Suggestion ${candidateIndex + 1}: ${candidate.title}`}>
                 <button
-                  key={candidate.id}
                   type="button"
                   className="flex size-6 items-center justify-center rounded-md outline-none hover:bg-fill-hover focus-visible:ring-2 focus-visible:ring-focus"
                   aria-label={`Suggestion ${candidateIndex + 1}: ${candidate.title}`}

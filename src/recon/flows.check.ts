@@ -55,6 +55,38 @@ function reset() {
 }
 setFastMode(true)
 reset()
+for (const itemId of Object.keys(recon.getState().items).filter(id => recon.getState().items[id].kind === "exception")) {
+  const original = recon.getState().items[itemId].suggestions
+  reconUi.set(state => ({ ...state, suggestionIndex: { [itemId]: original.length - 1 } }))
+  const thread = await postToThread(itemId, "@Ember what do you suggest?", [])
+  await until(() => !isRunning(thread), `First Ember reply for ${itemId}`)
+  const added = recon.getState().items[itemId].suggestions
+  assert(added.length === original.length + 1 && added[0].id === `${itemId}-ember-follow-up`, "First exchange prepends exactly one follow-up")
+  assert(added.slice(1).every((candidate, i) => candidate.id === original[i].id), "Original suggestions retain their order")
+  assert(reconUi.get().suggestionIndex[itemId] === 0, "New follow-up is selected")
+  const reply = Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
+  assert(reply?.parts.some(p => p.type === "text" && p.markdown === `Here's a new suggestion: ${added[0].title}. It's up top.`), "Ember points to the new suggestion")
+  await postToThread(itemId, "@Ember explain the confidence", [])
+  await until(() => !isRunning(thread), `Second Ember reply for ${itemId}`)
+  assert(recon.getState().items[itemId].suggestions.length === added.length, "Second exchange adds nothing")
+  ok(acceptSuggestion(itemId), "Accept the new follow-up through the shared action")
+  await flushApprovals()
+  assert(recon.getState().items[itemId].status === "resolved", "Follow-up acceptance resolves the item")
+}
+assert(summarize(recon.getState()).done, "All follow-ups preserve the reconciled balance")
+reset()
+// Rejection and undo must not turn a later exchange into another first exchange.
+for (const undo of [false, true]) {
+  const thread = await postToThread("r02", "@ember help", [])
+  await until(() => !isRunning(thread), "Follow-up before removal")
+  if (undo) ok(revertAction(recon.getState().actions.at(-1)!.id), "Undo follow-up")
+  else ok(rejectSuggestion("r02"), "Reject follow-up")
+  const count = recon.getState().items.r02.suggestions.length
+  await postToThread("r02", "@ember help", [])
+  await until(() => !isRunning(thread), "Reply after removal")
+  assert(recon.getState().items.r02.suggestions.length === count, "Removed follow-up is not recreated")
+  reset()
+}
 const queue = queueItems(recon.getState())
 assert(queue[0].id === "r06" && queue[1].id === "r05", "Timing adjustments lead the queue")
 const routine = queue.filter(
@@ -248,13 +280,16 @@ assert(
   "A rejected hidden candidate is not resurrected by another search"
 )
 reset()
+// The first exchange now creates a proposal; later searches retain discovery behavior.
+const firstThread = await postToThread("r04", "@ember help", [])
+await until(() => !isRunning(firstThread), "First Notion follow-up")
 const thread = await postToThread("r04", "@ember none of these match", [])
 await until(() => !isRunning(thread), "Notion thread reply")
 assert(
   recon
     .getState()
     .items.r04.suggestions.some(
-      (candidate) => candidate.invoiceNumber === "NTN-88213"
+      (candidate) => candidate.id === "r04-invoice-NTN-88213"
     ),
   "Thread engine path surfaces NTN-88213"
 )
@@ -307,7 +342,7 @@ assert(
   !recon
     .getState()
     .items.r04.suggestions.some(
-      (candidate) => candidate.invoiceNumber === "NTN-88213"
+      (candidate) => candidate.id === "r04-invoice-NTN-88213"
     ),
   "Revert removes the added candidate"
 )

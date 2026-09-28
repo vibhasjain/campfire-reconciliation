@@ -1092,6 +1092,78 @@ propose(
   }
 )
 
+/** One extra proposal per exception, created only by the first live Ember exchange. */
+export const emberFollowUps: Record<string, Suggestion> = {}
+function followUp(
+  itemId: string,
+  title: string,
+  score: number,
+  reasoning: string,
+  extras: Partial<Suggestion> = {}
+) {
+  const original = items[itemId].suggestions[0]
+  emberFollowUps[itemId] = {
+    ...original,
+    id: `${itemId}-ember-follow-up`,
+    source: "ember",
+    title,
+    reasoning,
+    reasons: [reasoning],
+    factors: [factor("review", "Supporting evidence", reasoning, score / 100, 1)],
+    confidence: score,
+    ...extras,
+  }
+}
+followUp("r01", "Match Google after invoice review", 93,
+  "The Google invoice and payment both total $2,640. Send the invoice match to Daniel for review instead of relying on the bank alias history.",
+  { approval: { by: "daniel", reason: "Review invoice support for the Google alias" } })
+followUp("r02", "Split the charge between service and other bank fees", 76,
+  "Chase charged $285.40, up $5.55 from August. Book $279.85 to Bank Service Charges and the $5.55 increase to Bank Fees – Other.",
+  { entries: [
+    { account: "6820 · Bank Service Charges", debit: 27985, credit: 0 },
+    { account: "6800 · Bank Fees – Other", debit: 555, credit: 0 },
+    { account: cash, debit: 0, credit: 28540 },
+  ] })
+followUp("r03", "Apply the interest credit to accrued interest", 74,
+  "Chase credited $3,912.07 on September 30. Apply it to Interest Receivable and ask Daniel to confirm the accrual before completing the reconciliation.",
+  { entries: adjustment(391207, "1250 · Interest Receivable"),
+    approval: { by: "daniel", reason: "Confirm the interest accrual" } })
+followUp("r04", "Record Notion from the invoice as a prepaid journal", 94,
+  "Invoice NTN-88213 covers 40 seats for $9,600 from September through August. Record a prepaid software journal against the bank payment and spread the cost over 12 months.",
+  { action: "create_je", attachmentIds: ["notion-invoice"], invoiceNumber: "NTN-88213" })
+followUp("r05", "Send the outstanding check to Daniel for review", 86,
+  "Check #4127 for $3,850 is absent from the September statement. Carry it as outstanding and require Daniel’s review of the attached check before closing the item.",
+  { approval: { by: "daniel", reason: "Review the outstanding check copy" } })
+followUp("r06", "Review Meridian’s October posting before sign-off", 97,
+  "Chase’s October 1 feed identifies the $86,400 Meridian wire as FW-100126-7731. Keep the September deposit in transit and send the posting evidence to Daniel for sign-off.",
+  { approval: { by: "daniel", reason: "Review subsequent clearing of the deposit" } })
+followUp("r07", "Match AWS and return $180 to accounts payable", 79,
+  "The AWS invoice and bank payment are $18,240, but the recorded payment is $18,420. Match the bank debit and credit the $180 payment overstatement back to Accounts Payable.",
+  { action: "match_adjust", entries: adjustment(18000, "2000 · Accounts Payable") })
+followUp("r08", "Write off Northstar’s $25 difference", 72,
+  "Northstar’s $47,975 deposit is $25 below the recorded receipt. Match the receipt and book the difference to Small Balance Write-offs, with Daniel’s approval.",
+  { entries: adjustment(-2500, "6810 · Small Balance Write-offs") })
+followUp("r09", "Book Harbour’s difference to FX clearing", 77,
+  "Chase paid $12,712.56 against Harbour’s $12,649.58 book entry. Put the $62.98 difference in FX Clearing for Daniel to review against the exchange confirmation.",
+  { entries: adjustment(-6298, "1290 · FX Clearing"),
+    approval: { by: "daniel", reason: "Review the exchange difference in FX Clearing" } })
+followUp("r10", "Route the Kestrel match for Daniel’s sign-off", 94,
+  "Kestrel’s $12,500 wire cleared September 16, five days after booking. Match the amounts and route the date exception to Daniel, who released the wire.",
+  { approval: { by: "daniel", reason: "Confirm the five-day wire approval delay" } })
+followUp("r11", "Keep the Datadog bill and offset the duplicate in clearing", 78,
+  "The bank shows one $6,840 Datadog payment and the books show two. Keep the bill payment matched and offset JE-7712 through Duplicate Payment Clearing for Daniel’s review.",
+  { action: "match_adjust", entries: adjustment(684000, "1295 · Duplicate Payment Clearing"),
+    approval: { by: "daniel", reason: "Review the duplicate offset before clearing it" } })
+followUp("r12", "Match Cascade after remittance sign-off", 97,
+  "Cascade’s $61,250 remittance names all three invoices and matches their total. Send the allocation to Daniel for sign-off before completing the three-invoice match.",
+  { approval: { by: "daniel", reason: "Review the three-invoice remittance allocation" } })
+followUp("r13", "Match the two contractors as one payroll batch", 88,
+  "The two September 15 Gusto debits total $8,000, matching the two contractor entries. Reconcile them as one payroll batch instead of assigning individual bank-to-book pairs.",
+  { action: "match_many", pairings: [{ bankIds: [...items.r13.bankIds], bookIds: [...items.r13.bookIds] }] })
+followUp("r14", "Correct the void through prior-period adjustments", 82,
+  "Check #4098 cleared for $1,150 before its backdated void. Post the September correction to Prior-period Adjustments and send it to Daniel for approval.",
+  { entries: adjustment(-115000, "3200 · Prior-period Adjustments") })
+
 const attachmentList: Attachment[] = [
   {
     id: "google-invoice",

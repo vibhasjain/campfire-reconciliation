@@ -36,7 +36,8 @@ if (!mode) {
   const { recon, reconUi } = await import("./useRecon")
   const { db, nextId } = await import("@/data/store")
   const { comments, appendThreadMessage, setThreadResolved, seedThreads, messageSnippet } = await import("@/comments/store")
-  const { flushDemo } = await import("@/data/persistence")
+  const { addEmberFollowUp } = await import("@/agent/scripts/recon")
+  const { flushDemo, resetDemo } = await import("@/data/persistence")
   // Coverage and idempotence apply to fresh, restored and invalidated snapshots.
   const before = JSON.stringify({ db: db.get(), comments: comments.get() })
   seedThreads()
@@ -78,6 +79,7 @@ if (!mode) {
     assert.equal(db.get().chats.page, undefined)
   }
   if (mode === "save") {
+    assert(addEmberFollowUp("r02"))
     recon.accept("r06", recon.getState().items.r06.suggestions[0].id)
     recon.reject("r08", recon.getState().items.r08.suggestions[0].id)
     appendThreadMessage("r04", "Persist this comment")
@@ -97,6 +99,15 @@ if (!mode) {
     assert.equal(restoredPart.type === "text" && restoredPart.streaming, false)
     assert.equal(db.get().approvals.apr_901.rows[0].state, "dismissed")
     assert.equal(nextId("msg"), "msg_902")
+    assert.equal(recon.getState().items.r02.suggestions.length, 3)
+    assert.equal(recon.getState().items.r02.suggestions[0].id, "r02-ember-follow-up")
+    assert.equal(reconUi.get().suggestionIndex.r02 ?? 0, 0)
+    assert.equal(addEmberFollowUp("r02"), undefined)
+    resetDemo()
+    assert.equal(raw, null)
+    recon.reset()
+    assert.equal(recon.getState().items.r02.suggestions.length, 2)
+    assert(addEmberFollowUp("r02"))
   } else {
     assert.equal(recon.getState().items.r06.status, "open")
     assert.equal(reconUi.get().completed, false)
