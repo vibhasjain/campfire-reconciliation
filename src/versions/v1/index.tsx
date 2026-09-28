@@ -233,7 +233,15 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col gap-sheet-group">
+      {/* Groups only need separating when a side is a cluster of several lines. */}
+      <div
+        className={cn(
+          "flex flex-col",
+          item.bankIds.length > 1 || item.bookIds.length > 1
+            ? "gap-sheet-group"
+            : "gap-sheet-row"
+        )}
+      >
         {(["bank", "book"] as const).map((side) => {
           const ids = side === "bank" ? item.bankIds : item.bookIds
           return ids.length > 0 ? (

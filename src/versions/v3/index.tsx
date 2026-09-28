@@ -32,6 +32,7 @@ import {
   focusThread,
 } from "@/comments"
 import { useDB } from "@/data/store"
+import { cn } from "@/lib/utils"
 import {
   recon,
   reconUi,
@@ -201,7 +202,14 @@ function FocusCard({ item }: { item: ReconItem }) {
             />
           </div>
         </header>
-        <div className="flow-lines flex flex-col gap-sheet-group">
+        <div
+          className={cn(
+            "flow-lines flex flex-col",
+            bankIds.length > 1 || bookIds.length > 1
+              ? "gap-sheet-group"
+              : "gap-sheet-row"
+          )}
+        >
           {(["bank", "book"] as const).map((side) => (
             <div key={side} role="group" aria-label={side === "bank" ? "Bank lines" : "Books lines"} className="flex flex-col gap-sheet-row">
               {(side === "bank" ? bankIds : bookIds).length ? (
