@@ -73,13 +73,6 @@
 .wb-detail [data-suggestion-id] div:has(> table) {
   display: none;
 }
-.wb-detail [data-suggestion-id] [data-slot="collapsible-trigger"] {
-  font-size: 0;
-}
-.wb-detail [data-suggestion-id] [data-slot="collapsible-trigger"]::before {
-  content: "Why";
-  font-size: 12px;
-}
 .wb-detail [data-suggestion-id] .flex.flex-wrap.gap-1\.5 > :not(:first-child) {
   display: none;
 }

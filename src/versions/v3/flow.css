@@ -109,13 +109,6 @@
 .flow-suggestion section span {
   font-size: 12px;
 }
-.flow-suggestion section [data-slot="collapsible-trigger"] {
-  font-size: 0;
-}
-.flow-suggestion section [data-slot="collapsible-trigger"]::before {
-  content: "Why";
-  font-size: 12px;
-}
 .flow-actions {
   display: flex;
   align-items: center;
