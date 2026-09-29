@@ -5828,3 +5828,21 @@ On References, the top-left tag will say "Version control" and link there. Versi
 
 - `Bash`
 - `Bash`
+
+**Claude** · Sep 29 08:09 ET
+
+On the References page, the top-left tag now says "Version control" and goes back to version control, matching the story deck. On version control itself it still says "Home" and goes to the live prototype. It's live, and I checked both pages in a local build.
+
+
+**Vibhas** · Sep 29 08:11 ET
+
+i guess escape on version control takes you back home
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 08:11 ET
+
+The test passed: Esc on version control went to `/`. The commit failed only because my command was still in the temp folder. Re-running it from the repo:
+
+- `Bash`

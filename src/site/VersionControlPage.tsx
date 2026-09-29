@@ -63,6 +63,20 @@ export default function VersionControlPage() {
       restored.scrollIntoView({ block: "center" })
   }, [initial])
 
+  // Esc goes home to the live prototype.
+  useEffect(() => {
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (
+        event.key === "Escape" &&
+        !event.defaultPrevented &&
+        !document.querySelector('[role="menu"]')
+      )
+        location.href = "/"
+    }
+    addEventListener("keydown", onKey)
+    return () => removeEventListener("keydown", onKey)
+  }, [])
+
   useEffect(() => {
     history.replaceState({ ...history.state, versions: { active } }, "")
   }, [active])
