@@ -13,7 +13,7 @@ export function CampfireTag({
     <span
       {...props}
       className={cn(
-        "flex items-center rounded-[7px] border border-[#484848] bg-[#292929] whitespace-nowrap text-[#ddd]",
+        "flex items-center rounded-[7px] border border-[#484848] bg-[#292929] whitespace-nowrap text-[#ddd] select-none",
         size === "lg" ? "gap-2 py-1.5 pr-3 pl-2 text-sm [&_svg]:size-[18px]" : "gap-1.5 py-[5px] pr-[9px] pl-1.5 text-xs [&_svg]:size-4",
         className
       )}

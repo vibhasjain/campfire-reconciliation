@@ -16,7 +16,7 @@ const PAGES = [
 ] as const
 
 const item = (active: boolean) =>
-  `cursor-pointer rounded px-3 py-1 text-sm whitespace-nowrap outline-none ${active ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`
+  `cursor-pointer rounded px-3 py-1 text-sm whitespace-nowrap outline-none select-none ${active ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`
 
 /** Story and References, right-aligned; on phones one centered dropdown that also leads back to the versions. */
 export function SiteNav({

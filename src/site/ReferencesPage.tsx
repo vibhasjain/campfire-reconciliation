@@ -54,7 +54,20 @@ export default function ReferencesPage() {
       }[event.key]
       if (delta === undefined) return
       event.preventDefault()
-      const next = Math.max(0, Math.min(ORDERED.length - 1, selected + delta))
+      // Loops: left/right walk all references; up/down wrap within the column.
+      const count = ORDERED.length
+      const next =
+        Math.abs(delta) === 1
+          ? (selected + delta + count) % count
+          : selected + delta >= 0 && selected + delta < count
+            ? selected + delta
+            : delta > 0
+              ? selected % columns
+              : Math.min(
+                  Math.floor((count - 1) / columns) * columns +
+                    (selected % columns),
+                  count - 1
+                )
       setSelected(next)
       const card = document.querySelectorAll("[data-reference]")[next]
       card?.scrollIntoView({ block: "nearest", behavior: "smooth" })

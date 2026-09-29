@@ -6430,3 +6430,51 @@ Checking both in the browser:
 
 - `Bash`
 - `Bash`
+
+**Claude** · Sep 29 12:26 ET
+
+These are pushed and will be live in about 40 seconds. I tested the keyboard parts in a local build.
+
+**Esc**, in v1, v2 and v3, from the innermost thing outward:
+1. Leaves a text box. The one exception is the quick-comment popover, where Esc closes it directly.
+2. Closes whatever is open: review sheet, popover, panel, dialog or menu.
+3. When nothing's left to close, goes to version control.
+
+Esc on version control brings you back home.
+
+**Arrow keys on version control:**
+- They always work. If no card has focus, the first press picks up the last selected card, or the first card.
+- ← → walk through all the cards and loop from the last back to the first.
+- ↑ ↓ move a row and wrap to the other end of the same column, so you never get stuck.
+
+**Toast and wording:**
+- The toast's undo is now a quiet gray arrow with no border.
+- "Unreconcile" now reads "Undo" wherever it's shown: the table button's tooltip, the ? dialog, the older versions' buttons, and the toast after using it ("Undone · …").
+
+Still running: Codex is building the Ember cycle (suggestion → answer → teammate → history). I'll check it in the browser when it lands.
+
+
+**Vibhas** · Sep 29 12:28 ET
+
+[Image #96] Non-selectable please story and references those words. Also the cycling through thing would also work on this page, right? The whatever the references page. Cycle loop.
+
+
+**Claude** · Sep 29 12:28 ET
+
+Two changes:
+- **Selection:** the Story / References words, and the dark Home / GitHub / Version control tags, can't be text-selected anymore.
+- **References grid:** it loops like version control. ← → walk through all 17 and wrap from the last to the first; ↑ ↓ wrap around within the column.
+
+- `Bash`
+
+**Claude** · Sep 29 12:28 ET
+
+Checking the wrapping, plus that the Story text can't be selected:
+
+- `Bash`
+
+**Claude** · Sep 29 12:29 ET
+
+It loops, and Story can't be selected. Committing that, then reviewing the Ember cycle Codex just finished:
+
+- `Bash`
