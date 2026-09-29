@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import { Chip } from "@/components/common/Chip"
 import {
   Dialog,
@@ -9,18 +8,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import SiteFrame from "./SiteFrame"
+import { SiteNav } from "./SiteNav"
 import { REFERENCES } from "./references"
 
 export default function ReferencesPage() {
   return (
-    <SiteFrame title="What I looked at">
-      <nav aria-label="Software" className="mb-8 flex gap-2">
-        {(["Campfire", "Rillet", "Numeric"] as const).map((software) => (
-          <Button key={software} asChild variant="ghost" size="sm">
-            <a href={`#${software.toLowerCase()}`}>{software}</a>
-          </Button>
-        ))}
-      </nav>
+    <SiteFrame
+      title="What I looked at"
+      toolbar={<SiteNav current="References" />}
+    >
       {(["Campfire", "Rillet", "Numeric"] as const).map((software) => (
         <section
           key={software}

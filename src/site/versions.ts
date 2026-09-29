@@ -220,3 +220,7 @@ export const VERSIONS: Version[] = [
     ],
   },
 ]
+
+/** Version-control filters; Story and References are pages of their own. */
+export const FILTERS = ["Code", "Brilliant", "Paper"] as const
+export type SiteFilter = (typeof FILTERS)[number]

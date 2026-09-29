@@ -12,8 +12,6 @@
 html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; }
 
 .chrome { position: fixed; inset: 0 0 auto 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; font-size: 13px; color: var(--ink); text-shadow: 0 1px 2px rgba(0,0,0,.6); }
-.brand { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 700; letter-spacing: .01em; }
-.brand img { width: 22px; height: 22px; }
 .counter { font-variant-numeric: tabular-nums; }
 
 .deck { position: relative; width: 100%; height: 100%; }
@@ -41,16 +39,18 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 .logos img { width: 32px; height: 32px; border-radius: 8px; display: block; }
 @media (max-width: 700px) { .logos { gap: 5px; padding: 6px; } .logos img { width: 22px; height: 22px; border-radius: 6px; } }
 
-.nav { position: fixed; right: 20px; bottom: 16px; z-index: 5; display: flex; gap: 6px; }
-.nav button { background: var(--panel); color: var(--ink); border: 1px solid #5C6B62; border-radius: 6px; width: 40px; height: 36px; font-size: 16px; cursor: pointer; }
-.nav button:hover { border-color: var(--green); }
+/* The site's dark Home tag (same as version control), and small arrows beside the counter. */
+.home-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border: 1px solid #484848; border-radius: 7px; background: #292929; color: #ddd; font: 14px system-ui, sans-serif; text-decoration: none; text-shadow: none; }
+.pager { display: inline-flex; align-items: center; gap: 6px; }
+.pager button { background: none; border: 0; padding: 2px 4px; color: var(--ink); opacity: .55; font-size: 12px; cursor: pointer; }
+.pager button:hover { opacity: 1; }
 
 /* phone: no slides — one continuous scroll */
 @media (max-width: 700px) {
   html, body { height: auto; overflow: visible; } /* the window scrolls, so the logo scrolls away with frame 1 */
   .slide[hidden] { display: flex; }
   .slide { position: relative; opacity: 1; visibility: visible; }
-  .counter, .nav { display: none; }
+  .pager { display: none; }
   .chrome { position: absolute; } /* logo sits on the first frame only, not over every frame while scrolling */
   .frame { flex: none; overflow: visible; }
   .frame img { height: auto; aspect-ratio: 16/9; }

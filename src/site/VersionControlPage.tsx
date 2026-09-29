@@ -4,11 +4,11 @@ import { Code2, Diamond, FileText, Images, Presentation } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Chip, type ChipTone } from "@/components/common/Chip"
 import SiteFrame from "./SiteFrame"
-import { REPO, VERSIONS, type Medium } from "./versions"
+import { FILTERS, REPO, VERSIONS, type Medium, type SiteFilter } from "./versions"
 import { CARD_COPY } from "./cardCopy"
 import { prefetch } from "./loaders"
+import { SiteNav } from "./SiteNav"
 
-const MEDIA = ["Code", "Brilliant", "Paper", "Story", "References"] as const
 const APPEARANCE: Record<Medium, { icon: typeof Code2; tone: ChipTone }> = {
   Code: { icon: Code2, tone: "green" },
   Brilliant: { icon: Diamond, tone: "blue" },
@@ -25,10 +25,15 @@ const time = new Intl.DateTimeFormat("en-US", {
 
 function restoredState() {
   const saved = history.state?.versions
+  // ?view=brilliant (from the References page) or the remembered filter; Code by default.
+  const view = new URLSearchParams(location.search).get("view")
+  const fromUrl = FILTERS.find((f) => f.toLowerCase() === view)
   return {
-    medium: MEDIA.includes(saved?.medium)
-      ? (saved.medium as (typeof MEDIA)[number])
-      : ("Code" as const),
+    medium:
+      fromUrl ??
+      (FILTERS.includes(saved?.medium)
+        ? (saved.medium as SiteFilter)
+        : ("Code" as const)),
     active: sorted.some((v) => v.id === saved?.active)
       ? (saved.active as string)
       : sorted[0].id,
@@ -42,7 +47,7 @@ function openLink(href: string, event: { metaKey: boolean; ctrlKey: boolean }) {
 
 export default function VersionControlPage() {
   const [initial] = useState(restoredState)
-  const [medium, setMedium] = useState<(typeof MEDIA)[number]>(initial.medium)
+  const [medium, setMedium] = useState<SiteFilter>(initial.medium)
   const [active, setActive] = useState(initial.active)
   const grid = useRef<HTMLDivElement>(null)
   const cards = useRef(new Map<string, HTMLDivElement>())
@@ -103,55 +108,17 @@ export default function VersionControlPage() {
     <SiteFrame
       title="Version control"
       toolbar={
-        <div
-          role="group"
-          aria-label="Medium"
-          className="contents"
-          onKeyDown={(e) => {
-            if (e.key === "ArrowDown") {
-              e.preventDefault()
-              if (visible[0]) cards.current.get(visible[0].id)?.focus()
-            }
-            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-              e.preventDefault()
-              const buttons = Array.from(
-                e.currentTarget.querySelectorAll("button")
-              )
-              const index = buttons.indexOf(e.target as HTMLButtonElement)
-              buttons[
-                (index + (e.key === "ArrowRight" ? 1 : -1) + buttons.length) %
-                  buttons.length
-              ]?.focus()
-            }
+        <SiteNav
+          current={medium}
+          onFilter={(value) => {
+            flushSync(() => setMedium(value))
+            const first = sorted.find((v) => value === v.medium)
+            if (first) cards.current.get(first.id)?.focus()
           }}
-        >
-          {/* Prototypes and canvases in one cluster; the story and references in their own. */}
-          {[
-            MEDIA.filter((m) => m !== "Story" && m !== "References"),
-            MEDIA.filter((m) => m === "Story" || m === "References"),
-          ].map((cluster, index) => (
-            <div
-              key={cluster[0]}
-              className={`flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 ${index ? "ml-auto" : ""}`}
-            >
-              {cluster.map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  className={`cursor-pointer rounded px-3 py-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus ${medium === value ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`}
-                  aria-pressed={medium === value}
-                  onClick={() => {
-                    flushSync(() => setMedium(value))
-                    const first = sorted.find((v) => value === v.medium)
-                    if (first) cards.current.get(first.id)?.focus()
-                  }}
-                >
-                  {value}
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
+          onArrowDown={() => {
+            if (visible[0]) cards.current.get(visible[0].id)?.focus()
+          }}
+        />
       }
     >
       <div

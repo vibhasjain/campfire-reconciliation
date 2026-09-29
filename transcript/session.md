@@ -5152,3 +5152,55 @@ Got it: Home, a small gap, Code / Brilliant / Paper on the left; Story / Referen
 - `Read`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 28 23:42 ET
+
+The version-control header now reads Home, a small gap, Code / Brilliant / Paper on the left, and Story / References, a small gap, GitHub on the right. The two gaps are equal (24px), with open space in the middle. It's live, and I checked it in a local build. The References page still shows just Home on the left and GitHub on the right.
+
+I also removed the native browser tooltip that popped up the full date and time over a card's time label.
+
+
+**Vibhas** · Sep 28 23:46 ET
+
+[Image #78] In references I don't need that.
+
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 23:47 ET
+
+[Image #79] Keep the nav in references because we and just show references selected there, right? We don't need story and references is one thing each, so we don't need cards to be honest. Just take me straight to the thing.
+
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 23:47 ET
+
+[Image #80] Just make this home instead of whatever, campfire and tube boss or whatever that is. Make it the home tag. The rest of the nav can disappear for story, I guess.
+
+
+**Claude** · Sep 28 23:47 ET
+
+Writing the shared nav component, then pointing both pages at it:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 23:47 ET
+
+[Image #81] Get rid of this please instead you can just put keyboard arrow icons next to the page numbers more subtle smaller on top
+
+
+**Claude** · Sep 28 23:48 ET
+
+Moving the filter list out of the component file to satisfy the linter, then the story page:
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+- `Read`
+- `Read`
+- `Bash`
