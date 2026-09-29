@@ -31,22 +31,31 @@ export function Toaster() {
               exit={{ scale: 0.7, opacity: 0, transition: { duration: 0.12 } }}
               className="pointer-events-auto flex min-h-11 items-center gap-1.5 rounded-lg bg-surface p-3 text-sm text-fg shadow-menu"
             >
-              <Icon className={`size-4 shrink-0 ${ICON_COLOR[tone]}`} />
-              <span className="min-w-0 flex-1 truncate">{t.message}</span>
-              {t.action && (
+              {/* Undo leads (a bordered icon); any other action trails the message. */}
+              {t.action?.label === "Undo" && (
                 <Button
-                  // Undo is a quiet gray icon; other actions stay regular buttons.
-                  variant={t.action.label === "Undo" ? "ghost" : undefined}
-                  className={t.action.label === "Undo" ? "-my-1 text-fg-4 hover:text-fg-2" : "-my-1"}
-                  // Undo reads as an icon (label in its tooltip); other actions keep their words.
-                  size={t.action.label === "Undo" ? "icon-sm" : undefined}
-                  aria-label={t.action.label}
+                  size="icon-sm"
+                  aria-label="Undo"
+                  className="-my-1 -ml-1 mr-1"
                   onClick={() => {
                     t.action!.onClick()
                     dismissToast(t.id)
                   }}
                 >
-                  {t.action.label === "Undo" ? <Undo2 /> : t.action.label}
+                  <Undo2 />
+                </Button>
+              )}
+              <Icon className={`size-4 shrink-0 ${ICON_COLOR[tone]}`} />
+              <span className="min-w-0 flex-1 truncate">{t.message}</span>
+              {t.action && t.action.label !== "Undo" && (
+                <Button
+                  className="-my-1"
+                  onClick={() => {
+                    t.action!.onClick()
+                    dismissToast(t.id)
+                  }}
+                >
+                  {t.action.label}
                 </Button>
               )}
               {t.training && <EmberTraining />}

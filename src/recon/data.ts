@@ -1092,7 +1092,7 @@ propose(
   }
 )
 
-/** One extra proposal per exception, created only by the first live Ember exchange. */
+/** One extra proposal per exception, created only on a live Ember suggestion turn. */
 export const emberFollowUps: Record<string, Suggestion> = {}
 function followUp(
   itemId: string,
@@ -1163,6 +1163,115 @@ followUp("r13", "Match the two contractors as one payroll batch", 88,
 followUp("r14", "Correct the void through prior-period adjustments", 82,
   "Check #4098 cleared for $1,150 before its backdated void. Post the September correction to Prior-period Adjustments and send it to Daniel for approval.",
   { entries: adjustment(-115000, "3200 · Prior-period Adjustments") })
+
+/** Scripted demo context; prior-period examples stay with their transaction. */
+export type EmberExchange = {
+  answer: string
+  teammate: "priya" | "daniel"
+  ask: string
+  reply: string
+  history: string
+}
+export const emberExchanges: Record<string, EmberExchange> = {
+  r01: {
+    answer: "The September invoice lists 120 Google Workspace seats at $22 each.",
+    teammate: "priya",
+    ask: "can you confirm the Google invoice total?",
+    reply: "The September PDF totals $2,640 for 120 seats.",
+    history: "In August, the $2,640 Google charge used the same GSUITE_ARBORANA alias and was matched to the Workspace bill.",
+  },
+  r02: {
+    answer: "The September 30 debit carries Chase’s ACCOUNT ANALYSIS FEE SEP descriptor.",
+    teammate: "daniel",
+    ask: "can you review the $5.55 increase in Chase’s monthly fee?",
+    reply: "August’s fee was $279.85; I’ll review the $5.55 increase before sign-off.",
+    history: "July’s $271.10 and August’s $279.85 Chase fees were both booked to Bank Service Charges.",
+  },
+  r03: {
+    answer: "Chase labels the September 30 credit INTEREST PAYMENT, and no corresponding book entry is recorded.",
+    teammate: "daniel",
+    ask: "can you confirm whether the $3,912.07 interest credit has an accrual to clear?",
+    reply: "I’ll check the Interest Receivable balance before approving the $3,912.07 allocation.",
+    history: "In August, Chase’s $3,880.24 month-end credit was booked to Interest Income after the accrual review.",
+  },
+  r04: {
+    answer: "The $9,600 annual invoice works out to $800 of software expense per month.",
+    teammate: "priya",
+    ask: "can you confirm the Notion invoice is still unprocessed?",
+    reply: "NTN-88213 is in the AP inbox and has not been entered as a bill.",
+    history: "In August, $800 of the previous $9,600 Notion renewal was released from prepaid software to expense.",
+  },
+  r05: {
+    answer: "Priya confirmed Evergreen received check #4127 on September 30 and deposits checks on Fridays.",
+    teammate: "priya",
+    ask: "can you confirm when Evergreen received check #4127?",
+    reply: "Evergreen confirmed delivery on September 30 and deposits checks on Fridays.",
+    history: "In August, a $3,850 Evergreen check was carried as outstanding at month-end and matched when it cleared in September.",
+  },
+  r06: {
+    answer: "The October 1 Chase feed and the September 30 book receipt both identify Meridian invoice INV-1187.",
+    teammate: "daniel",
+    ask: "can you review Meridian’s October 1 clearing against INV-1187?",
+    reply: "The October 1 feed shows the full $86,400 for INV-1187; I’ll review the September cutoff.",
+    history: "In August, an $86,400 Meridian receipt was carried in transit and matched to the September 1 bank posting.",
+  },
+  r07: {
+    answer: "AWS invoice AWS-2026-08-7719 totals $18,240 across compute, databases, storage and data transfer.",
+    teammate: "priya",
+    ask: "can you confirm the total on the unlocked AWS invoice?",
+    reply: "AWS-2026-08-7719 totals $18,240; the $18,420 AP entry has transposed digits.",
+    history: "In August, AWS’s $17,980 payment matched the usage invoice without an adjustment.",
+  },
+  r08: {
+    answer: "Chase’s NH-48000 wire advice separately identifies a $25 incoming-wire fee.",
+    teammate: "daniel",
+    ask: "can you review the account for Northstar’s $25 wire difference?",
+    reply: "The wire advice identifies a $25 fee; I’ll review the proposed account before approval.",
+    history: "In August, Northstar’s $48,000 receipt arrived as $47,975, and the $25 fee was booked to Bank Service Charges.",
+  },
+  r09: {
+    answer: "Chase converted Harbour’s £10,000 at 1.271256; the book entry used 1.264958.",
+    teammate: "daniel",
+    ask: "can you review Harbour’s $62.98 exchange difference?",
+    reply: "The two rates explain the $62.98 difference; I’ll review the FX account before approval.",
+    history: "In August, Harbour’s £10,000 payment cleared at $12,680 against $12,640 in the books, with $40 recorded as an FX loss.",
+  },
+  r10: {
+    answer: "The Kestrel book memo records Daniel’s release from dual approval on September 16.",
+    teammate: "daniel",
+    ask: "can you confirm you released Kestrel’s $12,500 wire on September 16?",
+    reply: "I released the $12,500 wire on September 16 after dual approval.",
+    history: "In July, Kestrel’s $12,500 retainer cleared three days after booking and was matched after Daniel confirmed the release date.",
+  },
+  r11: {
+    answer: "Chase’s September statement lists it once, on 9/12; the second $6,840 is JE-7712 in the GL.",
+    teammate: "priya",
+    ask: "can you confirm the Datadog bill ID?",
+    reply: "The bill is DD-2026-08-3912; I posted JE-7712 before that bill synced.",
+    history: "In August, Datadog’s $6,840 payment was matched to the synced bill, and the manual duplicate was reversed.",
+  },
+  r12: {
+    answer: "Cascade’s remittance allocates $24,500 to INV-2041, $18,750 to INV-2044 and $18,000 to INV-2047.",
+    teammate: "priya",
+    ask: "can you confirm Cascade’s remittance covers all three invoices?",
+    reply: "CO-092426 names INV-2041, INV-2044 and INV-2047 for a total of $61,250.",
+    history: "In August, Cascade’s $58,500 ACH was matched across three invoices using its remittance allocation.",
+  },
+  r13: {
+    answer: "The September 15 Gusto descriptors name Lin Chen and Emeka Okafor separately, at $4,000 each.",
+    teammate: "priya",
+    ask: "can you confirm both $4,000 contractor payments belong to the September 15 batch?",
+    reply: "Lin Chen and Emeka Okafor each received $4,000 in the September 15 Gusto batch.",
+    history: "In August, the $8,000 Gusto batch was matched to separate $4,000 entries for Lin Chen and Emeka Okafor.",
+  },
+  r14: {
+    answer: "The audit log dates J. Alvarez’s void to September 12 but gives it an August 28 effective date.",
+    teammate: "daniel",
+    ask: "can you review the September correction for check #4098’s backdated void?",
+    reply: "August is closed; I’ll review the $1,150 correction in September before approving it.",
+    history: "In August, Pinecrest’s $1,150 check #4098 was matched when it cleared on August 26; the later backdated void undid that book balance.",
+  },
+}
 
 const attachmentList: Attachment[] = [
   {

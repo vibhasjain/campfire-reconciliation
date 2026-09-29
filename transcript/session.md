@@ -6478,3 +6478,61 @@ Checking the wrapping, plus that the Story text can't be selected:
 It loops, and Story can't be selected. Committing that, then reviewing the Ember cycle Codex just finished:
 
 - `Bash`
+
+**Claude** · Sep 29 12:29 ET
+
+Codex finished, and all checks pass. One regression in its sample: reply 1 has lost the "Got it." I added earlier. Checking the script:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 12:29 ET
+
+As far as the tag goes, let's try one last thing. Bring back like the square behind the undo button, right? That's fine. Put the undo button right at the beginning of the toast. So undo button, then check mark icon, then whatever, and then the training ember thing
+
+- `Bash`
+
+**Claude** · Sep 29 12:29 ET
+
+First, restoring "Got it." only when you typed text:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 12:30 ET
+
+[Image #97] I think you can reduce the padding between the vertical padding between the heading and the review transaction thing some more still.
+
+- `Bash`
+
+**Claude** · Sep 29 12:30 ET
+
+The flow check expects the old wording. Its test messages include typed text, so the reply now starts with "Got it.". Updating the check to expect that:
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 12:30 ET
+
+Only one test typed text ("@Ember find another candidate"); the rest send a bare mention. Updating that one expectation:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 12:30 ET
+
+[Image #98] When I open the attachment, why is that little toast appearing? That should only appear if I hover on the X, right?
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 12:31 ET
+
+Now one browser pass over everything pending:
+- the toast layout
+- the heading gap
+- no tooltip when a document preview opens
+- E + Enter four times on Datadog to see the Ember cycle
+
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`
+- `Bash`

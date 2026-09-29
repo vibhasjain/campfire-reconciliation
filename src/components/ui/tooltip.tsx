@@ -85,7 +85,10 @@ function ActionTooltip({
 }) {
   return (
     <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      {/* Hover only: focus (a dialog focusing its close button, a shortcut) never pops a tooltip. */}
+      <TooltipTrigger asChild onFocus={(event) => event.preventDefault()}>
+        {children}
+      </TooltipTrigger>
       <TooltipContent>
         {label}
         {shortcut && (

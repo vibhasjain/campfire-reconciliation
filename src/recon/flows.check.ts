@@ -28,6 +28,7 @@ import {
   reconciledItems,
 } from "./useRecon"
 import { summarize } from "./store"
+import { emberExchanges, emberFollowUps } from "./data"
 import { setFastMode } from "./speed"
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -67,42 +68,69 @@ assert(Object.values(db.get().messages).filter(message => message.chatId.startsW
 
 setFastMode(true)
 reset()
-for (const itemId of Object.keys(recon.getState().items).filter(id => recon.getState().items[id].kind === "exception")) {
+function latestEmber(thread: string) {
+  return Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
+}
+async function exchange(itemId: string, expected: string, text = "[[agent:ember]]") {
+  const thread = await postToThread(itemId, text, [{ type: "agent", id: "ember" }])
+  await until(() => !isRunning(thread), `Ember reply for ${itemId}`)
+  assert(latestEmber(thread)?.parts.some(p => p.type === "text" && p.markdown === expected), `Expected reply: ${expected}`)
+  return thread
+}
+const suggestionReply = (itemId: string) => `Here's a new suggestion: ${emberFollowUps[itemId].title}. It's up top.`
+const teammateAsk = (itemId: string) => `[[member:${emberExchanges[itemId].teammate}]] ${emberExchanges[itemId].ask}`
+const pendingIds = Object.values(recon.getState().items).filter(item => item.kind === "exception").map(item => item.id)
+assert(pendingIds.length === 14 && pendingIds.every(id => emberExchanges[id]), "All fourteen pending items have exchange copy")
+// The first four E + Enter turns on Datadog, then each other item, loop in order.
+for (const itemId of ["r11", ...pendingIds.filter(id => id !== "r11")]) {
   const original = recon.getState().items[itemId].suggestions
+  const copy = emberExchanges[itemId]
   reconUi.set(state => ({ ...state, suggestionIndex: { [itemId]: original.length - 1 } }))
-  const thread = await postToThread(itemId, "@Ember what do you suggest?", [])
-  await until(() => !isRunning(thread), `First Ember reply for ${itemId}`)
+  await exchange(itemId, suggestionReply(itemId))
   const added = recon.getState().items[itemId].suggestions
-  assert(added.length === original.length + 1 && added[0].id === `${itemId}-ember-follow-up`, "First exchange prepends exactly one follow-up")
+  assert(added.length === original.length + 1 && added[0].id === `${itemId}-ember-follow-up`, "Suggestion turn prepends exactly one follow-up")
   assert(added.slice(1).every((candidate, i) => candidate.id === original[i].id), "Original suggestions retain their order")
-  assert(reconUi.get().suggestionIndex[itemId] === 0, "New follow-up is selected")
-  const reply = Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
-  assert(reply?.parts.some(p => p.type === "text" && p.markdown === `Got it. Here's a new suggestion: ${added[0].title}. It's up top.`), "Ember points to the new suggestion")
-  await postToThread(itemId, "@Ember explain the confidence", [])
-  await until(() => !isRunning(thread), `Second Ember reply for ${itemId}`)
-  assert(recon.getState().items[itemId].suggestions.length === added.length, "Second exchange adds nothing")
-  const explanation = Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
-  assert(explanation?.parts.some(p => p.type === "text" && p.markdown === added[0].reasoning && !/\n|\*\*/.test(p.markdown)), "Confidence reply uses factual prose without a list")
-  await postToThread(itemId, "@Ember your recommendation?", [])
-  await until(() => !isRunning(thread), `Fallback reply for ${itemId}`)
-  const fallback = Object.values(db.get().messages).filter(m => m.chatId === thread && m.author === "ember").at(-1)
-  assert(fallback?.parts.some(p => p.type === "text" && p.markdown === `I'd go with '${added[0].title}' at ${added[0].confidence}%.`), "Fallback names the top suggestion and confidence in one sentence")
+  assert(reconUi.get().suggestionIndex[itemId] === 0, "New follow-up is selected for its pop-in")
+  await exchange(itemId, copy.answer)
+  assert(copy.answer !== added[0].reasoning, "Answer supplies supporting detail instead of repeating the proposal")
+  const before = Object.keys(db.get().messages)
+  const thread = await exchange(itemId, teammateAsk(itemId))
+  const teammate = Object.values(db.get().messages).filter(m => !before.includes(m.id) && m.chatId === thread && m.author === copy.teammate)
+  assert(teammate.length === 1 && teammate[0].text === copy.reply && teammate[0].role === "user", "Teammate posts one normal thread message")
+  assert(Date.parse(teammate[0].createdAt) >= Date.parse(latestEmber(thread)!.createdAt), "Teammate follows Ember’s ask")
+  await exchange(itemId, copy.history)
+  assert(recon.getState().items[itemId].suggestions.length === added.length, "Answer, teammate and history add no suggestions")
   ok(acceptSuggestion(itemId), "Accept the new follow-up through the shared action")
   await flushApprovals()
   assert(recon.getState().items[itemId].status === "resolved", "Follow-up acceptance resolves the item")
 }
 assert(summarize(recon.getState()).done, "All follow-ups preserve the reconciled balance")
 reset()
-// Rejection and undo must not turn a later exchange into another first exchange.
+// Switching threads shares the cursor; typed instructions cannot divert the cycle.
+await exchange("r11", `Got it. ${suggestionReply("r11")}`, "@Ember find another candidate")
+await exchange("r07", emberExchanges.r07.answer, "@Ember book this as a bank fee")
+await exchange("r08", teammateAsk("r08"), "@Ember explain the confidence")
+await exchange("r04", emberExchanges.r04.history, "@Ember none of these match")
+assert(recon.getState().actions.filter(action => action.kind === "addSuggestion").length === 1, "Only the suggestion slot changes reconciliation")
+// Looping onto an item with a follow-up consumes the suggestion slot and answers.
+await exchange("r11", emberExchanges.r11.answer, "@Ember")
+await exchange("r11", teammateAsk("r11"))
+await exchange("r11", emberExchanges.r11.history)
+assert(recon.getState().items.r11.suggestions.filter(s => s.id === "r11-ember-follow-up").length === 1, "Loop does not duplicate the follow-up")
+reset()
+// Rejection and undo must not recreate a follow-up when the cycle loops.
 for (const undo of [false, true]) {
-  const thread = await postToThread("r02", "@ember help", [])
-  await until(() => !isRunning(thread), "Follow-up before removal")
+  await exchange("r02", suggestionReply("r02"))
   if (undo) ok(revertAction(recon.getState().actions.at(-1)!.id), "Undo follow-up")
   else ok(rejectSuggestion("r02"), "Reject follow-up")
   const count = recon.getState().items.r02.suggestions.length
-  await postToThread("r02", "@ember help", [])
-  await until(() => !isRunning(thread), "Reply after removal")
+  await exchange("r02", emberExchanges.r02.answer)
+  await exchange("r02", teammateAsk("r02"))
+  await exchange("r02", emberExchanges.r02.history)
+  await exchange("r02", emberExchanges.r02.answer)
   assert(recon.getState().items.r02.suggestions.length === count, "Removed follow-up is not recreated")
+  await exchange("r02", teammateAsk("r02"))
+  await exchange("r02", emberExchanges.r02.history)
   reset()
 }
 const queue = queueItems(recon.getState())
@@ -298,44 +326,40 @@ assert(
   "A rejected hidden candidate is not resurrected by another search"
 )
 reset()
-// The first exchange now creates a proposal; later searches retain discovery behavior.
-const firstThread = await postToThread("r04", "@ember help", [])
-await until(() => !isRunning(firstThread), "First Notion follow-up")
-const thread = await postToThread("r04", "@ember none of these match", [])
-await until(() => !isRunning(thread), "Notion thread reply")
-assert(
-  recon
-    .getState()
-    .items.r04.suggestions.some(
-      (candidate) => candidate.id === "r04-invoice-NTN-88213"
-    ),
-  "Thread engine path surfaces NTN-88213"
-)
+// Explicit tool discovery remains available in page chat with item context.
+const thread = send({
+  chatId: "page-discovery",
+  text: "@ember none of these match",
+  mentions: [],
+  attachments: [],
+  context: [{ type: "reconItem", id: "r04" }],
+})
+await until(() => !isRunning(thread), "Notion page reply")
+assert(recon.getState().items.r04.suggestions.some(candidate => candidate.id === "r04-invoice-NTN-88213"), "Page engine path surfaces NTN-88213")
 const turns = Object.values(db.get().messages).filter(
   (message) => message.chatId === thread
 )
 assert(
   turns.filter((message) => message.text === "@ember none of these match")
     .length === 1,
-  "Comments and engine do not duplicate Maya’s message"
+  "Engine adds Maya’s message once"
 )
 assert(
   turns.some(
     (message) =>
       message.author === "ember" &&
       message.parts.some(
-        (part) => part.type === "card" && part.card.kind === "recon-change"
+        (part) => part.type === "card" && part.card.kind === "recon-candidate"
       )
   ),
-  "Ember emits a compact reversible addition in item threads"
+  "Ember emits a reversible candidate in page chat"
 )
-assert(!turns.some(m => m.parts.some(p => p.type === "card" && p.card.kind === "recon-candidate")), "Thread has no duplicate actionable proposal")
 assert(recon.getState().items.r04.suggestions[reconUi.get().suggestionIndex.r04].invoiceNumber === "NTN-88213", "Discovered invoice is active")
 const candidateReply = turns.find(
   (message) =>
     message.author === "ember" &&
     message.parts.some(
-      (part) => part.type === "card" && part.card.kind === "recon-change"
+      (part) => part.type === "card" && part.card.kind === "recon-candidate"
     )
 )!
 assert(
@@ -343,7 +367,7 @@ assert(
   "Discovery emits one outcome card"
 )
 const candidatePart = candidateReply.parts.find(
-  (part) => part.type === "card" && part.card.kind === "recon-change"
+  (part) => part.type === "card" && part.card.kind === "recon-candidate"
 )!
 assert(
   candidatePart.type === "card" &&

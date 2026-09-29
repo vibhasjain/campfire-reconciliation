@@ -1,6 +1,7 @@
+import { appendThreadMessage } from "@/comments/store"
 import type { ReconCandidateCard } from "@/recon/cards"
 import type { SendInput, RunCtx, Script } from "../types"
-import { emberFollowUps, suggestionSummary, type ActionRecord, type Suggestion } from "@/recon/data"
+import { emberExchanges, emberFollowUps, suggestionSummary, type ActionRecord, type Suggestion } from "@/recon/data"
 import type { Result } from "@/recon/store"
 import { fmtMoney, summarize } from "@/recon/store"
 import { recon, reconUi, itemAmount, queueItems } from "@/recon/useRecon"
@@ -281,21 +282,40 @@ async function saySnapshot(ctx: RunCtx, markdown: string) {
   await ctx.say(`${markdown} (As of ${time})`, { snapshot: { clock, question: ctx.input.text } })
 }
 
+// Shared across item threads for this session; a reload starts at suggestion again.
+let emberTurn = 0
+async function itemThreadReply(ctx: RunCtx, itemId: string): Promise<boolean> {
+  const exchange = emberExchanges[itemId]
+  if (!exchange) return false
+  let useCase = emberTurn++ % 4
+  if (useCase === 0) {
+    const followUp = addEmberFollowUp(itemId)
+    if (followUp) {
+      // "Got it." only acknowledges context the user actually typed (a bare @Ember gets straight to it).
+      const typed = ctx.input.text.replace(/\[\[[^\]]+\]\]/g, "").trim()
+      await ctx.say(`${typed ? "Got it. " : ""}Here's a new suggestion: ${followUp.title}. It's up top.`)
+      return true
+    }
+    useCase = emberTurn++ % 4
+  }
+  if (useCase === 1) await ctx.say(exchange.answer)
+  else if (useCase === 2) {
+    await ctx.say(`[[member:${exchange.teammate}]] ${exchange.ask}`)
+    await ctx.wait(2000)
+    appendThreadMessage(itemId, exchange.reply, exchange.teammate)
+  } else await ctx.say(exchange.history)
+  return true
+}
+
 export const reconciliationScript: Script = {
   id: "reconciliation",
   match: reconIntentScore,
   async run(ctx) {
-    const intent = intentFor(ctx.input)
     const itemId = contextItemId(ctx.input)
     const item = itemId ? recon.getState().items[itemId] : undefined
     await ctx.thinking(420)
-    if (itemId && ctx.input.chatId?.startsWith("thread:")) {
-      const followUp = addEmberFollowUp(itemId)
-      if (followUp) {
-        await ctx.say(`Got it. Here's a new suggestion: ${followUp.title}. It's up top.`)
-        return
-      }
-    }
+    if (itemId && ctx.input.chatId?.startsWith("thread:") && await itemThreadReply(ctx, itemId)) return
+    const intent = intentFor(ctx.input)
     if (intent === "stripe") {
       await tool(ctx, "Searching reconciled Stripe payouts", [
         ["Date", "September 28"],
