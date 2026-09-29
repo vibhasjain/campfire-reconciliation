@@ -5364,3 +5364,24 @@ Checking a phone width with the dropdown open, and desktop:
 - `Read`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 00:15 ET
+
+On phones the nav is now a single row: Home on the left, a centered dropdown, GitHub on the right. It's live.
+
+- **Closed**, the dropdown shows the current section: "Code ⌄" by default, or "References" on the References page.
+- **Open**, it lists Code, Brilliant and Paper, a divider, then Story and References, with a check next to the current one.
+
+I checked it at iPhone width with the menu open, and there's no sideways scrolling. Desktop still has the full row of buttons.
+
+
+**Vibhas** (while Claude was working) · Sep 29 00:17 ET
+
+In this story, the top left, it shouldn't lead to home. It should lead to version control. And it should also obviously say version control.
+
+
+**Vibhas** · Sep 29 00:17 ET
+
+In this story, the top left, it shouldn't lead to home. It should lead to version control. And it should also obviously say version control.
+
+- `Bash`
