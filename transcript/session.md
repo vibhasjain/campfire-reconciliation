@@ -5762,3 +5762,8 @@ lightbox use arrow keys to select image not to scroll. enter to lightbox.
 Already works that way: the test above shows the first Esc only closed the lightbox and stayed on References, and the second Esc went back. Committing:
 
 - `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+- `Bash`

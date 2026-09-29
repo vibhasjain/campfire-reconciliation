@@ -24,16 +24,44 @@ const ORDERED = SOFTWARE.flatMap((software) =>
 export default function ReferencesPage() {
   const [open, setOpen] = useState<number | null>(null)
   const shown = open === null ? null : ORDERED[open]
-  // Esc goes back to version control (an open lightbox takes the first Esc).
+  // Grid keys (no lightbox): arrows move the selection instead of scrolling, Enter opens it, Esc goes back to version control.
+  const [selected, setSelected] = useState(0)
   useEffect(() => {
     if (open !== null) return
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !event.defaultPrevented)
+      if (
+        event.defaultPrevented ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey
+      )
+        return
+      if (event.key === "Escape") {
         location.href = "/version-control"
+        return
+      }
+      if (event.key === "Enter") {
+        event.preventDefault()
+        setOpen(selected)
+        return
+      }
+      const columns = matchMedia("(min-width: 700px)").matches ? 2 : 1
+      const delta = {
+        ArrowRight: 1,
+        ArrowLeft: -1,
+        ArrowDown: columns,
+        ArrowUp: -columns,
+      }[event.key]
+      if (delta === undefined) return
+      event.preventDefault()
+      const next = Math.max(0, Math.min(ORDERED.length - 1, selected + delta))
+      setSelected(next)
+      const card = document.querySelectorAll("[data-reference]")[next]
+      card?.scrollIntoView({ block: "nearest", behavior: "smooth" })
     }
     addEventListener("keydown", onKey)
     return () => removeEventListener("keydown", onKey)
-  }, [open])
+  }, [open, selected])
   const step = (delta: number) =>
     setOpen((current) =>
       current === null
@@ -50,9 +78,14 @@ export default function ReferencesPage() {
         {ORDERED.map((item, index) => (
           <figure key={item.src} className="min-w-0">
             <button
-              onClick={() => setOpen(index)}
+              data-reference
+              data-selected={selected === index || undefined}
+              onClick={() => {
+                setSelected(index)
+                setOpen(index)
+              }}
               aria-label={`Enlarge ${item.title}`}
-              className="flex aspect-[16/10] w-full cursor-zoom-in items-center justify-center overflow-hidden rounded-lg border-hair border-line bg-surface p-2 outline-none hover:border-line-strong"
+              className="flex aspect-[16/10] w-full cursor-zoom-in items-center justify-center overflow-hidden rounded-lg border-hair border-line bg-surface p-2 outline-none hover:border-line-strong data-[selected]:border-brand"
             >
               <img
                 src={item.src}
