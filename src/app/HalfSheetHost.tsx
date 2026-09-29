@@ -26,7 +26,11 @@ export function HalfSheetHost() {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.defaultPrevented || isOverlayOpen()) return
       const focused = document.activeElement as HTMLElement | null
-      if (focused?.closest("[contenteditable=true], textarea, input") && !ref.current?.contains(focused)) return
+      // First Esc leaves a text box (the sheet's own composer included); the next one closes the sheet.
+      if (focused?.closest("[contenteditable=true], textarea, input")) {
+        if (ref.current?.contains(focused)) focused.blur()
+        return
+      }
       close()
     }
     window.addEventListener("keydown", onKey)

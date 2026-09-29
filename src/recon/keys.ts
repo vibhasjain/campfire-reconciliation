@@ -77,7 +77,8 @@ export function useReconKeys({
               : editor.textContent
           editor.blur()
           // Quick comments dismiss on Escape even with a draft (kept in store).
-          if (text?.trim() && !editor.closest('[data-layer="thread"]')) {
+          // In the review sheet the first Escape only leaves the text box; the next closes the sheet.
+          if (editor.closest('[data-slot="half-sheet"]') || (text?.trim() && !editor.closest('[data-layer="thread"]'))) {
             event.preventDefault()
             event.stopImmediatePropagation()
             return

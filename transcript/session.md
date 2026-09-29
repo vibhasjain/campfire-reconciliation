@@ -4872,3 +4872,31 @@ The avatars sit cleanly side by side on a selected, hovered row, with no halo. N
 Even after four Tab presses into the sheet, the focused button has no ring, outline or border. Adding the rule to CLAUDE.md so it sticks, then committing everything:
 
 - `Bash`
+
+**Claude** · Sep 28 23:00 ET
+
+Accept and Reject are truncating, when the attachment chips should give way first. Checking why the buttons shrink:
+
+- `Bash`
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 28 23:00 ET
+
+I was trying to unfocus the text box so I could use the other keyboard shortcuts in the sidebar, but it also closed the entire sidebar. Probably the first escape should just be to unfocus the text box I think
+
+- `Bash`
+
+**Claude** · Sep 28 23:01 ET
+
+The sheet panel can't take focus itself, so after leaving the box, focus just returns to the page, and shortcuts work from there. Dropping that extra line, then testing: E, type, Esc, Esc.
+
+- `Bash`
+
+**Claude** · Sep 28 23:01 ET
+
+Still closing on the first Esc, so something else closes the sheet before my handler runs. The shared key handler catches Esc first, so looking there:
+
+- `Bash`
+- `Bash`
+- `Bash`

@@ -10,7 +10,7 @@ const ghostStyle =
 // spec §4.4 — dense 24px buttons, instant hovers (no transition), hairline borders.
 // Icon + label: a leading icon sits 2px into the padding (glyphs carry their own whitespace) so both sides read equal.
 const buttonVariants = cva(
-  "group/button inline-flex min-w-0 max-w-full shrink items-center justify-center rounded-md border-hair border-transparent bg-clip-padding font-medium whitespace-nowrap outline-none select-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-focus disabled:pointer-events-none disabled:text-fg-disabled aria-invalid:border-danger [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "group/button inline-flex max-w-full shrink-0 items-center justify-center rounded-md border-hair border-transparent bg-clip-padding font-medium whitespace-nowrap outline-none select-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-focus disabled:pointer-events-none disabled:text-fg-disabled aria-invalid:border-danger [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
