@@ -5261,3 +5261,38 @@ When it lands, I'll open each version in the browser, check the logo hover and t
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 28 23:57 ET
+
+Every Code version now lives on campfiredesign.netlify.app itself, and it's live.
+
+- **Same domain:** versions 1.0 to 1.5 are rebuilt from their original commits and served at addresses like `campfiredesign.netlify.app/code/1.4/campfire1`. Clicking a Code card now opens in the same tab, like Brilliant and Paper, with no Arc popup.
+- **Same logo:** every older version now has today's Campfire logo. It links back to version control, with the same slight pop and dark "Version control" tag on hover.
+- **Checked:** on a draft deploy first, I opened all 18 pages (six versions × three prototypes), and each one loaded with the new logo. The live `/code/1.4/campfire2` also returns successfully.
+
+The rebuilt versions add 8.8MB of files to the repo and are stored as-is, so each deploy doesn't rebuild them. `scripts/build-frozen.mjs` can regenerate them from their commits if ever needed. The old subdomains still exist, so any links you've already shared keep working, but nothing on the site points to them anymore.
+
+
+**Vibhas** (while Claude was working) · Sep 28 23:59 ET
+
+Get rid of the old domains bro why do we need them
+
+
+**Vibhas** · Sep 28 23:59 ET
+
+Get rid of the old domains bro why do we need them
+
+
+**Claude** · Sep 28 23:59 ET
+
+Those subdomains are separate Netlify deploys, published with a name like `code-1-4`. Listing them so I delete exactly the right ones:
+
+- `Bash`
+
+**Claude** · Sep 28 23:59 ET
+
+There are 18: six versions, each published three times. Deleting all of them, then checking that nothing in the repo still points at those subdomains:
+
+- `Bash`
+- `Bash`
+- `Bash`
