@@ -5524,3 +5524,51 @@ Now checking the lightbox at desktop and phone widths, a landscape and a tall im
 - `Read`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 01:06 ET
+
+The References page changes are live. I checked them in the browser on desktop (1440px) and iPhone width (393px).
+
+- **Arrow keys:** in the lightbox, ← → move through all 17 references and loop. → on the last one goes back to the first, and ← goes the other way. A small "3 of 17" count sits next to the title.
+- **Company tags:** the Campfire / Rillet / Numeric section headers are gone, and all references sit in one grid. Each one has its company tag at the bottom right of its caption, in that company's color: Campfire green, Rillet purple, Numeric blue. The lightbox shows the same tag at the bottom right.
+- **Lightbox alignment:** the lightbox is now exactly as wide as the image. The title lines up with the image's left edge, the count and ✕ with its right edge, and the description and tag sit directly under it on the same edges. That holds at every screen size.
+- **Responsive:** the image grows as large as the screen allows, full width on a phone, and a taller image is limited by the screen height instead. The grid is one column on phones, and nothing scrolls sideways.
+- **"Close" tooltip:** removed. It used to pop up by itself whenever the lightbox opened.
+
+
+**Vibhas** · Sep 29 07:42 ET
+
+ok so in code we just show the three versions we dont need to show v1 v2 v3 of those just the latest is fine. so you can remove all that sybnav from each of the cards. pretty clean now. three code versiona and three versions form each vector program. but also the vector programs combine them into one section called vector. so that bnow becaomes three code versions and 6 verctor versions
+
+
+**Claude** · Sep 29 07:43 ET
+
+Here's how I'm reading it. Tell me if I've got it wrong.
+
+- **Code:** only the three latest Code releases (1.5, 1.4, 1.3), with no v1 / v2 / v3 / Live links on the cards. Clicking a card opens that release's main prototype (v1, the Workbench, which is the one on the homepage).
+- **Vector:** Brilliant and Paper merge into one "Vector" filter, showing the three latest versions from each, so 6 cards. Each card keeps its Brilliant or Paper tag, so you can still tell them apart.
+- **Nav:** Code, Vector, then Story and References.
+
+Checking how many versions exist and how the cards render their links:
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 07:43 ET
+
+The versions: 6 Code, 4 Brilliant, 4 Paper. Making the changes:
+
+- `Bash`
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`
+
+**Claude** · Sep 29 07:44 ET
+
+Yes, `min-h-60` holds every card at 240px. Removing it so cards fit their content; cards in the same row still match each other's height:
+
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react"
 import { flushSync } from "react-dom"
 import { Code2, Diamond, FileText, Images, Presentation } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Chip, type ChipTone } from "@/components/common/Chip"
 import SiteFrame from "./SiteFrame"
 import { FILTERS, REPO, VERSIONS, type Medium, type SiteFilter } from "./versions"
@@ -40,6 +39,14 @@ function restoredState() {
   }
 }
 
+// Code: the three latest releases. Vector: the three latest Brilliant and three latest Paper canvases.
+function shownFor(filter: SiteFilter) {
+  const latest = (medium: Medium) => sorted.filter((v) => v.medium === medium).slice(0, 3)
+  return filter === "Code"
+    ? latest("Code")
+    : sorted.filter((v) => [...latest("Brilliant"), ...latest("Paper")].includes(v))
+}
+
 function openLink(href: string, event: { metaKey: boolean; ctrlKey: boolean }) {
   if (event.metaKey || event.ctrlKey) window.open(href, "_blank", "noopener")
   else location.assign(href)
@@ -51,7 +58,7 @@ export default function VersionControlPage() {
   const [active, setActive] = useState(initial.active)
   const grid = useRef<HTMLDivElement>(null)
   const cards = useRef(new Map<string, HTMLDivElement>())
-  const visible = sorted.filter((v) => medium === v.medium)
+  const visible = shownFor(medium)
   const activeId = visible.some((v) => v.id === active)
     ? active
     : visible[0]?.id
@@ -95,9 +102,7 @@ export default function VersionControlPage() {
     const link =
       event.key === "Enter" && event.target === event.currentTarget
         ? visible[index].links[0]
-        : /^[123]$/.test(event.key)
-          ? visible[index].links[Number(event.key) - 1]
-          : undefined
+        : undefined
     if (link) {
       event.preventDefault()
       openLink(link.href, event)
@@ -112,7 +117,7 @@ export default function VersionControlPage() {
           current={medium}
           onFilter={(value) => {
             flushSync(() => setMedium(value))
-            const first = sorted.find((v) => value === v.medium)
+            const first = shownFor(value)[0]
             if (first) cards.current.get(first.id)?.focus()
           }}
           onArrowDown={() => {
@@ -149,7 +154,7 @@ export default function VersionControlPage() {
                 if (!(e.target as HTMLElement).closest("a, button"))
                   openLink(version.links[0].href, e)
               }}
-              className="flex min-h-60 min-w-0 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
+              className="flex min-w-0 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
             >
               <div className="flex items-center gap-2">
                 <Chip tone={tone} icon={<Icon />}>
@@ -170,54 +175,14 @@ export default function VersionControlPage() {
                   {copy?.title ?? version.title}
                 </h2>
               </div>
-              <ul className="mt-3 mb-5 space-y-1 text-xs text-fg-3">
+              <ul className="mt-3 space-y-1 text-xs text-fg-3">
                 {(copy?.lines ?? version.changes).slice(0, 4).map((line) => (
                   <li key={line} className="truncate">
                     {line}
                   </li>
                 ))}
               </ul>
-              <div className="mt-auto flex min-w-0 items-center gap-1.5">
-                {version.links.map((link, i) => (
-                  <Button
-                    key={link.href}
-                    asChild
-                    size="xs"
-                    variant={i === 0 ? "outline" : "ghost"}
-                  >
-                    <a
-                      href={link.href}
-                      aria-label={link.label}
-                      onMouseEnter={() => prefetch(link.href)}
-                      onFocus={() => prefetch(link.href)}
-                    >
-                      <span className="min-w-0 truncate">
-                        {version.links.length > 1
-                          ? `v${i + 1}`
-                          : version.medium === "Brilliant" ||
-                              version.medium === "Paper"
-                            ? "Open canvas"
-                            : version.medium === "Story"
-                              ? "Open deck"
-                              : "Browse"}
-                      </span>
-                    </a>
-                  </Button>
-                ))}
-                {version.id === "code-1.5" && (
-                  <span className="flex items-center gap-1 text-xs text-fg-3">
-                    Live
-                    {[1, 2, 3].map((number) => (
-                      <a
-                        key={number}
-                        href={`/v${number}`}
-                        className="rounded px-1 hover:text-brand focus-visible:outline-2 focus-visible:outline-focus"
-                      >
-                        v{number}
-                      </a>
-                    ))}
-                  </span>
-                )}
+              <div className="mt-auto flex min-w-0 items-center gap-1.5 pt-4 empty:hidden">
                 {version.commit && (
                   <a
                     href={`${REPO}/commit/${version.commit}`}
