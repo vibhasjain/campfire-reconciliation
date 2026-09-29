@@ -15,6 +15,10 @@ import {
   RotateCcw,
   X,
 } from "lucide-react"
+import { flushSync } from "react-dom"
+import { focusComposer } from "@/app/hotkeys"
+import { LAYOUT } from "@/app/layout"
+import { ActionTooltip } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import {
   Popover,
@@ -196,7 +200,9 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
   const item = useItem(id)
   const heading = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
-    const timer = window.setTimeout(() => heading.current?.focus(), 50)
+    const timer = window.setTimeout(() => {
+      if (!document.activeElement?.closest(".wb-thread")) heading.current?.focus()
+    }, 50)
     return () => clearTimeout(timer)
   }, [id])
   if (!item) return null
@@ -436,10 +442,12 @@ export default function Workbench() {
     if (!next) return
     setPage(Math.floor(nextIndex / 50))
     reconUi.set((s) => ({ ...s, selectedItemId: next.id }))
-    openHalfSheet({
-      title: "Review transaction",
-      content: <Detail move={navigate} />,
-    })
+    // Arrows only move the highlight; they follow into the sheet only when it's already open (Enter opens it).
+    if (ui.get().halfSheet)
+      openHalfSheet({
+        title: "Review transaction",
+        content: <Detail move={navigate} />,
+      })
     requestAnimationFrame(() =>
       document
         .querySelector(`[data-item-id="${next.id}"]`)
@@ -464,7 +472,33 @@ export default function Workbench() {
     const id = reconUi.get().selectedItemId
     if (id) cycleSuggestion(id, delta)
   }, [])
-  useReconKeys({ move, enter, cycle })
+  const selectTab = useCallback((name: "Pending" | "Reconciled") => {
+    setTab(name)
+    setPage(0)
+  }, [])
+  const toggleSidebar = useCallback(() => {
+    if (window.matchMedia(`(min-width: ${LAYOUT.desktopMin}px)`).matches)
+      ui.set({ sidebarCollapsed: !ui.get().sidebarCollapsed })
+  }, [])
+  const comment = useCallback(() => {
+    const thread = document.querySelector(".wb-thread")
+    return !!thread && focusComposer(thread)
+  }, [])
+  const ember = useCallback(() => {
+    if (!ui.get().halfSheet) flushSync(() => enter())
+    const thread = document.querySelector(".wb-thread")
+    if (thread) focusComposer(thread, true)
+  }, [enter])
+  const scrollSheet = useCallback((delta: -1 | 1) => {
+    const scroller = document.querySelector<HTMLElement>('[data-slot="half-sheet"] [data-slot="half-sheet-scroll"]')
+    if (!scroller) return false
+    scroller.scrollBy({
+      top: delta * scroller.clientHeight * 0.8,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    })
+    return true
+  }, [])
+  useReconKeys({ move, enter, cycle, selectTab, toggleSidebar, comment, ember, scrollSheet })
   // Comments inbox: open the item's review sheet with the cursor in its conversation.
   useEffect(() => {
     const onOpenItem = (event: Event) => {
@@ -556,27 +590,25 @@ export default function Workbench() {
           aria-label="Transaction status"
           className="flex shrink-0 rounded-md border-hair border-line bg-segment p-1"
         >
-          {["Pending", "Reconciled"].map((name) => (
-            <button
-              key={name}
-              role="tab"
-              aria-selected={tab === name}
-              onClick={() => {
-                setTab(name)
-                setPage(0)
-              }}
-              className={cn(
-                "flex min-h-9 shrink-0 items-center rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
-                tab === name
-                  ? "bg-segment-active font-medium text-fg"
-                  : "text-fg-3"
-              )}
-            >
-              <span>{name}</span>
-              <span className="ml-2 shrink-0 whitespace-nowrap text-fg-3 tabular-nums">
-                {name === "Pending" ? pending.length : reconciled.length}
-              </span>
-            </button>
+          {(["Pending", "Reconciled"] as const).map((name, index) => (
+            <ActionTooltip key={name} label={name} shortcut={String(index + 1)}>
+              <button
+                role="tab"
+                aria-selected={tab === name}
+                onClick={() => selectTab(name)}
+                className={cn(
+                  "flex min-h-9 shrink-0 items-center rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
+                  tab === name
+                    ? "bg-segment-active font-medium text-fg"
+                    : "text-fg-3"
+                )}
+              >
+                <span>{name}</span>
+                <span className="ml-2 shrink-0 whitespace-nowrap text-fg-3 tabular-nums">
+                  {name === "Pending" ? pending.length : reconciled.length}
+                </span>
+              </button>
+            </ActionTooltip>
           ))}
         </div>
       </header>
@@ -654,6 +686,8 @@ export default function Workbench() {
                       }}
                       onKeyDown={(event) => {
                         if (
+                          !event.defaultPrevented &&
+                          !event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey &&
                           event.target === event.currentTarget &&
                           (event.key === "Enter" || event.key === " ")
                         ) {
@@ -783,7 +817,7 @@ export default function Workbench() {
       <SelectionPill />
       <PageChat />
       <CommentsInbox />
-      <ShortcutsDialog />
+      <ShortcutsDialog workbench />
     </section>
   )
 }

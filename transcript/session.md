@@ -4555,3 +4555,113 @@ The empty-thread case is fixed: the comment box sits at the bottom. Renaming the
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 28 21:32 ET
+
+All of it is live, and I checked each piece in a local build before deploying. The transcript went along in the same commit.
+
+- **Conversations:**
+  - Only 7 of the 14 pending items have a thread now, 11 messages in all. Just 12 of the 207 reconciled items keep a short note.
+  - None of them repeat Ember. For example, Maya asks "@Priya Shah who owns the Notion renewal now?" and Priya answers that procurement wants 30 days' notice before next September's renewal.
+  - Bank service charge, Harbour and Datadog have no thread, so your Ember demo on them starts fresh.
+- **Empty items:** the comment box now sits at the bottom of the sheet even when there are no messages. Before, it floated up under the divider.
+- **Tabs:** they read **Pending** and **Reconciled**, with Pending first since it's the default view.
+
+
+**Vibhas** · Sep 28 22:19 ET
+
+Alright, let's add some more keyboard shortcuts like switching between pending and reconciled and collapsing the drawer. And I don't know, whatever else we can think of like. Yeah, like whatever we would want to do just to go through the whatever reconciliation flow like most actions, right? Like sometimes you might want to make a comment so how do you focus the text box and or how do you scroll once the sidebar is open all through the keyboard, right?
+
+Or I don't know
+
+
+**Claude** · Sep 28 22:19 ET
+
+The existing shortcuts: ↑/↓ or K/J move between items, ←/→ switch suggestions, Enter opens, A accepts, X rejects, U unreconciles, M matches, C comments, ⌘E opens Ask Ember, ? shows shortcuts, and Esc closes. Here's what I'll add for v1:
+
+- **1 / 2:** switch between Pending and Reconciled.
+- **Esc:** already closes the review sheet; it'll now say so in the close button's tooltip. **[** will collapse the left nav.
+- **C with the sheet open:** puts the cursor in the sheet's comment box instead of opening the quick popover. Esc leaves the box.
+- **Space / Shift+Space and PageDown / PageUp:** scroll the open sheet.
+- **E:** starts a comment to Ember, with "@Ember " already typed. That's the fast path for your demo.
+- All of these appear in the ? dialog and the tooltips.
+
+The plan says Codex should do this, so checking the balance:
+
+- `Bash`
+- `Bash`
+- `Monitor` Codex keyboard shortcuts job finishing
+
+**Claude** · Sep 28 22:20 ET
+
+Codex is building the new shortcuts. It had 9 more points of weekly usage left than Claude (63% vs 54%).
+
+When it's done, I'll drive each shortcut by keyboard in the browser before committing:
+- tab switching
+- collapsing the nav
+- C and E into the comment box
+- scrolling the sheet
+- Esc
+
+
+**Vibhas** · Sep 28 22:20 ET
+
+You don't automatically own this open the sidebar if I'm just going up and down on the fully expanded version. Only if I press enter then you open the sidebar and and then i can still go up and down normally then if i press escape i can go up and down without the sidebar open you get what i mean
+
+
+**Claude** · Sep 28 22:20 ET
+
+Got it: ↑/↓ on the full-width list should only move the highlight. Enter opens the sheet, arrows keep moving through items with it open, and Esc closes it so arrows go back to just moving the highlight.
+
+Right now every arrow press opens the sheet. Codex is editing that same file, so I'll make this change as soon as it finishes, then verify both together.
+
+
+**Vibhas** · Sep 28 22:20 ET
+
+I don't need the column resize icon.
+
+
+**Claude** · Sep 28 22:20 ET
+
+Finding which resize control you mean. There's one on the left nav and possibly one on the review sheet:
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 28 22:21 ET
+
+Removing the drag code those handles used, so nothing is left dead:
+
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 28 22:21 ET
+
+Both resize handles are gone, with their drag code, and it typechecks. I'll commit it with the shortcuts and the arrow-key change, after checking all of them in the browser.
+
+- `Bash`
+
+**Claude** · Sep 28 22:24 ET
+
+Codex's part typechecks and lints clean. Now the arrow-key change: arrows should only open or refresh the sheet if it's already open. Checking how to read the sheet's open state:
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 28 22:25 ET
+
+Now driving it all from the keyboard in the browser:
+
+- `Bash`
+- `Read`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 28 22:26 ET
+
+The dialog's close button no longer shows a ring. Committing everything:
+
+- `Bash`

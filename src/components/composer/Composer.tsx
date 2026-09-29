@@ -6,7 +6,7 @@ import { useEditor } from "@/components/editor/use-editor"
 import { CornerDownLeft, FileText, LayoutList, Paperclip, Square, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { EntityChip } from "@/components/common/EntityChip"
-import { COMPOSER_ATTR } from "@/app/hotkeys"
+import { COMPOSER_ATTR, MENTION_EMBER_EVENT } from "@/app/hotkeys"
 import { nextId, useDB } from "@/data/store"
 import type { Attachment, EntityRef, ID } from "@/data/types"
 import { send, stop, useRun } from "@/agent/engine"
@@ -68,6 +68,7 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
   const [attachments, setAttachments] = useState<Attachment[]>([])
   const running = useDB((d) => (chatId ? d.chats[chatId]?.status === "running" : false))
   const run = useRun(chatId)
+  const composerRef = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -81,6 +82,19 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
     onUpdate: ({ editor: e }: { editor: { isEmpty: boolean; getJSON(): JSONContent } }) => bridge.update(e),
   }))
   const editor = useEditor(options)
+  useEffect(() => {
+    const node = composerRef.current
+    const mentionEmber = () => {
+      // Preserve the draft and insert the same node used by the mention picker.
+      editor.chain().focus("end").insertContent([
+        ...(!editor.isEmpty ? [{ type: "text", text: " " }] : []),
+        { type: "mention", attrs: { id: "agent:ember", label: "Ember" } },
+        { type: "text", text: " " },
+      ]).run()
+    }
+    node?.addEventListener(MENTION_EMBER_EVENT, mentionEmber)
+    return () => node?.removeEventListener(MENTION_EMBER_EVENT, mentionEmber)
+  }, [editor])
   const shownPrefill = useRef(prefillText)
   useEffect(() => {
     if (!editor || shownPrefill.current === prefillText) return
@@ -148,6 +162,7 @@ export function Composer({ variant, context: contextProp = [], chatId: chatIdPro
   const busy = running || (!!run && variant === "thread")
   return (
     <div
+      ref={composerRef}
       className={cn(
         "flex w-full flex-col gap-0.5 rounded-xl border-hair border-line bg-surface p-2 shadow-composer [caret-color:var(--c-brand)]",
         className

@@ -16,6 +16,11 @@ export type ReconKeyOptions = {
   move: (delta: -1 | 1) => void
   enter?: () => void
   cycle?: (delta: -1 | 1) => void
+  selectTab?: (tab: "Pending" | "Reconciled") => void
+  toggleSidebar?: () => void
+  comment?: () => boolean
+  ember?: () => void
+  scrollSheet?: (delta: -1 | 1) => boolean
   enabled?: boolean
 }
 
@@ -24,6 +29,11 @@ export function useReconKeys({
   move,
   enter,
   cycle,
+  selectTab,
+  toggleSidebar,
+  comment,
+  ember,
+  scrollSheet,
   enabled = true,
 }: ReconKeyOptions) {
   const order = useRef<
@@ -55,8 +65,9 @@ export function useReconKeys({
       const target = event.target instanceof HTMLElement ? event.target : null
       const state = reconUi.get()
       if (event.key === "Escape") {
+        if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return
         const editor = target?.closest<HTMLElement>(
-          'textarea,input,[contenteditable="true"]'
+          'textarea,input,[contenteditable]:not([contenteditable="false"])'
         )
         if (editor) {
           const text =
@@ -120,7 +131,7 @@ export function useReconKeys({
       if (
         (event.metaKey || event.ctrlKey) &&
         (key === "e" || key === "j") &&
-        !event.altKey
+        !event.altKey && !event.shiftKey
       ) {
         event.preventDefault()
         reconUi.set((current) => ({
@@ -130,10 +141,30 @@ export function useReconKeys({
         return
       }
       if (event.metaKey || event.ctrlKey || event.altKey) return
+      if (event.shiftKey && key !== "?" && key !== " ") return
       const id = state.selectedItemId
       const step = (delta: -1 | 1) =>
         cycle ? cycle(delta) : id && cycleSuggestion(id, delta)
       switch (key) {
+        case "1":
+        case "2":
+          if (!selectTab) return
+          selectTab(key === "1" ? "Pending" : "Reconciled")
+          break
+        case "[":
+          if (!toggleSidebar) return
+          toggleSidebar()
+          break
+        case "e":
+          if (!ember) return
+          ember()
+          break
+        case " ":
+        case "pagedown":
+        case "pageup":
+          if (!scrollSheet?.(key === "pageup" || event.shiftKey ? -1 : 1)) return
+          event.stopPropagation()
+          break
         case "arrowup":
         case "k":
           move(-1)
@@ -165,7 +196,7 @@ export function useReconKeys({
           matchSelection()
           break
         case "c":
-          if (id) focusThread(id)
+          if (!comment?.() && id) focusThread(id)
           break
         case "?":
           reconUi.set((current) => ({ ...current, shortcutsOpen: true }))
@@ -188,5 +219,5 @@ export function useReconKeys({
       window.removeEventListener("recon:view-suggestion", onViewSuggestion)
       window.removeEventListener("keydown", onKey, true)
     }
-  }, [move, enter, cycle, enabled])
+  }, [move, enter, cycle, selectTab, toggleSidebar, comment, ember, scrollSheet, enabled])
 }

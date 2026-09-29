@@ -380,10 +380,10 @@
     --tw-ring-shadow: 0 0 #0000 !important;
     --tw-ring-offset-shadow: 0 0 #0000 !important;
   }
-  :root:not([data-tab-focus]) [data-slot="button"]:focus-visible {
+  :root:not([data-tab-focus]) [data-variant]:focus-visible {
     border-color: transparent !important;
   }
-  :root:not([data-tab-focus]) [data-slot="button"][data-variant="outline"]:focus-visible {
+  :root:not([data-tab-focus]) [data-variant="outline"]:focus-visible {
     border-color: var(--c-line) !important;
   }
 

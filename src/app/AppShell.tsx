@@ -39,7 +39,7 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
   return (
     <header className="flex h-14 min-w-0 shrink-0 items-center gap-2 border-b-hair border-line px-4 lg:px-6">
       {showMenu && (
-        <ActionTooltip label="Open sidebar">
+        <ActionTooltip label="Open sidebar" shortcut={desktop ? "[" : undefined}>
           <button
             type="button"
             aria-label="Open sidebar"

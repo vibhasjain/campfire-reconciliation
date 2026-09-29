@@ -1,6 +1,4 @@
 import type { ComponentProps, ReactNode } from "react"
-import { LAYOUT } from "../layout"
-import { setWidth, useSidebarWidth, widthStore } from "./width"
 import { cn } from "@/lib/utils"
 
 
@@ -9,56 +7,12 @@ export function InertControl({ className, ...props }: Omit<ComponentProps<"butto
   return <button type="button" {...props} aria-disabled="true" className={cn("cursor-default outline-none focus-visible:ring-2 focus-visible:ring-focus", className)} />
 }
 
-/** Sidebar width stays adjustable by pointer and keyboard. */
-export function SidebarResizeHandle() {
-  const { width, dragging } = useSidebarWidth()
-  const { min, max, step } = LAYOUT.sidebar
-  return (
-    <button
-      type="button"
-      role="separator"
-      aria-label="Resize sidebar"
-      aria-orientation="vertical"
-      aria-valuemin={min}
-      aria-valuemax={max}
-      aria-valuenow={width}
-      data-dragging={dragging || undefined}
-      className="group/resize absolute inset-y-0 -right-1 z-20 w-2 cursor-col-resize outline-none max-lg:hidden"
-      onKeyDown={(event) => {
-        const next = { ArrowLeft: width - step, ArrowRight: width + step, Home: min, End: max }[event.key]
-        if (next === undefined) return
-        event.preventDefault()
-        setWidth(next)
-      }}
-      onPointerDown={(event) => {
-        event.preventDefault()
-        const startX = event.clientX
-        const startWidth = width
-        widthStore.set((state) => ({ ...state, dragging: true }))
-        const move = (moveEvent: PointerEvent) => setWidth(startWidth + moveEvent.clientX - startX)
-        const end = () => {
-          widthStore.set((state) => ({ ...state, dragging: false }))
-          window.removeEventListener("pointermove", move)
-          window.removeEventListener("pointerup", end)
-          window.removeEventListener("pointercancel", end)
-        }
-        window.addEventListener("pointermove", move)
-        window.addEventListener("pointerup", end)
-        window.addEventListener("pointercancel", end)
-      }}
-    >
-      <span className="mx-auto block h-full w-px bg-line-strong opacity-0 transition-opacity duration-150 group-hover/resize:opacity-100 group-focus-visible/resize:opacity-100 group-data-dragging/resize:opacity-100" />
-    </button>
-  )
-}
-
-export function SidebarFrame({ children, resizable = true, className }: { children: ReactNode; resizable?: boolean; className?: string }) {
+export function SidebarFrame({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <div className="relative h-full min-w-0">
       <nav aria-label="Sidebar" className={cn("flex h-full w-full flex-col overflow-hidden border-r-hair border-line bg-sidebar", className)}>
         {children}
       </nav>
-      {resizable && <SidebarResizeHandle />}
     </div>
   )
 }

@@ -10,23 +10,33 @@ import {
 import { Kbd } from "@/components/ui/kbd"
 import { reconUi, useReconUi } from "./useRecon"
 
-const shortcuts = [
-  ["↑ / K", "Previous item"],
-  ["↓ / J", "Next item"],
-  ["← / →", "Cycle suggestions"],
-  ["Enter", "Open selected item"],
-  ["A", "Accept suggestion"],
-  ["X", "Reject suggestion"],
-  ["U", "Unreconcile item"],
-  ["M", "Match selected lines"],
-  ["C", "Comment on item"],
-  ["⌘E / Ctrl+E", "Ask Ember"],
-  ["?", "Show shortcuts"],
-  ["Esc", "Close topmost layer"],
-  ["⌘ / Ctrl / ⇧ + click", "Select multiple lines"],
-]
-
-export function ShortcutsDialog() {
+export function ShortcutsDialog({ workbench = false }: { workbench?: boolean }) {
+  const groups = [
+    ["Navigate", [
+      ["↑ / K · ↓ / J", "Previous / next item"],
+      ...(workbench ? [["1 / 2", "Pending / Reconciled"]] : []),
+      ["Enter", "Open item"],
+      ["Esc", "Close topmost layer"],
+      ...(workbench ? [["[", "Toggle sidebar"]] : []),
+    ]],
+    ["Review", [
+      ["← / →", "Cycle suggestions"],
+      ["A", "Accept"],
+      ["X", "Reject"],
+      ["U", "Unreconcile"],
+      ["M", "Match lines"],
+      ["⌘ / Ctrl / ⇧ + click", "Select lines"],
+    ]],
+    ["Talk", [
+      ["C", "Comment"],
+      ...(workbench ? [["E", "Mention Ember on item"]] : []),
+      ["⌘E / Ctrl+E", "Ask Ember"],
+    ]],
+    ["View", [
+      ...(workbench ? [["Space / ⇧Space", "Scroll sheet"], ["PageDown / PageUp", "Scroll sheet"]] : []),
+      ["?", "Show shortcuts"],
+    ]],
+  ] as const
   const open = useReconUi((state) => state.shortcutsOpen)
   return (
     <Dialog
@@ -43,19 +53,21 @@ export function ShortcutsDialog() {
         <DialogDescription className="sr-only">
           Reconciliation shortcuts. Shortcuts are paused while typing.
         </DialogDescription>
-        <dl className="flex flex-col gap-2 px-4 pt-1 pb-4">
-          {shortcuts.map(([key, label]) => (
-            <div
-              key={key}
-              className="flex items-center justify-between gap-4 text-xs"
-            >
-              <dt className="text-fg-3">{label}</dt>
-              <dd>
-                <Kbd>{key}</Kbd>
-              </dd>
-            </div>
+        <div className="flex flex-col gap-4 px-4 pt-1 pb-4">
+          {groups.map(([group, shortcuts]) => (
+            <section key={group}>
+              <h3 className="mb-2 text-xs font-medium">{group}</h3>
+              <dl className="flex flex-col gap-2">
+                {shortcuts.map(([key, label]) => (
+                  <div key={key} className="flex items-center justify-between gap-4 text-xs">
+                    <dt className="text-fg-3">{label}</dt>
+                    <dd><Kbd>{key}</Kbd></dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
           ))}
-        </dl>
+        </div>
       </DialogContent>
     </Dialog>
   )

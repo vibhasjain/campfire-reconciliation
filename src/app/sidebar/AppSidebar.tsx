@@ -28,7 +28,7 @@ const chevron = (
 export const AppSidebar = memo(function AppSidebar() {
   const desktop = useIsDesktop()
   return (
-    <SidebarFrame resizable={desktop}>
+    <SidebarFrame>
       <div className="flex h-[66px] shrink-0 items-center gap-2.5 px-5">
         {/* The one live control in the inert shell: home to version control.
             Hover pops the logo slightly and surfaces the same "Version control" tag the canvases use. */}
@@ -50,7 +50,7 @@ export const AppSidebar = memo(function AppSidebar() {
           />
         </a>
         <span className="flex-1" />
-        <ActionTooltip label={desktop ? "Collapse sidebar" : "Close sidebar"}>
+        <ActionTooltip label={desktop ? "Collapse sidebar" : "Close sidebar"} shortcut={desktop ? "[" : undefined}>
           <button
             type="button"
             aria-label={desktop ? "Collapse sidebar" : "Close sidebar"}
