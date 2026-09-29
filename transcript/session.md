@@ -6307,3 +6307,42 @@ Every toast uses Undo except one "Ask Ember" action, which stays as text. The ic
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 12:20 ET
+
+Both changes are pushed, and Netlify is building them now; they'll be live in about 40 seconds. I checked both in a local build:
+
+- **Undo:** in every toast it's now an undo arrow icon, and hovering it shows "Undo". The one "Ask Ember" toast action keeps its words.
+- **Sheet heading:** the gap between "Review transaction" and the item's title is much tighter. The taller header's extra space was stacking on top of the content's own 16px of top padding, so I removed the 16px.
+
+
+**Vibhas** · Sep 29 12:21 ET
+
+[Image #95] I just did add ember and type something, but I wasn't already scrolled to the bottom. So because I did that the ember's message came in and the conversation did not scroll to the bottom. So either I send a message or the Ember sends a message. In either case, you auto scroll to the bottom.
+
+
+**Claude** · Sep 29 12:21 ET
+
+In the review sheet the conversation doesn't scroll itself; the whole sheet does. The code that jumps to the newest message was still scrolling the thread's own box, which can't scroll, so nothing moved. I'll point it at the nearest area that actually scrolls: the sheet here, the thread's own box in the popover and Ask Ember. It scrolls when you send a message and as Ember's reply arrives. It won't scroll when you first open an item, so that still starts at the top.
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 12:22 ET
+
+Testing it: open an item with a long conversation, scroll to the top, send a message to Ember, then check the sheet ends up at the bottom:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 12:22 ET
+
+Not all of Ember's things are like new suggestions, right? Some are you're answering questions, some are like I don't know. You gotta mix them up a little Yeah, I'm just gonna basically be demoing the chat like comments are obvious, but I'm gonna be demoing the chat by like I'm just gonna use a keyboard shortcut to press E and just hit enter and then so regardless of what conversation I'm in, like just we just gotta cycle through different like ember use cases, right?
+
+We can start with a suggestion, that's a great one, but yeah.
+
+
+**Claude** · Sep 29 12:22 ET
+
+It works: the item opened at the top, and after sending from a scrolled-up position the sheet ended fully at the bottom once Ember replied (272 of 272). Committing:
+
+- `Bash`

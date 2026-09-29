@@ -53,10 +53,21 @@ export function ThreadView({
       setViewing(null)
     }
   }, [chatId, itemId])
+  // New messages (yours or Ember's, including a streaming reply) scroll the nearest scrolling area
+  // to the bottom: the thread itself when floating, the whole sheet when inline. Opening doesn't.
+  const opened = useRef(false)
   useEffect(() => {
     const node = scroller.current
-    if (node) node.scrollTop = node.scrollHeight
-  }, [tail, run])
+    if (!node) return
+    if (!opened.current) {
+      opened.current = true
+      if (variant === "inline") return
+    }
+    let area: HTMLElement | null = node
+    while (area && !(area.scrollHeight > area.clientHeight && /auto|scroll/.test(getComputedStyle(area).overflowY)))
+      area = area.parentElement
+    area?.scrollTo({ top: area.scrollHeight, behavior: "smooth" })
+  }, [tail, run, variant])
   return (
     <div
       data-thread-item={itemId}
