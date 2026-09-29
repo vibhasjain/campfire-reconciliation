@@ -5418,3 +5418,109 @@ It goes in the ? dialog under Review.
 Now it steps through: the first O opens the first attachment, the second O the next, the third wraps back to the first. Esc closes the preview and leaves the sheet open. Committing:
 
 - `Bash`
+
+**Claude** · Sep 29 00:58 ET
+
+Press **O** with the review sheet open to open the current suggestion's first source document. Press O again to move to the next attachment; after the last one it wraps back to the first. **Esc** closes the preview and leaves the sheet open. It's listed in the ? dialog as "Open attachments", and it does nothing while you're typing or when a suggestion has no attachments.
+
+It's live. I tested it on Harbour, which has two attachments. The first version only closed the open preview instead of moving to the next one, and that's fixed now.
+
+
+**Vibhas** · Sep 29 01:01 ET
+
+[Image #83] let me cycle through references with arrow keys. cuycle through all references and loop
+
+
+**Claude** · Sep 29 01:01 ET
+
+You want ← → in the reference preview to move to the previous or next reference, across all three sections, looping at the ends. Looking at how the preview is built:
+
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 01:01 ET
+
+references have a tag on bottom right for the company that way we dont need the compant dividers
+
+
+**Vibhas** (while Claude was working) · Sep 29 01:02 ET
+
+[Image #84] like there on bottom right
+
+
+**Claude** · Sep 29 01:02 ET
+
+Makes sense: a small company tag in the bottom-right of each image, then the Campfire / Rillet / Numeric section headers can go and everything sits in one grid. Looking at the current markup:
+
+- `Bash`
+
+**Claude** · Sep 29 01:02 ET
+
+The tag goes in the caption area under each image, aligned bottom right beside the title and note. Rebuilding as one grid without the section headers:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 01:02 ET
+
+each company tag is different color, whatever hat ocmpans signature color is
+
+
+**Claude** · Sep 29 01:02 ET
+
+Checking which colors the tag component supports:
+
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 01:02 ET
+
+in the lightbox too company tag can be bottom right
+
+
+**Vibhas** (while Claude was working) · Sep 29 01:02 ET
+
+make sure shit is resposnive the refences page and ligthbozes etc
+
+
+**Claude** · Sep 29 01:03 ET
+
+Adding the same tag to the lightbox, bottom right beside the description:
+
+- `Bash`
+- `Read`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 29 01:03 ET
+
+[Image #85] can those two line up with the freaking image please
+
+
+**Vibhas** (while Claude was working) · Sep 29 01:03 ET
+
+[Image #86] same for the x
+
+
+**Vibhas** (while Claude was working) · Sep 29 01:03 ET
+
+and the tag too obv
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 01:04 ET
+
+Now checking the lightbox at desktop and phone widths, a landscape and a tall image, and the grid on a phone:
+
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`
