@@ -5204,3 +5204,60 @@ Moving the filter list out of the component file to satisfy the linter, then the
 - `Read`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 28 23:49 ET
+
+The nav and story changes are live, and I checked all three pages in a local build before deploying.
+
+- **One shared nav row** on version control and References: Home, then Code / Brilliant / Paper, then Story / References, then GitHub.
+  - **Code / Brilliant / Paper:** on version control they filter the cards in place. On References they link back to version control with that filter selected.
+  - **Story and References:** go straight to their pages; they no longer filter cards. On the References page, References shows as selected.
+- **References page:** the Campfire / Rillet / Numeric jump links are gone.
+- **Story deck:**
+  - "Campfire × Vibhas" is replaced by the same dark Home tag, linking to the live prototype.
+  - The big ← → buttons in the corner are gone. Small, faint arrows now sit on either side of the page counter at the top ("← 02 / 12 →"), and they brighten on hover.
+  - Arrow keys work as before. On phones the counter and arrows stay hidden, as they were.
+
+
+**Vibhas** · Sep 28 23:51 ET
+
+[Image #82] Bro when I click on something from the code tile why does it w open up with this weird pop-up thing and not just regular and the home logo always the same component man like it points back to version control with the hover state and everything across every single prototype that is accessible through the code section.
+
+Please the brilliant paper sections seem to behave themselves just fine. Open up like normal things and there's a version control tag up front. Which so why the fuck is these code prototypes opening weirdly and not redirecting back
+
+
+**Claude** · Sep 28 23:51 ET
+
+Two problems here:
+
+1. **The popup:** that's Arc's "peek" window. Arc opens it when you follow a link to a different domain. Brilliant and Paper live on this same site under `/concepts/…`. The older Code versions are separate Netlify deploys on their own subdomains (`code-1-4--campfiredesign.netlify.app`), so Arc treats them as external links.
+2. **The logo:** those older versions are frozen builds from earlier commits, so their logo is the old one without the version-control tag.
+
+The real fix is to serve the older Code versions from this same site, built from their own commits, with today's logo and tag behaviour. Checking how the versions are defined:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 23:52 ET
+
+Bro, why the fuck are they on a separate subdomain? Who asked you to do that? Just bring it all in one domain.
+
+- `Bash`
+- `Bash`
+- `Monitor` Codex frozen-versions same-domain job finishing
+
+**Claude** · Sep 28 23:52 ET
+
+Codex is moving all six older Code versions (1.0 to 1.5) onto this domain:
+
+- Each is rebuilt from its own commit and served at `/code/1.4/…` on campfiredesign.netlify.app, the same way Brilliant and Paper live under `/concepts/…`. Arc will open them in the same tab, with no peek popup.
+- Each rebuild gets today's logo: it links back to version control, with the same slight pop and dark "Version control" tag on hover.
+- The version cards will link to these same-site pages.
+- The old subdomains stay up, so links you've already shared keep working; nothing will link to them anymore.
+
+When it lands, I'll open each version in the browser, check the logo hover and that nothing loads from another domain, then commit.
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+- `Bash`

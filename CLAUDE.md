@@ -5,7 +5,8 @@ Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfired
 ## What lives where
 - `/`: the latest v1 prototype, always (same bundle as `/v1`).
 - `/version-control`: the index of every artifact, newest first, design-system cards, arrow keys + Enter. **Every new artifact gets an entry in `src/site/versions.ts`.**
-- `/v1`, `/v2`, `/v3`: the coded prototypes (Workbench, Paired ledger, Flow) built on the shared core in `src/recon`, `src/comments`, `src/agent`; each version in `src/versions/v1|v2|v3`. Older Code versions are frozen alias deploys (`code-1-0--campfiredesign.netlify.app/campfire1` …).
+- `/v1`, `/v2`, `/v3`: the coded prototypes (Workbench, Paired ledger, Flow) built on the shared core in `src/recon`, `src/comments`, `src/agent`; each version in `src/versions/v1|v2|v3`.
+- `/code/<version>/campfire1` (or `campfire2`, `campfire3`): frozen Code versions in `public/code/<version>/`, rebuilt from the Code commits in `src/site/versions.ts` with `node scripts/build-frozen.mjs`. The builder uses temporary detached worktrees, patches base-path routing and today's sidebar logo behavior, and builds without source maps or the historical SEO step. Run it explicitly before the normal build when refreshing snapshots; `npm run build` copies the saved outputs. Old alias deploys remain available for shared links.
 - `/story/`: the storyboard deck (static, `public/story/`); its working docs and image briefs live in `story-src/` (not served).
 - `/concepts/<slug>/`: the Brilliant (A, B) and Paper (C, D) canvases as static HTML exports in `public/concepts/`. Never hand-edit those exports; page-level fixes (dark canvas, labels, zoom, home pill, legibility) are applied at build time by `scripts/seo.mjs`. `scripts/paper-to-html.mjs` re-renders Paper pages.
 - `/references`: curated screenshots (`public/references`, data in `src/site/references.ts`). No personal info in any image.

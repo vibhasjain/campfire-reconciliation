@@ -17,7 +17,7 @@ export const REPO = "https://github.com/vibhasjain/campfire-reconciliation"
 const prototypes = (version: string) =>
   ["Workbench", "Paired ledger", "Flow"].map((name, index) => ({
     label: `v${index + 1} ${name}`,
-    href: `https://code-${version.replace(".", "-")}--campfiredesign.netlify.app/campfire${index + 1}`,
+    href: `/code/${version}/campfire${index + 1}`,
   }))
 
 export const VERSIONS: Version[] = [
