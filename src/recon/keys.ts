@@ -70,15 +70,9 @@ export function useReconKeys({
           'textarea,input,[contenteditable]:not([contenteditable="false"])'
         )
         if (editor) {
-          const text =
-            editor instanceof HTMLInputElement ||
-            editor instanceof HTMLTextAreaElement
-              ? editor.value
-              : editor.textContent
           editor.blur()
-          // Quick comments dismiss on Escape even with a draft (kept in store).
-          // In the review sheet the first Escape only leaves the text box; the next closes the sheet.
-          if (editor.closest('[data-slot="half-sheet"]') || (text?.trim() && !editor.closest('[data-layer="thread"]'))) {
+          // First Escape only leaves a text box; the quick-comment popover is the exception (Escape closes it).
+          if (editor.closest('[data-slot="half-sheet"]') || !editor.closest('[data-layer="thread"]')) {
             event.preventDefault()
             event.stopImmediatePropagation()
             return
@@ -113,7 +107,11 @@ export function useReconKeys({
               [layer]: layer === "threadFor" ? null : false,
             }))
           else if (shell.halfSheet) ui.set({ halfSheet: null })
-          else return
+          else if (!document.querySelector('[role="dialog"], [role="menu"], [data-radix-popper-content-wrapper]')) {
+            // Nothing left to close: Escape goes to version control (and version control's Escape comes home).
+            location.href = "/version-control"
+            return
+          } else return
         }
         })
         focusPage()

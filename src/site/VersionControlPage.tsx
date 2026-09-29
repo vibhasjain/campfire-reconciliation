@@ -63,6 +63,31 @@ export default function VersionControlPage() {
       restored.scrollIntoView({ block: "center" })
   }, [initial])
 
+  // Arrows always work: if no card has focus, the first press picks up the remembered (or first) card.
+  useEffect(() => {
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (
+        !event.key.startsWith("Arrow") ||
+        event.defaultPrevented ||
+        event.altKey ||
+        event.metaKey ||
+        event.ctrlKey
+      )
+        return
+      const target = event.target as HTMLElement | null
+      if (
+        target?.closest(
+          '[data-version-card], input, textarea, [contenteditable="true"], [role="menu"], [role="group"]'
+        )
+      )
+        return
+      event.preventDefault()
+      cards.current.get(activeId ?? SHOWN[0].id)?.focus()
+    }
+    addEventListener("keydown", onKey)
+    return () => removeEventListener("keydown", onKey)
+  }, [activeId])
+
   // Esc goes home to the live prototype.
   useEffect(() => {
     const onKey = (event: globalThis.KeyboardEvent) => {
@@ -86,20 +111,20 @@ export default function VersionControlPage() {
     const columns = grid.current
       ? getComputedStyle(grid.current).gridTemplateColumns.split(" ").length
       : 1
+    // Every direction loops: left/right walk the whole list; up/down wrap within the column.
+    const count = visible.length
     let next = index
-    if (event.key === "ArrowLeft" && index % columns > 0) next--
-    if (
-      event.key === "ArrowRight" &&
-      index % columns < columns - 1 &&
-      index + 1 < visible.length
-    )
-      next++
-    if (event.key === "ArrowUp" && index >= columns) next -= columns
-    if (
-      event.key === "ArrowDown" &&
-      Math.floor(index / columns) < Math.floor((visible.length - 1) / columns)
-    )
-      next = Math.min(index + columns, visible.length - 1)
+    if (event.key === "ArrowRight") next = (index + 1) % count
+    if (event.key === "ArrowLeft") next = (index - 1 + count) % count
+    if (event.key === "ArrowDown")
+      next = index + columns < count ? index + columns : index % columns
+    if (event.key === "ArrowUp") {
+      if (index >= columns) next = index - columns
+      else {
+        const lastRowStart = Math.floor((count - 1) / columns) * columns
+        next = Math.min(lastRowStart + (index % columns), count - 1)
+      }
+    }
     if (event.key.startsWith("Arrow")) {
       event.preventDefault()
       cards.current.get(visible[next].id)?.focus()
@@ -150,6 +175,7 @@ export default function VersionControlPage() {
               }}
               onMouseEnter={() => prefetch(version.links[0].href)}
               onKeyDown={(e) => navigate(e, index)}
+              data-version-card
               onClick={(e) => {
                 if (!(e.target as HTMLElement).closest("a, button"))
                   openLink(version.links[0].href, e)

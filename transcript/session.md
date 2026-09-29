@@ -6410,3 +6410,23 @@ I guess even on the code prototypes, including the home page, just in escape can
 Only my edits; Codex hasn't changed any files yet. Committing:
 
 - `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 12:25 ET
+
+I'm on version control now and I'm somehow unselected any of the cards so the cycling through cards with arrow keys doesn't work. That is never a thing. It should always cycle. and it just loops. If I reach the bottom or something and I can't go right, that's fine.
+
+Just loop through. I don't want to get stuck while cycling at any point.
+
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 12:26 ET
+
+Checking both in the browser:
+- On version control: lose focus, then press the arrows, including at the ends.
+- On the homepage: Esc steps through box → sheet → version control.
+
+- `Bash`
+- `Bash`
