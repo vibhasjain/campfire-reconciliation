@@ -18,6 +18,7 @@
   document.getElementById("next").onclick = () => show(i + 1);
   document.getElementById("prev").onclick = () => show(i - 1);
   addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { location.href = "/version-control"; return; }
     if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); show(i + 1); }
     else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); show(i - 1); }
     else if (e.key === "Home") show(0);

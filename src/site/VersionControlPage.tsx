@@ -127,7 +127,7 @@ export default function VersionControlPage() {
                 else cards.current.delete(version.id)
               }}
               role="group"
-              aria-label={`${version.medium} ${version.version}: ${copy?.title ?? version.title}`}
+              aria-label={`${version.medium}: ${copy?.title ?? version.title}`}
               tabIndex={version.id === activeId ? 0 : -1}
               onFocus={(e) => {
                 setActive(version.id)
@@ -162,9 +162,6 @@ export default function VersionControlPage() {
                 )}
               </div>
               <div className="mt-5 flex items-baseline gap-2">
-                <span className="max-w-24 min-w-0 truncate text-sm text-fg-3 tabular-nums">
-                  {version.version}
-                </span>
                 <h2 className="min-w-0 truncate text-sm font-medium">
                   {copy?.title ?? version.title}
                 </h2>

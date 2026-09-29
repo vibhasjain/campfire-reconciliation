@@ -1,5 +1,5 @@
 import { Chip } from "@/components/common/Chip"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,6 +24,16 @@ const ORDERED = SOFTWARE.flatMap((software) =>
 export default function ReferencesPage() {
   const [open, setOpen] = useState<number | null>(null)
   const shown = open === null ? null : ORDERED[open]
+  // Esc goes back to version control (an open lightbox takes the first Esc).
+  useEffect(() => {
+    if (open !== null) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !event.defaultPrevented)
+        location.href = "/version-control"
+    }
+    addEventListener("keydown", onKey)
+    return () => removeEventListener("keydown", onKey)
+  }, [open])
   const step = (delta: number) =>
     setOpen((current) =>
       current === null

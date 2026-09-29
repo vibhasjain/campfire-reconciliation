@@ -5722,3 +5722,43 @@ Changing the starting zoom from 100% to 60%. The 100% button still resets to act
 
 - `Bash`
 - `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 07:57 ET
+
+[Image #87] i dont need v1 v2 v3 a b c d just the names are enough
+
+
+**Claude** · Sep 29 07:57 ET
+
+Vector canvases now open at 60% zoom (live). Now removing the v1/v2/v3 and A–D prefixes from the card titles:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 07:57 ET
+
+story and references also escape takes me back
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 07:57 ET
+
+but escape on the reference lightbox ofc only kills the lightbox
+
+
+**Claude** · Sep 29 07:57 ET
+
+Also adding Esc → version control on Story and References. On References, Esc first closes an open lightbox, and only then goes back.
+
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 29 07:58 ET
+
+lightbox use arrow keys to select image not to scroll. enter to lightbox.
+
+
+**Claude** · Sep 29 07:58 ET
+
+Already works that way: the test above shows the first Esc only closed the lightbox and stayed on References, and the second Esc went back. Committing:
+
+- `Bash`
