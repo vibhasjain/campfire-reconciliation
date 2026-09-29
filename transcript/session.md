@@ -4965,3 +4965,41 @@ The browser check timed out. It could be a flaky run, or my change could be hang
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 28 23:24 ET
+
+The version-control page changes are live, and I checked them in a local build first:
+
+- **Top padding:** down from 48px to 20px, with a slightly smaller gap under the Home and GitHub tags.
+- **Filter box:** removed, along with its "/" shortcut.
+- **Filters:** they're now two groups with a gap between them: "All, Code, Brilliant, Paper", then "Story, References". Arrow keys still move across all six.
+- **Keyboard hint on the right:** removed.
+
+
+**Vibhas** · Sep 28 23:26 ET
+
+[Image #71] Story and references write a line on the page. And you know what? yeah. I like the cluster. In the same row, right aligned.
+
+
+**Claude** · Sep 28 23:26 ET
+
+Pushing Story / References to the right end of the same row:
+
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 23:26 ET
+
+Let's get rid of the all switches to code brilliant paper story references.
+
+- `Bash`
+- `Read`
+
+**Claude** · Sep 28 23:26 ET
+
+Reading that as: drop the "All" option, leaving Code, Brilliant, Paper | Story, References, with Code as the default since the prototypes lead. Checking how "All" is wired:
+
+- `Bash`
+- `Bash`
+- `Read`
+- `Bash`

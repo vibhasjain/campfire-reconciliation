@@ -9,7 +9,6 @@ import { CARD_COPY } from "./cardCopy"
 import { prefetch } from "./loaders"
 
 const MEDIA = [
-  "All",
   "Code",
   "Brilliant",
   "Paper",
@@ -35,7 +34,7 @@ function restoredState() {
   return {
     medium: MEDIA.includes(saved?.medium)
       ? (saved.medium as (typeof MEDIA)[number])
-      : ("All" as const),
+      : ("Code" as const),
     active: sorted.some((v) => v.id === saved?.active)
       ? (saved.active as string)
       : sorted[0].id,
@@ -53,7 +52,7 @@ export default function VersionControlPage() {
   const [active, setActive] = useState(initial.active)
   const grid = useRef<HTMLDivElement>(null)
   const cards = useRef(new Map<string, HTMLDivElement>())
-  const visible = sorted.filter((v) => medium === "All" || medium === v.medium)
+  const visible = sorted.filter((v) => medium === v.medium)
   const activeId = visible.some((v) => v.id === active)
     ? active
     : visible[0]?.id
@@ -112,7 +111,7 @@ export default function VersionControlPage() {
         <div
           role="group"
           aria-label="Medium"
-          className="flex max-w-full min-w-0 [scrollbar-width:none] gap-3 overflow-x-auto"
+          className="flex max-w-full min-w-0 flex-1 [scrollbar-width:none] gap-3 overflow-x-auto"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault()
@@ -135,10 +134,10 @@ export default function VersionControlPage() {
           {[
             MEDIA.filter((m) => m !== "Story" && m !== "References"),
             MEDIA.filter((m) => m === "Story" || m === "References"),
-          ].map((cluster) => (
+          ].map((cluster, index) => (
             <div
               key={cluster[0]}
-              className="flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1"
+              className={`flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 ${index ? "ml-auto" : ""}`}
             >
               {cluster.map((value) => (
                 <button
@@ -149,7 +148,7 @@ export default function VersionControlPage() {
                   onClick={() => {
                     flushSync(() => setMedium(value))
                     const first = sorted.find(
-                      (v) => value === "All" || value === v.medium
+                      (v) => value === v.medium
                     )
                     if (first) cards.current.get(first.id)?.focus()
                   }}
