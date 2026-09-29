@@ -33,9 +33,9 @@ export function ParticipantAvatar({
 }
 export function ParticipantStack({ actors }: { actors: Actor[] }) {
   return (
-    <AvatarGroup className="-space-x-0.5">
+    <AvatarGroup className="gap-0.5 space-x-0 *:data-[slot=avatar]:ring-0">
       {[...new Set(actors)].slice(0, 3).map((actor) => (
-        <ParticipantAvatar key={actor} actor={actor} className="size-5 ring-2 ring-surface" />
+        <ParticipantAvatar key={actor} actor={actor} className="size-5" />
       ))}
     </AvatarGroup>
   )

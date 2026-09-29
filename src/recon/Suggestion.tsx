@@ -73,7 +73,7 @@ export function Suggestion({
         </p>
         {suggestion.approval && (
           <div
-            className="flex items-center gap-1.5 text-xs text-fg-3"
+            className="mb-1.5 flex items-center gap-1.5 text-xs text-fg-3"
             title={suggestion.approval.reason}
           >
             <LockKeyhole className="size-4 shrink-0" />

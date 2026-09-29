@@ -373,17 +373,16 @@
     overscroll-behavior: none;
   }
 
-  /* Focus rings are for Tab navigation only (main.tsx sets data-tab-focus on Tab, clears it on pointer).
-     Shortcut keys and clicks never paint a focus state. */
-  :root:not([data-tab-focus]) *:focus-visible {
+  /* No focus rings or selected-state outlines anywhere (owner rule): hover and pressed states carry the UI. */
+  *:focus-visible {
     outline: none !important;
     --tw-ring-shadow: 0 0 #0000 !important;
     --tw-ring-offset-shadow: 0 0 #0000 !important;
   }
-  :root:not([data-tab-focus]) [data-variant]:focus-visible {
+  [data-variant]:focus-visible {
     border-color: transparent !important;
   }
-  :root:not([data-tab-focus]) [data-variant="outline"]:focus-visible {
+  [data-variant="outline"]:focus-visible {
     border-color: var(--c-line) !important;
   }
 

@@ -4807,3 +4807,68 @@ Fixed and live: now only the "Suggestion 1 of 1" label shakes, about 2px each wa
 The panel header is now one row. Search opens in place and filters: typing "notion" left just the Notion thread. Committing:
 
 - `Bash`
+
+**Claude** · Sep 28 22:52 ET
+
+The comments panel header is one row now, and it's live. From left to right: the comment icon, the Open / Resolved tabs, the search icon, then ✕. I tested it in the browser.
+
+- **Search:** clicking the icon swaps the tabs for a search field in the same row, and results filter as you type. Clicking the icon again, or pressing Esc on an empty field, brings the tabs back.
+- **Word "Comments":** it's gone from view, but screen readers still announce the panel as Comments.
+
+
+**Vibhas** · Sep 28 22:58 ET
+
+[Image #63] When it's two bubbles in there it looks like the hover stayed in the back. The gray thing it looks like that breaks.
+
+
+**Claude** · Sep 28 22:58 ET
+
+What's showing is the thin white ring I added around stacked avatars to separate them. On a white row it's invisible, but on a hovered or selected row it shows up as a pale halo. I'll drop the ring and the overlap, so the avatars sit side by side with a small gap and look right on any row color:
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 28 22:58 ET
+
+The shared avatar group also adds its own white ring to every avatar, which the stack needs to turn off too:
+
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 28 22:58 ET
+
+[Image #64] If we're doing that needs Daniel's approval thing, then we need a little more room after it before the button row starts, man.
+
+
+**Claude** · Sep 28 22:58 ET
+
+That row has no comments since the rewrite, so it proves nothing. Re-testing on Cascade, which has two participants, while it's selected and hovered:
+
+- `Bash`
+- `Read`
+
+**Claude** · Sep 28 22:59 ET
+
+The avatars sit cleanly side by side on a selected, hovered row, with no halo. Now the approval line: giving "Needs Daniel's approval" extra space above the button row:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 22:59 ET
+
+[Image #65] What is that? I thought I said no selection states, man.
+
+- `Bash`
+- `Read`
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 23:00 ET
+
+[Image #66] the fullness of the buttons always takes priority. It's the file names that take the hit.
+
+
+**Claude** · Sep 28 23:00 ET
+
+Even after four Tab presses into the sheet, the focused button has no ring, outline or border. Adding the rule to CLAUDE.md so it sticks, then committing everything:
+
+- `Bash`

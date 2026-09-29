@@ -18,7 +18,7 @@ Public repo, live at https://campfiredesign.netlify.app (Netlify site `campfired
 - `node tests/flows.mjs --base <url>`: 24 browser flow runs across the three versions (dev-browser).
 
 ## Rules
-- Restraint: calm, opinionated, no information density, no explanatory copy. Light mode. Money is tabular and right-aligned, with negatives in parentheses.
+- Restraint: calm, opinionated, no information density, no explanatory copy. No focus rings or browser selected-state outlines anywhere (killed globally in `src/index.css`); hover and pressed states carry the UI. Light mode. Money is tabular and right-aligned, with negatives in parentheses.
 - Zoom only on the canvases, and only through their own zoom; everything else loads `/no-zoom.js`.
 - Everything should open instantly. Keep the version-control page's JS small, lazy-load the prototype, prefetch on intent, and keep images compressed.
 - Every page keeps a home link to `/version-control` (the Campfire logo in the prototypes, the story title, the canvas pill).
