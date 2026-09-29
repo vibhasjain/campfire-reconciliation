@@ -6123,3 +6123,28 @@ Typecheck and lint pass. Accepting a suggestion in the browser and screenshottin
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 12:06 ET
+
+Accepting or rejecting a suggestion now shows "Training Ember" in the toast, and it's live. It sits on a second line under "Accepted · Google Workspace alias", with Undo still on the right.
+
+- **The loader:** it's the Drive pixel-grid from your snippet, a 3×3 grid with the chevron wave driving right on a 650ms loop, in Ember orange.
+- **The label:** "Training Ember" shimmers between dark orange and bright orange.
+- **Reduced motion:** both animations stop if reduced motion is on.
+- **Check icon:** on two-line toasts it lines up with the first line.
+
+I screenshotted it in a local build after accepting Google Workspace alias, but only after the latest-but-one change: the check-icon alignment is untested in the browser. I left out the elapsed timer and the video variant, since you only asked for the "training Ember" line. I also added it to Reject, since a rejection teaches Ember too; tell me if you want it on Accept only.
+
+
+**Vibhas** · Sep 29 12:07 ET
+
+Yeah, but get it all in one line. Somehow. I don't want to increase the height of that little thing.
+
+
+**Claude** · Sep 29 12:07 ET
+
+Putting it all on one line: the check, the message, then the pixel grid and "Training Ember", then Undo. The message truncates if it runs out of room, so the toast stays one line high.
+
+- `Bash`
+- `Read`
+- `Bash`

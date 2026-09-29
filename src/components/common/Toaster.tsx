@@ -31,11 +31,9 @@ export function Toaster() {
               exit={{ scale: 0.7, opacity: 0, transition: { duration: 0.12 } }}
               className="pointer-events-auto flex min-h-11 items-center gap-1.5 rounded-lg bg-surface p-3 text-sm text-fg shadow-menu"
             >
-              <Icon className={`size-4 shrink-0 ${ICON_COLOR[tone]} ${t.training ? "mt-0.5 self-start" : ""}`} />
-              <span className="flex min-w-0 flex-1 flex-col gap-1.5">
-                {t.message}
-                {t.training && <EmberTraining />}
-              </span>
+              <Icon className={`size-4 shrink-0 ${ICON_COLOR[tone]}`} />
+              <span className="min-w-0 flex-1 truncate">{t.message}</span>
+              {t.training && <EmberTraining />}
               {t.action && (
                 <Button
                   className="-my-1"

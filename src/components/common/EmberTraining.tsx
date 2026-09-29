@@ -8,7 +8,7 @@ const CHEVRON = Array.from({ length: 9 }, (_, i) => {
 
 export function EmberTraining({ label = "Training Ember" }: { label?: string }) {
   return (
-    <span role="status" className="flex items-center gap-2">
+    <span role="status" className="mr-1 flex shrink-0 items-center gap-1.5">
       <span aria-hidden className="grid shrink-0 grid-cols-[repeat(3,4px)] gap-[1.5px]">
         {CHEVRON.map((delay, index) => (
           <span
