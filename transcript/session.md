@@ -5767,3 +5767,35 @@ Already works that way: the test above shows the first Esc only closed the light
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 08:00 ET
+
+All of this is live, and I tested each key in a local build:
+
+- **Version cards:** the v1 / v2 / v3 and A to D prefixes are gone, so each card shows just its name: Workbench, Paired ledger, Flow, Workpaper, Balance bridge, Thread inbox, Timeline.
+- **Esc on Story and References:** goes back to version control, as on the canvases. In the References lightbox, Esc only closes the lightbox; a second Esc goes back.
+- **References grid:**
+  - The arrow keys move a selection between images instead of scrolling the page. ← → step one image; ↑ ↓ move a row, which is two images on desktop and one on phones.
+  - The selected image has a dark-green border, and the page scrolls only as needed to keep it in view.
+  - Enter opens the selected image in the lightbox, where ← → still step through all 17.
+- **Vector canvases:** open at 60% zoom; the zoom % button still resets to 100%.
+
+
+**Vibhas** · Sep 29 08:05 ET
+
+lemme juump to story and referecnes with s and r
+
+
+**Vibhas** (while Claude was working) · Sep 29 08:05 ET
+
+keys
+
+
+**Claude** · Sep 29 08:06 ET
+
+S jumps to Story and R to References. That works from version control and References, since both use the shared nav, and from the story deck I'll add R for References. Neither fires while you're typing or while a lightbox or dialog is open.
+
+- `Bash`
+- `Bash`
+- `Read`
+- `Bash`

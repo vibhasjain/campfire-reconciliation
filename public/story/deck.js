@@ -19,6 +19,7 @@
   document.getElementById("prev").onclick = () => show(i - 1);
   addEventListener("keydown", (e) => {
     if (e.key === "Escape") { location.href = "/version-control"; return; }
+    if (e.key === "r" && !e.metaKey && !e.ctrlKey) { location.href = "/references"; return; }
     if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); show(i + 1); }
     else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); show(i - 1); }
     else if (e.key === "Home") show(0);

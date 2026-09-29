@@ -1,4 +1,4 @@
-import type { KeyboardEvent } from "react"
+import { useEffect, type KeyboardEvent } from "react"
 import { Check, ChevronDown } from "lucide-react"
 import {
   DropdownMenu,
@@ -8,10 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { prefetch } from "./loaders"
+import { ActionTooltip } from "@/components/ui/tooltip"
 
 const PAGES = [
-  ["Story", "/story/"],
-  ["References", "/references"],
+  ["Story", "/story/", "S"],
+  ["References", "/references", "R"],
 ] as const
 
 const item = (active: boolean) =>
@@ -25,6 +26,29 @@ export function SiteNav({
   current: "Versions" | "Story" | "References"
   onArrowDown?: () => void
 }) {
+  // S jumps to the story, R to the references (not while typing or with a dialog open).
+  useEffect(() => {
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey
+      )
+        return
+      const target = event.target as HTMLElement | null
+      if (
+        target?.closest('input, textarea, [contenteditable="true"]') ||
+        document.querySelector('[role="dialog"]')
+      )
+        return
+      const href = { s: "/story/", r: "/references" }[event.key.toLowerCase()]
+      if (href && !location.pathname.startsWith(href.replace(/\/$/, "")))
+        location.href = href
+    }
+    addEventListener("keydown", onKey)
+    return () => removeEventListener("keydown", onKey)
+  }, [])
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "ArrowDown" && onArrowDown) {
       event.preventDefault()
@@ -50,17 +74,18 @@ export function SiteNav({
       onKeyDown={onKeyDown}
     >
       <div className="ml-auto flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 max-sm:hidden">
-        {PAGES.map(([label, href]) => (
-          <a
-            key={label}
-            href={href}
-            aria-current={current === label ? "page" : undefined}
-            onMouseEnter={() => prefetch(href)}
-            onFocus={() => prefetch(href)}
-            className={item(current === label)}
-          >
-            {label}
-          </a>
+        {PAGES.map(([label, href, key]) => (
+          <ActionTooltip key={label} label={label} shortcut={key}>
+            <a
+              href={href}
+              aria-current={current === label ? "page" : undefined}
+              onMouseEnter={() => prefetch(href)}
+              onFocus={() => prefetch(href)}
+              className={item(current === label)}
+            >
+              {label}
+            </a>
+          </ActionTooltip>
         ))}
       </div>
       <DropdownMenu>
