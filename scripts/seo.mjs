@@ -230,7 +230,7 @@ const CANVAS_CONTROLS = `<nav id="zoom-controls" aria-label="Canvas zoom"><butto
     if (location.hash !== '#r2' || !roundTwo) return;
     scrollTo(Math.max(0, roundTwo.offsetLeft * z - 32), Math.max(0, roundTwo.offsetTop * z - 72)); // clear the home pill
   }
-  setZoom(1);
+  setZoom(.6); // canvases open at 60%; the level button still resets to 100%
   if (document.readyState === 'complete') landOnRoundTwo();
   else addEventListener('load', landOnRoundTwo, {once:true});
   addEventListener('hashchange', landOnRoundTwo);

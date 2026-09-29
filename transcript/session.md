@@ -5698,3 +5698,27 @@ The zoom code is back and the Esc behaviour survived. Building, then checking a 
 The zoom controls are back in the bottom-right corner (−, 100%, +, Fit), "+" took it to 125%, and Esc still goes back to version control. Committing all of it:
 
 - `Bash`
+
+**Claude** · Sep 29 07:53 ET
+
+To your question: no, there were only ever two concepts per tool. Brilliant has A (Workpaper) and B (Balance bridge), and Paper has C (Thread inbox) and D (Timeline). Each has a 1.0 and a 1.1 restraint pass. The six Vector cards I showed earlier were those four restraint passes plus the 1.0 of A and D; I'd picked "three per tool" without checking, and that was wrong.
+
+All of this is live:
+
+- **Vector cards:** only the restraint versions show now, as four cards named A Workpaper, B Balance bridge, C Thread inbox and D Timeline, with no "restraint" and no "1.1".
+- **Zoom controls:** back on all four canvases, bottom right (−, the zoom %, +, Fit), along with pinch and trackpad zoom. They'd been removed in an earlier "no zoom anywhere" change. I undid just that part, so everything added since then stays.
+- **Esc on a canvas:** goes back to version control. I tested it on Thread inbox and Workpaper.
+
+
+**Vibhas** · Sep 29 07:56 ET
+
+when we open vector pages deault zoom can be 60%
+
+- `Bash`
+
+**Claude** · Sep 29 07:56 ET
+
+Changing the starting zoom from 100% to 60%. The 100% button still resets to actual size.
+
+- `Bash`
+- `Bash`
