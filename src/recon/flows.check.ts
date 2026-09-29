@@ -11,7 +11,7 @@ import {
   editFromInstruction,
   compactItems,
 } from "@/agent/scripts/recon"
-import { postToThread } from "@/comments"
+import { comments, postToThread, seedThreads } from "@/comments"
 import {
   acceptSuggestion,
   rejectSuggestion,
@@ -53,6 +53,18 @@ function reset() {
     completed: false,
   }))
 }
+// Fixture hydration must preserve sparse inbox rows and leave demo follow-ups untouched.
+const seededMessages = Object.values(db.get().messages).filter(message => message.chatId.startsWith("thread:"))
+assert(Object.keys(comments.get().threads).length === 19 && seededMessages.length === 23, "Sparse seed hydrates nineteen threads and twenty-three messages")
+assert(Object.values(comments.get().threads).filter(thread => !thread.resolved).length === 7, "Only review conversations enter the open inbox")
+assert(Object.values(comments.get().unread).every(count => count === 0) &&
+  Object.values(comments.get().emberUnread).every(value => !value), "Historical notes do not create unread badges")
+for (const id of ["r02", "r09", "r11"])
+  assert(!comments.get().threads[`thread:${id}`] && !db.get().chats[`thread:${id}`], "Live-demo items have no seeded pin or chat")
+assert(!recon.getState().actions.some(action => action.kind === "addSuggestion"), "Seeds do not consume follow-up suggestions")
+seedThreads()
+assert(Object.values(db.get().messages).filter(message => message.chatId.startsWith("thread:")).length === 23, "Seed hydration is idempotent")
+
 setFastMode(true)
 reset()
 for (const itemId of Object.keys(recon.getState().items).filter(id => recon.getState().items[id].kind === "exception")) {

@@ -1662,66 +1662,70 @@ auto(
   "transfer"
 )
 
-const threadList: Thread[] = [
-  {
-    id: "thread-r14",
-    itemId: "r14",
-    resolved: false,
-    messages: [
-      {
-        id: "message-r14-1",
-        author: "daniel",
-        at: "2026-10-02T16:12:00-04:00",
-        text: "Someone voided #4098 with an 8/28 date and August is closed. @Maya can you fix it in September? I'll approve.",
-      },
-      {
-        id: "message-r14-2",
-        author: "ember",
-        at: "2026-10-02T16:13:00-04:00",
-        text: "Check #4098 cleared 8/26, before J. Alvarez voided it on 9/12 with an 8/28 date. Reverse the void in September to correct the $1,150 discrepancy.",
-      },
-    ],
-  },
-  {
-    id: "thread-r11",
-    itemId: "r11",
-    resolved: false,
-    messages: [
-      {
-        id: "message-r11-1",
-        author: "priya",
-        at: "2026-10-01T10:40:00-04:00",
-        text: "I posted JE-7712 by hand before the Datadog bill synced. That one's a dupe, sorry.",
-      },
-    ],
-  },
-  {
-    id: "thread-r08",
-    itemId: "r08",
-    resolved: false,
-    messages: [
-      {
-        id: "message-r08-1",
-        author: "daniel",
-        at: "2026-10-01T09:05:00-04:00",
-        text: "Wire fees under $50 can go to 6820. Just route it to me.",
-      },
-    ],
-  },
-  {
-    id: "thread-r09",
-    itemId: "r09",
-    resolved: false,
-    messages: [
-      {
-        id: "message-r09-1",
-        author: "priya",
-        at: "2026-09-30T15:22:00-04:00",
-        text: "Harbour invoiced £10,000. We booked it at 1.264958; Chase converted at 1.271256.",
-      },
-    ],
-  },
+// Human context only: leave every item's first Ember exchange for the live demo.
+const reviewConversations: [string, [Actor, string][]][] = [
+  ["r01", [["priya", "Google billing emails now go to me. [[member:maya]] I forwarded the September PDF to your inbox on 9/4."]]],
+  ["r04", [
+    ["maya", "[[member:priya]] who owns the Notion renewal now?"],
+    ["priya", "I do. Procurement asked me to give 30 days’ notice before next September’s renewal."],
+  ]],
+  ["r05", [
+    ["maya", "[[member:priya]] did Evergreen receive check #4127?"],
+    ["priya", "Yes, they called at 2 today to confirm delivery. Their office deposits checks on Fridays."],
+  ]],
+  ["r07", [
+    ["maya", "[[member:priya]] can you get the AWS billing contact to resend the PDF? The copy in my email is password-protected."],
+    ["priya", "Sent you the unlocked copy at 3:10. Use the attachment in that email."],
+  ]],
+  ["r08", [["maya", "[[member:daniel]] can you review Northstar before Friday? I’m meeting their controller at 10 that morning."]]],
+  ["r10", [["daniel", "Kestrel’s finance contact is out until 10/5. Send any questions to me this week."]]],
+  ["r12", [
+    ["priya", "[[member:maya]] did Cascade send the remittance to you directly? They left me off the email."],
+    ["maya", "Yes, on 9/24. I forwarded it and asked them to copy AP next time."],
+  ]],
 ]
+const threadList: Thread[] = reviewConversations.map(([itemId, lines], index) => ({
+  id: `thread-${itemId}`,
+  itemId,
+  resolved: false,
+  messages: lines.map(([author, text], line) => ({
+    id: `seed-${itemId}-${line + 1}`,
+    author,
+    at: `2026-09-30T${16 + Math.floor(index / 4)}:${String((index % 4) * 10 + line * 3).padStart(2, "0")}:00-04:00`,
+    text,
+  })),
+}))
+// A few settled subscriptions retain useful handoff notes, filed as resolved.
+const settledNotes: [string, Actor, string][] = [
+  ["Slack", "priya", "Slack renewal notices go to AP now. I changed the billing contact on 9/8."],
+  ["Figma", "maya", "Design asked for two more Figma seats in October. Daniel has the request."],
+  ["Salesforce", "daniel", "I own the Salesforce renewal discussion. Please send any pricing emails to me."],
+  ["GitHub", "priya", "Engineering wants GitHub invoices sent to AP starting 10/1. I updated the billing email."],
+  ["Zoom", "maya", "Priya has the Zoom admin login for invoice downloads as of 9/15."],
+  ["Atlassian", "priya", "Atlassian support closed our billing-address ticket on 9/18. October’s invoice will have the new address."],
+  ["Linear", "daniel", "The Linear seat owner is Maya for the October headcount review."],
+  ["Rippling", "priya", "Rippling’s billing contact asked for five business days’ notice for PO changes."],
+  ["1Password", "maya", "Priya has the 1Password renewal reminder for 10/15."],
+  ["Vercel", "daniel", "Engineering will send me the Vercel usage forecast by 10/2."],
+  ["Anthropic", "priya", "I asked Anthropic billing to copy AP on receipts starting in October."],
+  ["OpenAI", "maya", "Daniel is collecting the OpenAI seat requests for October. I sent him our list on 9/29."],
+]
+for (const [payee, author, text] of settledNotes) {
+  const item = Object.values(items).find(item =>
+    item.kind === "auto" && bankLines[item.bankIds[0]].payee === payee
+  )!
+  threadList.push({
+    id: `thread-${item.id}`,
+    itemId: item.id,
+    resolved: true,
+    messages: [{
+      id: `seed-${item.id}-1`,
+      author,
+      at: "2026-09-30T15:45:00-04:00",
+      text,
+    }],
+  })
+}
 export const seed: ReconState = {
   company: "Arbor Analytics, Inc.",
   account: "1010 · Chase Operating ••4821",

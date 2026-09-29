@@ -367,7 +367,7 @@ export default function Workbench() {
   const state = useRecon((s) => s)
   const selected = useReconUi((s) => s.selectedItemId)
   const selection = useReconUi((s) => s.selectedLines)
-  const [tab, setTab] = useState("To review")
+  const [tab, setTab] = useState("Pending")
   const [page, setPage] = useState(0)
   const pending = ordered(queue.filter((item) => item.status !== "resolved"))
   const all = tab === "Reconciled" ? reconciled : pending
@@ -398,7 +398,7 @@ export default function Workbench() {
         !items.some((item) => item.id === selected) &&
         recon.getState().items[selected]?.status === "open"
       ) {
-        setTab("To review")
+        setTab("Pending")
         items = ordered(
           queueItems(recon.getState()).filter(
             (item) => item.status !== "resolved"
@@ -492,7 +492,7 @@ export default function Workbench() {
       if (
         !fresh ||
         !id ||
-        tabRef.current !== "To review" ||
+        tabRef.current !== "Pending" ||
         action?.kind !== "accept" ||
         action.actor !== "maya" ||
         action.itemId !== id
@@ -556,7 +556,7 @@ export default function Workbench() {
           aria-label="Transaction status"
           className="flex shrink-0 rounded-md border-hair border-line bg-segment p-1"
         >
-          {["To review", "Reconciled"].map((name) => (
+          {["Pending", "Reconciled"].map((name) => (
             <button
               key={name}
               role="tab"
@@ -574,13 +574,13 @@ export default function Workbench() {
             >
               <span>{name}</span>
               <span className="ml-2 shrink-0 whitespace-nowrap text-fg-3 tabular-nums">
-                {name === "To review" ? pending.length : reconciled.length}
+                {name === "Pending" ? pending.length : reconciled.length}
               </span>
             </button>
           ))}
         </div>
       </header>
-      {summary.done && tab === "To review" ? (
+      {summary.done && tab === "Pending" ? (
         <div className="wb-done mt-8">
           <DoneState compact />
         </div>

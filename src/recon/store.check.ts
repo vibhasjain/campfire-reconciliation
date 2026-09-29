@@ -191,7 +191,20 @@ function checkSeed(): void {
     ruleShare >= 0.6 && ruleShare <= 0.8,
     "roughly 70% of automatic matches use rules"
   )
-  equal(Object.keys(state.threads).length, 4, "four seeded threads")
+  const threads = Object.values(state.threads)
+  equal(threads.length, 19, "nineteen sparse seeded threads")
+  equal(threads.reduce((sum, thread) => sum + thread.messages.length, 0), 23, "twenty-three seeded messages")
+  deepEqual(threads.filter(thread => state.items[thread.itemId].kind === "exception").map(thread => thread.itemId),
+    ["r01", "r04", "r05", "r07", "r08", "r10", "r12"], "half the review items have conversations")
+  equal(threads.filter(thread => thread.resolved).length, 12, "settled notes are filed as resolved")
+  for (const id of ["r02", "r09", "r11"])
+    assert(!threads.some(thread => thread.itemId === id), `${id} demo starts without a thread`)
+  for (const thread of threads) {
+    assert(thread.messages.length >= 1 && thread.messages.length <= 3, "short seeded conversations")
+    assert(thread.messages.every(message => message.author !== "ember" && !message.text.includes("[[agent:ember]]")), "first Ember exchange stays fresh")
+    assert(thread.messages.every((message, index) => message.at.startsWith("2026-09-") &&
+      (index === 0 || Date.parse(message.at) > Date.parse(thread.messages[index - 1].at))), "September messages are ordered")
+  }
   for (const thread of Object.values(state.threads)) {
     for (const message of thread.messages)
       assert(
