@@ -1,4 +1,12 @@
 import type { KeyboardEvent } from "react"
+import { Check, ChevronDown } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { prefetch } from "./loaders"
 import { FILTERS, type SiteFilter } from "./versions"
 
@@ -8,7 +16,7 @@ const PAGES = [
 ] as const
 
 const item = (active: boolean) =>
-  `cursor-pointer rounded px-3 py-1 text-sm whitespace-nowrap outline-none max-sm:px-2 max-sm:text-xs ${active ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`
+  `cursor-pointer rounded px-3 py-1 text-sm whitespace-nowrap outline-none ${active ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`
 
 /** Site sections: Code/Brilliant/Paper filter the version cards; Story and References go straight to their page. */
 export function SiteNav({
@@ -45,7 +53,7 @@ export function SiteNav({
       className="contents"
       onKeyDown={onKeyDown}
     >
-      <div className="flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 max-sm:order-2">
+      <div className="flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 max-sm:hidden">
         {FILTERS.map((filter) =>
           onFilter ? (
             <button
@@ -69,7 +77,7 @@ export function SiteNav({
           )
         )}
       </div>
-      <div className="ml-auto flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 max-sm:order-3">
+      <div className="ml-auto flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 max-sm:hidden">
         {PAGES.map(([label, href]) => (
           <a
             key={label}
@@ -83,6 +91,38 @@ export function SiteNav({
           </a>
         ))}
       </div>
+      {/* Phones: one centered dropdown between Home and GitHub. */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className="mx-auto flex items-center gap-1.5 rounded-md border-hair border-line bg-segment px-3 py-1.5 text-sm font-medium text-fg outline-none sm:hidden">
+          {current}
+          <ChevronDown className="size-4 text-fg-3" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="center" className="min-w-40">
+          {FILTERS.map((filter) =>
+            onFilter ? (
+              <DropdownMenuItem key={filter} onSelect={() => onFilter(filter)}>
+                {filter}
+                {current === filter && <Check className="ml-auto size-4" />}
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem key={filter} asChild>
+                <a href={`/version-control?view=${filter.toLowerCase()}`}>
+                  {filter}
+                </a>
+              </DropdownMenuItem>
+            )
+          )}
+          <DropdownMenuSeparator />
+          {PAGES.map(([label, href]) => (
+            <DropdownMenuItem key={label} asChild>
+              <a href={href}>
+                {label}
+                {current === label && <Check className="ml-auto size-4" />}
+              </a>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }

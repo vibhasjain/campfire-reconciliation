@@ -5328,3 +5328,39 @@ On a phone the row can't fit everything, so I'll split it over two lines: Home a
 It fits at both phone widths (393px and 360px) with no sideways scroll, and desktop is unchanged. The References page doesn't overflow either. Committing:
 
 - `Bash`
+
+**Claude** · Sep 29 00:03 ET
+
+The top nav no longer overflows on phones, and it's live. On a phone it now takes two lines:
+
+- **Top line:** Home on the left, GitHub on the right.
+- **Second line:** Code / Brilliant / Paper on the left, Story / References on the right. These buttons are slightly smaller on phones so both groups fit.
+
+I checked it at 393px and 360px wide on both version control and References, with no sideways scrolling. Desktop still has everything in one row.
+
+
+**Vibhas** (while Claude was working) · Sep 29 00:13 ET
+
+No, on mobile, just keep it simple. Home on the top left, GitHub top right, and on in the center, drop down. Code is selected by default. All the others are in there. You can have a little, you know, divider in the drop down for the story references section.
+
+
+**Vibhas** · Sep 29 00:13 ET
+
+No, on mobile, just keep it simple. Home on the top left, GitHub top right, and on in the center, drop down. Code is selected by default. All the others are in there. You can have a little, you know, divider in the drop down for the story references section.
+
+
+**Claude** · Sep 29 00:13 ET
+
+On phones then: one row with Home on the left, GitHub on the right, and a dropdown in the middle. It shows the current section (Code by default) and opens to Code, Brilliant, Paper, a divider, then Story and References. Checking for an existing dropdown component:
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 00:14 ET
+
+Checking a phone width with the dropdown open, and desktop:
+
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`
