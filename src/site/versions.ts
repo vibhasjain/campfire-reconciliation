@@ -163,7 +163,7 @@ export const VERSIONS: Version[] = [
   },
   {
     id: "a-1.1",
-    version: "A 1.1",
+    version: "A",
     title: "Concept A: Workpaper, restraint pass",
     medium: "Brilliant",
     at: "2026-09-27T16:30:00-04:00",
@@ -174,7 +174,7 @@ export const VERSIONS: Version[] = [
   },
   {
     id: "b-1.1",
-    version: "B 1.1",
+    version: "B",
     title: "Concept B: Balance bridge, restraint pass",
     medium: "Brilliant",
     at: "2026-09-27T15:52:00-04:00",
@@ -187,7 +187,7 @@ export const VERSIONS: Version[] = [
   },
   {
     id: "d-1.1",
-    version: "D 1.1",
+    version: "D",
     title: "Concept D: Timeline, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:55:00-04:00",
@@ -198,7 +198,7 @@ export const VERSIONS: Version[] = [
   },
   {
     id: "c-1.1",
-    version: "C 1.1",
+    version: "C",
     title: "Concept C: Thread inbox, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:51:00-04:00",

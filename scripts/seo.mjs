@@ -131,35 +131,106 @@ const legible = (html) =>
 // Canvases: a small fixed "home" pill, top-left, styled like the zoom control.
 const HOME =
   '<a id="home-link" href="/version-control" title="Version control" style="position:fixed;left:16px;top:16px;z-index:10;display:flex;align-items:center;gap:6px;padding:5px 9px 5px 6px;border:1px solid #484848;border-radius:7px;background:#292929;color:#ddd;font:12px system-ui,sans-serif;text-decoration:none"><img src="/favicon.svg" width="16" height="16" alt="">Version control</a>'
+// Esc on a canvas goes back to version control, like the home pill.
+const ESC_HOME =
+  '<script>addEventListener("keydown",function(e){if(e.key==="Escape"&&!e.defaultPrevented&&!e.metaKey&&!e.ctrlKey)location.href="/version-control"})</script>'
 const withHome = (html) =>
   html.includes('id="home-link"')
     ? html
-    : html.replace("</body>", `${HOME}</body>`)
+    : html.replace("</body>", `${HOME}${ESC_HOME}</body>`)
 
 // Both exporters own their raw HTML; normalize behavior only in the built pages.
 const CANVAS_STYLE = `<style id="canvas-fixes">
 html,body{touch-action:pan-x pan-y}
 body{width:auto}
+#canvas-viewport{position:relative;overflow:clip}
+#canvas{position:absolute;left:0;top:0;transform-origin:0 0}
 #export svg{display:block}
 .frame div[style*="position:absolute"]:not([style*="width:"]){width:max-content}
 /* Match the reference's wider name column while retaining room for effects. */
 .frame[aria-label="C5 Sweep"] div[style*="width:352px"]{width:364px!important}
 .frame[aria-label="C5 Sweep"] div[style*="height:34px"]>div[style*="flex-grow:1"]{white-space:nowrap}
+#zoom-controls{position:fixed;right:16px;bottom:16px;z-index:10;display:flex;align-items:center;gap:4px;padding:4px;border:1px solid #484848;border-radius:7px;background:#292929;color:#ddd;font:12px system-ui,sans-serif}
+#zoom-controls button{border:0;border-radius:3px;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:6px 9px}
+#zoom-controls button:hover{background:#404040}
+#zoom-controls button:focus-visible{outline:1px solid #ccc}
+#zoom-level{min-width:52px;text-align:center}
 </style>`
-const CANVAS_CONTROLS = `<script src="/no-zoom.js"></script>
+const CANVAS_CONTROLS = `<nav id="zoom-controls" aria-label="Canvas zoom"><button type="button" data-zoom="out" aria-label="Zoom out">−</button><button type="button" data-zoom="reset" id="zoom-level" aria-label="Reset to 100%">100%</button><button type="button" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-zoom="fit">Fit</button></nav>
 <script id="canvas-behavior">
 (() => {
-  // No zoom anywhere on the site: the canvas is shown at 1x; #r2 jumps to the round-2 frames.
   const canvas = document.getElementById('canvas');
+  const level = document.getElementById('zoom-level');
+  const width = canvas.offsetWidth, height = canvas.offsetHeight;
+  const viewport = document.createElement('div');
+  viewport.id = 'canvas-viewport';
+  canvas.before(viewport);
+  viewport.append(canvas);
+  let z = 1;
+  // Zoom around a focal point (viewport coords): the canvas point under it stays put.
+  function setZoom(next, fit = false, fx = innerWidth / 2, fy = innerHeight / 2) {
+    const cx = (scrollX + fx) / z, cy = (scrollY + fy) / z;
+    z = Math.max(.02, Math.min(4, next));
+    canvas.style.transform = 'scale(' + z + ')';
+    viewport.style.width = width * z + 'px';
+    viewport.style.height = height * z + 'px';
+    level.textContent = Math.round(z * 100) + '%';
+    scrollTo(fit ? 0 : cx * z - fx, fit ? 0 : cy * z - fy);
+  }
+  function zoom(action) {
+    setZoom(action === 'fit' ? Math.min(innerWidth / width, innerHeight / height)
+      : action === 'reset' ? 1 : z * (action === 'out' ? .8 : 1.25), action === 'fit');
+  }
+  document.getElementById('zoom-controls').addEventListener('click', event => {
+    const action = event.target.closest('button')?.dataset.zoom;
+    if (action) zoom(action);
+  });
+  // - = 0, and ⌘/ctrl + - = 0 (the browser-zoom shortcuts) all drive the canvas zoom instead.
+  addEventListener('keydown', event => {
+    if (event.altKey || event.target.closest('input,textarea,select,[contenteditable]')) return;
+    const action = {'-':'out', '_':'out', '=':'in', '+':'in', '0':'reset'}[event.key];
+    if (action) { event.preventDefault(); zoom(action); }
+  });
+  // Pinch anywhere zooms the canvas, never the page (so the home pill and controls stay put).
+  const opts = { passive: false };
+  // Chrome/Firefox/Edge deliver trackpad pinch as ctrl+wheel; ⌘+wheel for mouse users.
+  addEventListener('wheel', event => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    // Trackpads send small deltas; a mouse notch (~100) is capped to a ~22% step.
+    setZoom(z * Math.exp(-Math.max(-25, Math.min(25, event.deltaY)) * .01), false, event.clientX, event.clientY);
+  }, opts);
+  // Touch pinch (phones, tablets): scale by finger distance around the midpoint.
+  let pinch = null;
+  const span = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  addEventListener('touchstart', event => { if (event.touches.length === 2) pinch = { d: span(event.touches), z }; }, opts);
+  addEventListener('touchmove', event => {
+    if (event.touches.length < 2) return;
+    event.preventDefault();
+    if (!pinch) pinch = { d: span(event.touches), z };
+    const [a, b] = event.touches;
+    setZoom(pinch.z * span(event.touches) / pinch.d, false, (a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2);
+  }, opts);
+  addEventListener('touchend', event => { if (event.touches.length < 2) pinch = null; });
+  // Safari's gesture events: always suppress page zoom; drive the zoom from them only for the
+  // macOS trackpad (on iOS the touch handler above already did).
+  let gestureStart = 1;
+  addEventListener('gesturestart', event => { event.preventDefault(); gestureStart = z; }, opts);
+  addEventListener('gesturechange', event => {
+    event.preventDefault();
+    if (!pinch) setZoom(gestureStart * event.scale, false, event.clientX ?? innerWidth / 2, event.clientY ?? innerHeight / 2);
+  }, opts);
+  addEventListener('gestureend', event => event.preventDefault(), opts);
+  // Brilliant exposes labels; Paper exposes named frame sections. Ignore note cards.
   const roundTwo = [...canvas.querySelectorAll('.canvas-label,.frame[aria-label]')]
     .filter(node => /\\b(r2|round\\s*2)\\b/i.test(node.getAttribute('aria-label') || node.textContent))
     .sort((a, b) => a.offsetTop - b.offsetTop || a.offsetLeft - b.offsetLeft)[0];
   if (roundTwo) roundTwo.id = 'r2';
   function landOnRoundTwo() {
     if (location.hash !== '#r2' || !roundTwo) return;
-    const r = roundTwo.getBoundingClientRect();
-    scrollTo(Math.max(0, r.left + scrollX - 32), Math.max(0, r.top + scrollY - 72)); // clear the home pill
+    scrollTo(Math.max(0, roundTwo.offsetLeft * z - 32), Math.max(0, roundTwo.offsetTop * z - 72)); // clear the home pill
   }
+  setZoom(1);
   if (document.readyState === 'complete') landOnRoundTwo();
   else addEventListener('load', landOnRoundTwo, {once:true});
   addEventListener('hashchange', landOnRoundTwo);

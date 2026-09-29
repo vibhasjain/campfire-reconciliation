@@ -50,7 +50,7 @@ export const CARD_COPY: Record<string, { title: string; lines: string[] }> = {
     lines: ["Twelve illustrated frames", "Before · During · After"],
   },
   "a-1.1": {
-    title: "Workpaper restraint",
+    title: "Workpaper",
     lines: [
       "Two-thirds fewer words",
       "Batch routine signoffs",
@@ -58,7 +58,7 @@ export const CARD_COPY: Record<string, { title: string; lines: string[] }> = {
     ],
   },
   "b-1.1": {
-    title: "Bridge restraint",
+    title: "Balance bridge",
     lines: [
       "54% fewer words",
       "Confidence on selection",
@@ -66,7 +66,7 @@ export const CARD_COPY: Record<string, { title: string; lines: string[] }> = {
     ],
   },
   "c-1.1": {
-    title: "Inbox restraint",
+    title: "Thread inbox",
     lines: [
       "Half the text",
       "Single-line thread rows",
@@ -74,7 +74,7 @@ export const CARD_COPY: Record<string, { title: string; lines: string[] }> = {
     ],
   },
   "d-1.1": {
-    title: "Timeline restraint",
+    title: "Timeline",
     lines: ["Labels on selection", "Difference leads", "One cutoff marker"],
   },
   "a-1.0": {

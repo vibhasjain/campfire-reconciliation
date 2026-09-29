@@ -31,13 +31,11 @@ function restoredState() {
   }
 }
 
-// One page: the three live prototypes, then the three latest Brilliant and three latest Paper canvases.
-const latest = (medium: Medium) =>
-  sorted.filter((v) => v.medium === medium).slice(0, 3)
+// One page: the three live prototypes, then the four vector concepts (their latest, restraint pass).
 const SHOWN = [
   ...LIVE,
-  ...sorted.filter((v) =>
-    [...latest("Brilliant"), ...latest("Paper")].includes(v)
+  ...(["a-1.1", "b-1.1", "c-1.1", "d-1.1"] as const).map((id) =>
+    sorted.find((v) => v.id === id)!
   ),
 ]
 

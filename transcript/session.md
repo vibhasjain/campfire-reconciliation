@@ -5627,3 +5627,74 @@ Checking desktop and phone for version control, plus References:
 - `Read`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 07:49 ET
+
+Version control is now a single page with no Code / Vector switch, and it's live:
+
+- **First row, three Code cards:** v1 Workbench, v2 Paired ledger and v3 Flow. Each is marked "Live" and opens the current prototype: v1 is the homepage, v2 is `/v2`, v3 is `/v3`.
+- **Below, six Vector cards:** the three latest Brilliant and three latest Paper canvases, newest first. Each is tagged "Vector".
+- **Nav:** Home on the left, Story / References and GitHub on the right. On phones it's Home, a dropdown (Versions, Story, References), then GitHub. The References page uses the same nav.
+
+I checked it on desktop and at iPhone width, with no sideways scrolling, and pressing Enter on the v2 card opened `/v2`.
+
+Two notes:
+- **Old releases:** 1.0 to 1.5 no longer appear on the page. Their rebuilt copies are still hosted under `/code/…`, but nothing links to them. I can delete those files if you don't need them.
+- **Tags:** the Vector cards no longer say whether they're Brilliant or Paper. The "A 1.1" / "C 1.1" style labels still hint at it: A and B are Brilliant, C and D are Paper.
+
+
+**Vibhas** · Sep 29 07:50 ET
+
+for vectors i only need the restraint versions and you dont need to name them restraint. ps didnt we have three from paper and three from brilliant?
+
+
+**Claude** · Sep 29 07:51 ET
+
+Listing every Brilliant and Paper version to answer that properly:
+
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 07:51 ET
+
+being in any vector and pressing escape takes me back to version control btw
+
+
+**Claude** · Sep 29 07:51 ET
+
+Adding it: Esc on any vector canvas goes back to version control. The canvases are static exports, patched at build time, so it goes in the build step that already adds their home pill:
+
+- `Bash`
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 29 07:51 ET
+
+bring the zoom controls back into the vector pages please
+
+- `Bash`
+
+**Claude** · Sep 29 07:52 ET
+
+A clean reverse of just that commit's changes to the build script should bring the zoom back. Trying it:
+
+- `Bash`
+
+**Claude** · Sep 29 07:52 ET
+
+It refused because my Esc edit to the same file wasn't staged. Staging it and retrying:
+
+- `Bash`
+
+**Claude** · Sep 29 07:52 ET
+
+The zoom code is back and the Esc behaviour survived. Building, then checking a canvas: controls visible, "+" zooms, Esc still goes home.
+
+- `Bash`
+- `Read`
+
+**Claude** · Sep 29 07:52 ET
+
+The zoom controls are back in the bottom-right corner (−, 100%, +, Fit), "+" took it to 125%, and Esc still goes back to version control. Committing all of it:
+
+- `Bash`
