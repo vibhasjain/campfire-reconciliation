@@ -136,7 +136,7 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
         <Button
           variant="outline"
           size="sm"
-          className="max-w-28"
+          className="ml-1.5 max-w-28"
           aria-label="Ask Ember"
           tooltip="Ask Ember"
           shortcut="⌘E"

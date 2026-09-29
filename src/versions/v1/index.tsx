@@ -711,7 +711,7 @@ export default function Workbench() {
                 aria-selected={tab === name}
                 onClick={() => selectTab(name)}
                 className={cn(
-                  "flex min-h-9 shrink-0 items-center rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
+                  "flex min-h-7! shrink-0 items-center rounded-md px-3 text-xs whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-focus",
                   tab === name
                     ? "bg-segment-active font-medium text-fg"
                     : "text-fg-3"
