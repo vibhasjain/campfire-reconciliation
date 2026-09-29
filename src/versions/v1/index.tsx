@@ -326,7 +326,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
               onClick={() => unreconcileItem(item.id)}
             >
               <RotateCcw />
-              Unreconcile<kbd>U</kbd>
+              Undo<kbd>U</kbd>
             </Button>
           </div>
         ) : (
@@ -882,8 +882,8 @@ export default function Workbench() {
                               variant="ghost"
                               size="sm"
                               data-action="unreconcile"
-                              aria-label={`Unreconcile ${item.title}`}
-                              tooltip="Unreconcile"
+                              aria-label={`Undo ${item.title}`}
+                              tooltip="Undo"
                               shortcut="U"
                               className="wb-unreconcile h-8 px-2 text-fg-3"
                               onClick={(event) => {

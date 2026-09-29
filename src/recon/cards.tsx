@@ -151,7 +151,7 @@ function ItemCard({
             unreconcileItem(item.id)
           }}
         >
-          Unreconcile
+          Undo
         </Button>
       </div>
     </div>

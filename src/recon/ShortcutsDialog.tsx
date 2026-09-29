@@ -24,7 +24,7 @@ export function ShortcutsDialog({ workbench = false }: { workbench?: boolean }) 
       ["O", "Open attachments"],
       ["A", "Accept"],
       ["X", "Reject"],
-      ["U", "Unreconcile"],
+      ["U", "Undo"],
       ["M", "Match lines"],
       ["⌘ / Ctrl / ⇧ + click", "Select lines"],
     ]],

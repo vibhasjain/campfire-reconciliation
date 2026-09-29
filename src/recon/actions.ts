@@ -184,7 +184,7 @@ export function unreconcileItem(itemId: string, actor: Actor = "maya"): Result {
   const item = recon.getState().items[itemId]
   const result = recon.unreconcile(itemId, actor)
   if (result.ok)
-    show(`Unreconciled · ${item?.title ?? itemId}`, {
+    show(`Undone · ${item?.title ?? itemId}`, {
       action: {
         label: "Undo",
         onClick: () => {

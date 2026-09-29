@@ -232,8 +232,8 @@ function Group({
               variant="ghost"
               className="paired-unreconcile"
               data-action="unreconcile"
-              aria-label={`Unreconcile ${item.title}`}
-              tooltip="Unreconcile"
+              aria-label={`Undo ${item.title}`}
+              tooltip="Undo"
               shortcut="U"
               onClick={() => {
                 selectItem(item.id)

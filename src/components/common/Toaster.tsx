@@ -35,7 +35,9 @@ export function Toaster() {
               <span className="min-w-0 flex-1 truncate">{t.message}</span>
               {t.action && (
                 <Button
-                  className="-my-1"
+                  // Undo is a quiet gray icon; other actions stay regular buttons.
+                  variant={t.action.label === "Undo" ? "ghost" : undefined}
+                  className={t.action.label === "Undo" ? "-my-1 text-fg-4 hover:text-fg-2" : "-my-1"}
                   // Undo reads as an icon (label in its tooltip); other actions keep their words.
                   size={t.action.label === "Undo" ? "icon-sm" : undefined}
                   aria-label={t.action.label}

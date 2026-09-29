@@ -6346,3 +6346,67 @@ We can start with a suggestion, that's a great one, but yeah.
 It works: the item opened at the top, and after sending from a scrolled-up position the sheet ended fully at the bottom once Ember replied (272 of 272). Committing:
 
 - `Bash`
+- `Bash`
+- `Bash`
+- `Monitor` Codex Ember use-case cycle job finishing
+
+**Vibhas** (while Claude was working) · Sep 29 12:23 ET
+
+Let's go a little more subtle on the undo button like it can be a little more gray the icon maybe that'll help At least in the little toast thing. Yeah, in the toast. We don't necessarily need to mess with the unreconcile button in the reconcile transaction. By the way, unreconcile is a terrible word.
+
+Just say undo there instead of unreconcile.
+
+
+**Claude** · Sep 29 12:23 ET
+
+The scroll fix is pushed and will be live shortly. Sending a message, or Ember replying, now scrolls the sheet to the bottom. Opening an item still starts at the top. I tested it on AWS: sent from scrolled-up, and it ended fully at the bottom.
+
+Codex is building the Ember cycle; it had 7 more points left than Claude (51% vs 44%). Every E then Enter gives the next kind of Ember moment, whichever item you're on:
+
+1. **New suggestion:** "Got it. Here's a new suggestion…" and the card pops in. If that item already has its extra suggestion, it skips to 2.
+2. **Answer:** one concrete fact about the transaction, for example "Chase's September statement lists it once, on 9/12; the second $6,840 is JE-7712 in the GL."
+3. **Teammate:** Ember @mentions Priya or Daniel with a specific ask, and their short reply shows up a couple of seconds later.
+4. **History:** how the same vendor or pattern was handled in July and August.
+
+Then it loops back to 1. The cycle restarts on a page refresh, since the demo resets then anyway. When it lands I'll run E + Enter four times in the browser and send you the exact four replies from one item.
+
+
+**Vibhas** · Sep 29 12:23 ET
+
+Let's go a little more subtle on the undo button like it can be a little more gray the icon maybe that'll help At least in the little toast thing. Yeah, in the toast. We don't necessarily need to mess with the unreconcile button in the reconcile transaction. By the way, unreconcile is a terrible word.
+
+Just say undo there instead of unreconcile.
+
+
+**Claude** · Sep 29 12:23 ET
+
+Two changes:
+- **Toast undo:** a plain gray icon with no border, so it's quieter. That's only in the toast; the table's undo button stays as it is.
+- **"Unreconcile":** every place the word appears on screen becomes "Undo": the table button's tooltip, the ? dialog and the toast after using it. Finding them:
+
+- `Bash`
+
+**Claude** · Sep 29 12:24 ET
+
+v2's "Unreconciled" filter tab is a status, not the action, so it stays. I'm also leaving one rare error message in the store, since Codex is editing that file right now.
+
+- `Bash`
+- `Bash`
+- `Read`
+
+**Claude** · Sep 29 12:24 ET
+
+The toast's undo is now a plain gray arrow with no border. Before committing, making sure the files I touched don't also contain half-finished Codex edits:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 12:24 ET
+
+I guess even on the code prototypes, including the home page, just in escape can take us back to version control just escape on the home screen make sure obviously like the text box focus escape takes priority over like the sidebar collapse escape and then so like put all the way when the home screen like when in the UI if escape does nothing when you're on the home screen then we can go to version control and similarly if I press escape on the version control, take me back to the home screen.
+
+
+**Claude** · Sep 29 12:24 ET
+
+Only my edits; Codex hasn't changed any files yet. Committing:
+
+- `Bash`

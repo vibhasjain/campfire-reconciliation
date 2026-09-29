@@ -278,7 +278,7 @@ function FocusCard({ item }: { item: ReconItem }) {
               onClick={() => unreconcileItem(item.id)}
             >
               <RotateCcw className="size-4" />
-              Unreconcile
+              Undo
             </Button>
           )}
           {!!(selected.bank.length + selected.book.length) && (
@@ -579,8 +579,8 @@ export default function V3() {
                 <Button
                   data-action="unreconcile"
                   variant="ghost"
-                  aria-label={`Unreconcile ${item.title}`}
-                  tooltip="Unreconcile" shortcut="U"
+                  aria-label={`Undo ${item.title}`}
+                  tooltip="Undo" shortcut="U"
                   onFocus={() =>
                     reconUi.set((s) => ({ ...s, selectedItemId: item.id }))
                   }
