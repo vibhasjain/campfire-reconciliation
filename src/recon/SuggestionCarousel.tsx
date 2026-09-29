@@ -28,8 +28,8 @@ export function SuggestionCarousel({
   const item = useItem(itemId)
   const storedIndex = useReconUi((state) => state.suggestionIndex[itemId] ?? 0)
   const reducedMotion = useReducedMotion()
-  // Stepping with a lone suggestion gives the card a small sideways nudge.
-  const nudge = useRef<HTMLDivElement>(null)
+  // Stepping with a lone suggestion gives the "Suggestion 1 of 1" label a tiny sideways nudge.
+  const nudge = useRef<HTMLSpanElement>(null)
   useEffect(() => {
     const onEdge = (event: Event) => {
       if (
@@ -40,8 +40,8 @@ export function SuggestionCarousel({
         return
       animate(
         nudge.current,
-        { x: [0, -5, 5, -3, 3, 0] },
-        { duration: 0.28, ease: "easeOut" }
+        { x: [0, -2, 2, -1, 0] },
+        { duration: 0.22, ease: "easeOut" }
       )
     }
     addEventListener("recon:suggestion-edge", onEdge)
@@ -96,45 +96,43 @@ export function SuggestionCarousel({
       role="region"
       aria-label={`Suggestions for ${item.title}`}
     >
-      <div ref={nudge}>
-        <motion.div
-          key={suggestion.id}
-          className="rounded-lg"
-          initial={
+      <motion.div
+        key={suggestion.id}
+        className="rounded-lg"
+        initial={
+          observed.freshId === suggestion.id && !reducedMotion
+            ? { opacity: 0, scale: 0.98 }
+            : false
+        }
+        animate={{
+          opacity: 1,
+          scale: 1,
+          boxShadow:
             observed.freshId === suggestion.id && !reducedMotion
-              ? { opacity: 0, scale: 0.98 }
-              : false
-          }
-          animate={{
-            opacity: 1,
-            scale: 1,
-            boxShadow:
-              observed.freshId === suggestion.id && !reducedMotion
-                ? [
-                    "0 0 0 1px var(--c-ai-glow)",
-                    "0 0 14px 2px var(--c-ai-glow)",
-                    "0 0 0 0px transparent",
-                  ]
-                : "0 0 0 0px transparent",
-          }}
-          transition={{
-            duration: reducedMotion ? 0 : 0.2,
-            boxShadow: { duration: reducedMotion ? 0 : 1 },
-          }}
-          onAnimationComplete={() => {
-            if (observed.freshId)
-              setObserved((current) => ({ ...current, freshId: "" }))
-          }}
-        >
-          <Suggestion
-            suggestion={suggestion}
-            size={size}
-            active={active}
-            onAccept={onAccept ? () => onAccept(suggestion) : undefined}
-            onReject={onReject ? () => onReject(suggestion) : undefined}
-          />
-        </motion.div>
-      </div>
+              ? [
+                  "0 0 0 1px var(--c-ai-glow)",
+                  "0 0 14px 2px var(--c-ai-glow)",
+                  "0 0 0 0px transparent",
+                ]
+              : "0 0 0 0px transparent",
+        }}
+        transition={{
+          duration: reducedMotion ? 0 : 0.2,
+          boxShadow: { duration: reducedMotion ? 0 : 1 },
+        }}
+        onAnimationComplete={() => {
+          if (observed.freshId)
+            setObserved((current) => ({ ...current, freshId: "" }))
+        }}
+      >
+        <Suggestion
+          suggestion={suggestion}
+          size={size}
+          active={active}
+          onAccept={onAccept ? () => onAccept(suggestion) : undefined}
+          onReject={onReject ? () => onReject(suggestion) : undefined}
+        />
+      </motion.div>
       {suggestions.length > 0 && (
         <div className="mt-2 flex items-center justify-between gap-2">
           <div className="flex items-center gap-1">
@@ -152,6 +150,7 @@ export function SuggestionCarousel({
               <ChevronLeft className="size-4" />
             </Button>
             <span
+              ref={nudge}
               className="min-w-12 shrink-0 text-center text-[11px] whitespace-nowrap text-fg-3 tabular-nums"
               aria-live="polite"
             >

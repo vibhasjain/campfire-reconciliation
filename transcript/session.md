@@ -4745,3 +4745,42 @@ The Ask Ember panel opens clean now, with no prompt. Swapping the bell for a com
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 28 22:40 ET
+
+All three are live, and I checked each in the browser before committing:
+
+- **Shake:** with a single suggestion, ← or → (or the ‹ › buttons) gives the card a quick, small side-to-side shake. With several suggestions it still wraps around as before. The shake is skipped if reduced motion is on.
+- **Empty conversations:** the "Ask Ember about this reconciliation" and "Start a conversation" prompts are gone. An empty thread is now just the comment box, in the review sheet, the quick popover and the Ask Ember panel.
+- **Comments button:** it uses the comment icon instead of the bell, and keeps the unread dot.
+
+
+**Vibhas** · Sep 28 22:47 ET
+
+Oh, I did not want to nudge the card itself, but the thing that says suggestion one of one. And just a little more subtle, please. Or actually maybe it didn't feel subtle because the whole freaking card was shaking.
+
+
+**Claude** · Sep 28 22:47 ET
+
+Moving the shake from the card to the "Suggestion 1 of 1" label, and making it smaller:
+
+- `Bash`
+
+**Claude** · Sep 28 22:47 ET
+
+My edit script didn't apply: Prettier had reformatted that label, so my match failed and nothing changed. Looking at the current markup:
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 28 22:47 ET
+
+Checking that the label moves and the card doesn't:
+
+- `Bash`
+
+**Claude** · Sep 28 22:48 ET
+
+Now only the label moves, about 2px each way; the card stays still. Committing:
+
+- `Bash`
