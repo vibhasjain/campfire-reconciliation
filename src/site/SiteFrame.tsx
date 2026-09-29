@@ -16,8 +16,8 @@ export default function SiteFrame({
   }, [title])
   return (
     <main className="min-h-screen bg-page text-fg">
-      <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-12">
-        <header className="mb-8 flex items-center justify-between gap-4">
+      <div className="mx-auto max-w-[1440px] px-5 pt-4 pb-8 sm:px-8 sm:pt-5 sm:pb-12">
+        <header className="mb-6 flex items-center justify-between gap-4">
           <h1 className="sr-only">{title}</h1>
           <a
             href="/"

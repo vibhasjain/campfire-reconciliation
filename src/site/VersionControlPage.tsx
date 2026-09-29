@@ -2,8 +2,6 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react"
 import { flushSync } from "react-dom"
 import { Code2, Diamond, FileText, Images, Presentation } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Kbd } from "@/components/ui/kbd"
 import { Chip, type ChipTone } from "@/components/common/Chip"
 import SiteFrame from "./SiteFrame"
 import { REPO, VERSIONS, type Medium } from "./versions"
@@ -38,7 +36,6 @@ function restoredState() {
     medium: MEDIA.includes(saved?.medium)
       ? (saved.medium as (typeof MEDIA)[number])
       : ("All" as const),
-    query: typeof saved?.query === "string" ? saved.query : "",
     active: sorted.some((v) => v.id === saved?.active)
       ? (saved.active as string)
       : sorted[0].id,
@@ -53,18 +50,10 @@ function openLink(href: string, event: { metaKey: boolean; ctrlKey: boolean }) {
 export default function VersionControlPage() {
   const [initial] = useState(restoredState)
   const [medium, setMedium] = useState<(typeof MEDIA)[number]>(initial.medium)
-  const [query, setQuery] = useState(initial.query)
   const [active, setActive] = useState(initial.active)
-  const input = useRef<HTMLInputElement>(null)
   const grid = useRef<HTMLDivElement>(null)
   const cards = useRef(new Map<string, HTMLDivElement>())
-  const visible = sorted.filter(
-    (v) =>
-      (medium === "All" || medium === v.medium) &&
-      `${v.medium} ${v.title} ${v.version} ${v.changes.join(" ")}`
-        .toLowerCase()
-        .includes(query.toLowerCase().trim())
-  )
+  const visible = sorted.filter((v) => medium === "All" || medium === v.medium)
   const activeId = visible.some((v) => v.id === active)
     ? active
     : visible[0]?.id
@@ -76,29 +65,11 @@ export default function VersionControlPage() {
     // Back from a page: bring the remembered card into view (the async page misses scroll restoration).
     if (restored && restored !== first)
       restored.scrollIntoView({ block: "center" })
-    const shortcut = (event: globalThis.KeyboardEvent) => {
-      if (
-        event.key !== "/" ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.altKey ||
-        (event.target instanceof HTMLElement &&
-          event.target.closest('input, textarea, [contenteditable="true"]'))
-      )
-        return
-      event.preventDefault()
-      input.current?.focus()
-    }
-    window.addEventListener("keydown", shortcut)
-    return () => window.removeEventListener("keydown", shortcut)
   }, [initial])
 
   useEffect(() => {
-    history.replaceState(
-      { ...history.state, versions: { medium, query, active } },
-      ""
-    )
-  }, [medium, query, active])
+    history.replaceState({ ...history.state, versions: { medium, active } }, "")
+  }, [medium, active])
 
   function navigate(event: KeyboardEvent<HTMLDivElement>, index: number) {
     if (event.altKey) return
@@ -141,7 +112,7 @@ export default function VersionControlPage() {
         <div
           role="group"
           aria-label="Medium"
-          className="flex min-w-0 max-w-full [scrollbar-width:none] gap-0.5 overflow-x-auto rounded-md border-hair border-line bg-segment p-1 [&>*]:min-w-0 [&>*]:truncate"
+          className="flex max-w-full min-w-0 [scrollbar-width:none] gap-3 overflow-x-auto"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault()
@@ -160,58 +131,35 @@ export default function VersionControlPage() {
             }
           }}
         >
-          {MEDIA.map((value) => (
-            <button
-              key={value}
-              type="button"
-              className={`cursor-pointer rounded px-3 py-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus ${medium === value ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`}
-              aria-pressed={medium === value}
-              onClick={() => {
-                flushSync(() => setMedium(value))
-                const first = sorted.find(
-                  (v) =>
-                    (value === "All" || value === v.medium) &&
-                    `${v.medium} ${v.title} ${v.version} ${v.changes.join(" ")}`
-                      .toLowerCase()
-                      .includes(query.toLowerCase().trim())
-                )
-                if (first) cards.current.get(first.id)?.focus()
-              }}
+          {/* Prototypes and canvases in one cluster; the story and references in their own. */}
+          {[
+            MEDIA.filter((m) => m !== "Story" && m !== "References"),
+            MEDIA.filter((m) => m === "Story" || m === "References"),
+          ].map((cluster) => (
+            <div
+              key={cluster[0]}
+              className="flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1"
             >
-              {value}
-            </button>
+              {cluster.map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={`cursor-pointer rounded px-3 py-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus ${medium === value ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`}
+                  aria-pressed={medium === value}
+                  onClick={() => {
+                    flushSync(() => setMedium(value))
+                    const first = sorted.find(
+                      (v) => value === "All" || value === v.medium
+                    )
+                    if (first) cards.current.get(first.id)?.focus()
+                  }}
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
           ))}
         </div>
-        <Input
-          ref={input}
-          aria-label="Filter versions"
-          placeholder="Filter…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-44"
-          onKeyDown={(e) => {
-            if (e.key === "Escape") {
-              e.preventDefault()
-              flushSync(() => setQuery(""))
-              const fallback = sorted.find(
-                (v) => medium === "All" || medium === v.medium
-              )
-              ;(
-                cards.current.get(active) ??
-                cards.current.get(fallback?.id ?? "")
-              )?.focus()
-            }
-            if (e.key === "ArrowDown" || e.key === "Enter") {
-              e.preventDefault()
-              if (visible[0]) cards.current.get(visible[0].id)?.focus()
-            }
-          }}
-        />
-        <span className="ml-auto flex min-w-0 truncate items-center gap-1 text-xs text-fg-4">
-          <Kbd>↑↓←→</Kbd>
-          <span className="w-1 shrink-0 truncate">·</span>
-          <Kbd>Enter</Kbd>
-        </span>
       </div>
       <div
         ref={grid}
@@ -241,7 +189,7 @@ export default function VersionControlPage() {
                 if (!(e.target as HTMLElement).closest("a, button"))
                   openLink(version.links[0].href, e)
               }}
-              className="flex min-w-0 min-h-60 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
+              className="flex min-h-60 min-w-0 cursor-pointer flex-col rounded-xl border-hair border-line bg-surface p-5 outline-none hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-focus"
             >
               <div className="flex items-center gap-2">
                 <Chip tone={tone} icon={<Icon />}>
@@ -252,13 +200,13 @@ export default function VersionControlPage() {
                   title={new Date(version.at).toLocaleString("en-US", {
                     timeZone: "America/New_York",
                   })}
-                  className="ml-auto shrink-0 whitespace-nowrap text-xs text-fg-4 tabular-nums"
+                  className="ml-auto shrink-0 text-xs whitespace-nowrap text-fg-4 tabular-nums"
                 >
                   {time.format(new Date(version.at))}
                 </time>
               </div>
               <div className="mt-5 flex items-baseline gap-2">
-                <span className="min-w-0 max-w-24 truncate text-sm text-fg-3 tabular-nums">
+                <span className="max-w-24 min-w-0 truncate text-sm text-fg-3 tabular-nums">
                   {version.version}
                 </span>
                 <h2 className="min-w-0 truncate text-sm font-medium">
@@ -267,7 +215,9 @@ export default function VersionControlPage() {
               </div>
               <ul className="mt-3 mb-5 space-y-1 text-xs text-fg-3">
                 {(copy?.lines ?? version.changes).slice(0, 4).map((line) => (
-                  <li key={line} className="truncate">{line}</li>
+                  <li key={line} className="truncate">
+                    {line}
+                  </li>
                 ))}
               </ul>
               <div className="mt-auto flex min-w-0 items-center gap-1.5">
@@ -284,14 +234,16 @@ export default function VersionControlPage() {
                       onMouseEnter={() => prefetch(link.href)}
                       onFocus={() => prefetch(link.href)}
                     >
-                      <span className="min-w-0 truncate">{version.links.length > 1
-                        ? `v${i + 1}`
-                        : version.medium === "Brilliant" ||
-                            version.medium === "Paper"
-                          ? "Open canvas"
-                          : version.medium === "Story"
-                            ? "Open deck"
-                            : "Browse"}</span>
+                      <span className="min-w-0 truncate">
+                        {version.links.length > 1
+                          ? `v${i + 1}`
+                          : version.medium === "Brilliant" ||
+                              version.medium === "Paper"
+                            ? "Open canvas"
+                            : version.medium === "Story"
+                              ? "Open deck"
+                              : "Browse"}
+                      </span>
                     </a>
                   </Button>
                 ))}

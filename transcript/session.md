@@ -4900,3 +4900,68 @@ Still closing on the first Esc, so something else closes the sheet before my han
 - `Bash`
 - `Bash`
 - `Bash`
+
+**Claude** · Sep 28 23:02 ET
+
+Everything from the last few messages is live:
+
+- **Esc in the review sheet:** the first Esc only leaves the comment box, draft or not, and the sheet stays open so shortcuts work again. The second Esc closes the sheet. I tested the full sequence by keyboard.
+- **Buttons over file names:** buttons never shrink now. Accept, Reject and Send to Daniel always show in full, and the attachment chips truncate instead. The long-text pass had made every button shrinkable; that's reverted in the shared Button.
+- **Focus rings:** gone everywhere, including when you Tab. The ring on the ‹ button appeared because a Tab press had switched rings back on. Someone navigating purely by Tab now won't see where they are. It's recorded in CLAUDE.md as a project rule.
+- **Avatars:** the white ring that looked like a stuck hover is gone. Stacked avatars now sit side by side with a small gap.
+- **"Needs Daniel's approval":** it has more room before the button row.
+
+
+**Vibhas** · Sep 28 23:19 ET
+
+[Image #67] Too much padding at the from the top of the page.
+
+
+**Vibhas** (while Claude was working) · Sep 28 23:20 ET
+
+[Image #68] Don't need the filter.
+
+
+**Claude** · Sep 28 23:20 ET
+
+The page wrapper has 48px of top padding. Cutting it to 20px, and tightening the gap under the tags a little:
+
+- `Bash`
+- `Read`
+
+**Claude** · Sep 28 23:20 ET
+
+Top padding is down to 20px. Removing the filter box and the code behind it:
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 28 23:20 ET
+
+[Image #69] Story and references can actually like so not all like a little their own cluster so a little more space after like the prototype's cluster cluster and then story and references.
+
+
+**Vibhas** (while Claude was working) · Sep 28 23:21 ET
+
+[Image #70] Get rid of that.
+
+
+**Claude** · Sep 28 23:21 ET
+
+The filter is gone. Two more: splitting Story and References into their own group with a gap after the prototype group, and removing the keyboard hint:
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+
+**Claude** · Sep 28 23:23 ET
+
+The browser check timed out. It could be a flaky run, or my change could be hanging the page, so checking directly:
+
+- `Bash`
+- `Read`
+- `Bash`
