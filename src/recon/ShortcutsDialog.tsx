@@ -21,6 +21,7 @@ export function ShortcutsDialog({ workbench = false }: { workbench?: boolean }) 
     ]],
     ["Review", [
       ["← / →", "Cycle suggestions"],
+      ["O", "Open attachments"],
       ["A", "Accept"],
       ["X", "Reject"],
       ["U", "Unreconcile"],

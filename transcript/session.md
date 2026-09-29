@@ -5385,3 +5385,36 @@ In this story, the top left, it shouldn't lead to home. It should lead to versio
 In this story, the top left, it shouldn't lead to home. It should lead to version control. And it should also obviously say version control.
 
 - `Bash`
+
+**Claude** · Sep 29 00:17 ET
+
+The story deck's top-left tag now says "Version control" and goes to version control. It's the same dark tag with the Campfire favicon. It's live; I confirmed with curl, not a screenshot.
+
+
+**Vibhas** · Sep 29 00:56 ET
+
+what about kb shortcuts to open the source document attachments
+
+
+**Claude** · Sep 29 00:56 ET
+
+There isn't one yet. I'll add **O**, which works while the review sheet is open:
+
+- It opens the current suggestion's first attachment.
+- Pressing O again steps to the next attachment and wraps back to the first.
+- Esc closes the preview, as it already does.
+- If a suggestion has no attachments, nothing happens.
+
+It goes in the ? dialog under Review.
+
+- `Bash`
+- `Bash`
+- `Read`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 00:58 ET
+
+Now it steps through: the first O opens the first attachment, the second O the next, the third wraps back to the first. Esc closes the preview and leaves the sheet open. Committing:
+
+- `Bash`

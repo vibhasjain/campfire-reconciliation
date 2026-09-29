@@ -511,6 +511,25 @@ export default function Workbench() {
     return true
   }, [])
   useReconKeys({ move, enter, cycle, selectTab, toggleSidebar, comment, ember, scrollSheet })
+  // O opens the current suggestion's attachments one by one (wrapping); Esc closes the preview.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "o" || event.metaKey || event.ctrlKey || event.altKey || event.defaultPrevented) return
+      if ((event.target as HTMLElement | null)?.closest('input, textarea, [contenteditable="true"]')) return
+      const chips = [...document.querySelectorAll<HTMLElement>('[data-slot="half-sheet"] [data-suggestion-id] [aria-label^="View "]')]
+      if (!chips.length) return
+      event.preventDefault()
+      const open = chips.findIndex((chip) => chip.getAttribute("data-state") === "open")
+      const next = chips[(open + 1) % chips.length]
+      const preview = document.querySelector('[data-recon-evidence][data-state="open"]')
+      if (!preview) return next.click()
+      // Close the open preview first; a click alone would only dismiss it.
+      preview.dispatchEvent(new Event("recon-close"))
+      setTimeout(() => next.click(), 180)
+    }
+    addEventListener("keydown", onKey)
+    return () => removeEventListener("keydown", onKey)
+  }, [])
   // Comments inbox: open the item's review sheet with the cursor in its conversation.
   useEffect(() => {
     const onOpenItem = (event: Event) => {
