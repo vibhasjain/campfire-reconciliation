@@ -20,6 +20,49 @@ const prototypes = (version: string) =>
     href: `/code/${version}/campfire${index + 1}`,
   }))
 
+/** The three live prototypes: what the Code filter shows. v1 is the homepage. */
+export const LIVE: Version[] = [
+  {
+    id: "live-v1",
+    version: "v1",
+    title: "Workbench",
+    medium: "Code",
+    at: "",
+    links: [{ label: "v1 Workbench", href: "/" }],
+    changes: [
+      "A prioritized queue with a review sheet",
+      "Ember suggests; accept, reject or tell it more",
+      "Keyboard first: J K, A, E, O",
+    ],
+  },
+  {
+    id: "live-v2",
+    version: "v2",
+    title: "Paired ledger",
+    medium: "Code",
+    at: "",
+    links: [{ label: "v2 Paired ledger", href: "/v2" }],
+    changes: [
+      "Books and bank side by side",
+      "Ember's pairs pre-aligned",
+      "Matching is reading across a line",
+    ],
+  },
+  {
+    id: "live-v3",
+    version: "v3",
+    title: "Flow",
+    medium: "Code",
+    at: "",
+    links: [{ label: "v3 Flow", href: "/v3" }],
+    changes: [
+      "One decision at a time",
+      "Accept and the next arrives",
+      "The difference closes to $0.00",
+    ],
+  },
+]
+
 export const VERSIONS: Version[] = [
   {
     id: "code-1.5",
@@ -220,7 +263,3 @@ export const VERSIONS: Version[] = [
     ],
   },
 ]
-
-/** Version-control filters; Story and References are pages of their own. */
-export const FILTERS = ["Code", "Vector"] as const
-export type SiteFilter = (typeof FILTERS)[number]

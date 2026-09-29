@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react"
-import { flushSync } from "react-dom"
-import { Code2, Diamond, FileText, Images, Presentation } from "lucide-react"
+import { Code2, Images, PenTool, Presentation } from "lucide-react"
 import { Chip, type ChipTone } from "@/components/common/Chip"
 import SiteFrame from "./SiteFrame"
-import { FILTERS, REPO, VERSIONS, type Medium, type SiteFilter } from "./versions"
+import { LIVE, REPO, VERSIONS, type Medium } from "./versions"
 import { CARD_COPY } from "./cardCopy"
 import { prefetch } from "./loaders"
 import { SiteNav } from "./SiteNav"
 
 const APPEARANCE: Record<Medium, { icon: typeof Code2; tone: ChipTone }> = {
   Code: { icon: Code2, tone: "green" },
-  Brilliant: { icon: Diamond, tone: "blue" },
-  Paper: { icon: FileText, tone: "copper" },
+  // Brilliant and Paper canvases are both vector work.
+  Brilliant: { icon: PenTool, tone: "blue" },
+  Paper: { icon: PenTool, tone: "blue" },
   Story: { icon: Presentation, tone: "purple" },
   References: { icon: Images, tone: "gray" },
 }
@@ -24,28 +24,22 @@ const time = new Intl.DateTimeFormat("en-US", {
 
 function restoredState() {
   const saved = history.state?.versions
-  // ?view=brilliant (from the References page) or the remembered filter; Code by default.
-  const view = new URLSearchParams(location.search).get("view")
-  const fromUrl = FILTERS.find((f) => f.toLowerCase() === view)
   return {
-    medium:
-      fromUrl ??
-      (FILTERS.includes(saved?.medium)
-        ? (saved.medium as SiteFilter)
-        : ("Code" as const)),
-    active: sorted.some((v) => v.id === saved?.active)
+    active: SHOWN.some((v) => v.id === saved?.active)
       ? (saved.active as string)
-      : sorted[0].id,
+      : SHOWN[0].id,
   }
 }
 
-// Code: the three latest releases. Vector: the three latest Brilliant and three latest Paper canvases.
-function shownFor(filter: SiteFilter) {
-  const latest = (medium: Medium) => sorted.filter((v) => v.medium === medium).slice(0, 3)
-  return filter === "Code"
-    ? latest("Code")
-    : sorted.filter((v) => [...latest("Brilliant"), ...latest("Paper")].includes(v))
-}
+// One page: the three live prototypes, then the three latest Brilliant and three latest Paper canvases.
+const latest = (medium: Medium) =>
+  sorted.filter((v) => v.medium === medium).slice(0, 3)
+const SHOWN = [
+  ...LIVE,
+  ...sorted.filter((v) =>
+    [...latest("Brilliant"), ...latest("Paper")].includes(v)
+  ),
+]
 
 function openLink(href: string, event: { metaKey: boolean; ctrlKey: boolean }) {
   if (event.metaKey || event.ctrlKey) window.open(href, "_blank", "noopener")
@@ -54,11 +48,10 @@ function openLink(href: string, event: { metaKey: boolean; ctrlKey: boolean }) {
 
 export default function VersionControlPage() {
   const [initial] = useState(restoredState)
-  const [medium, setMedium] = useState<SiteFilter>(initial.medium)
   const [active, setActive] = useState(initial.active)
   const grid = useRef<HTMLDivElement>(null)
   const cards = useRef(new Map<string, HTMLDivElement>())
-  const visible = shownFor(medium)
+  const visible = SHOWN
   const activeId = visible.some((v) => v.id === active)
     ? active
     : visible[0]?.id
@@ -73,8 +66,8 @@ export default function VersionControlPage() {
   }, [initial])
 
   useEffect(() => {
-    history.replaceState({ ...history.state, versions: { medium, active } }, "")
-  }, [medium, active])
+    history.replaceState({ ...history.state, versions: { active } }, "")
+  }, [active])
 
   function navigate(event: KeyboardEvent<HTMLDivElement>, index: number) {
     if (event.altKey) return
@@ -114,12 +107,7 @@ export default function VersionControlPage() {
       title="Version control"
       toolbar={
         <SiteNav
-          current={medium}
-          onFilter={(value) => {
-            flushSync(() => setMedium(value))
-            const first = shownFor(value)[0]
-            if (first) cards.current.get(first.id)?.focus()
-          }}
+          current="Versions"
           onArrowDown={() => {
             if (visible[0]) cards.current.get(visible[0].id)?.focus()
           }}
@@ -158,14 +146,22 @@ export default function VersionControlPage() {
             >
               <div className="flex items-center gap-2">
                 <Chip tone={tone} icon={<Icon />}>
-                  {version.medium}
+                  {version.medium === "Brilliant" || version.medium === "Paper"
+                    ? "Vector"
+                    : version.medium}
                 </Chip>
-                <time
-                  dateTime={version.at}
-                  className="ml-auto shrink-0 text-xs whitespace-nowrap text-fg-4 tabular-nums"
-                >
-                  {time.format(new Date(version.at))}
-                </time>
+                {version.at ? (
+                  <time
+                    dateTime={version.at}
+                    className="ml-auto shrink-0 text-xs whitespace-nowrap text-fg-4 tabular-nums"
+                  >
+                    {time.format(new Date(version.at))}
+                  </time>
+                ) : (
+                  <span className="ml-auto shrink-0 text-xs text-fg-4">
+                    Live
+                  </span>
+                )}
               </div>
               <div className="mt-5 flex items-baseline gap-2">
                 <span className="max-w-24 min-w-0 truncate text-sm text-fg-3 tabular-nums">

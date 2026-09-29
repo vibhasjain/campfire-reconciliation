@@ -5572,3 +5572,58 @@ Yes, `min-h-60` holds every card at 240px. Removing it so cards fit their conten
 - `Read`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 07:45 ET
+
+Version control is cleaned up and live, and I checked both views in a local build:
+
+- **Code:** only the three latest releases, 1.5, 1.4 and 1.3. The v1 / v2 / v3 and "Live" links are gone from the cards. Clicking a card, or pressing Enter on it, opens that release's main prototype, the Workbench. Each card still shows its commit hash at the bottom right.
+- **Vector:** Brilliant and Paper are now one filter. It shows six cards, the three latest from each, newest first. Each card keeps its Brilliant or Paper tag, and clicking opens the canvas.
+- **Nav:** the filters are now Code and Vector, then Story and References, with the same dropdown on phones.
+- **Cards** are shorter: they fit their content instead of a fixed height, and cards in the same row still match.
+
+I read "three code versions" as the three latest releases, each opening its Workbench. If you meant three cards for the prototypes themselves (v1 Workbench, v2 Paired ledger, v3 Flow), say so and I'll switch it.
+
+
+**Vibhas** · Sep 29 07:46 ET
+
+no bro the three in code are the three completely different versions
+
+
+**Claude** · Sep 29 07:47 ET
+
+Got it: Code shows three cards for the three prototypes, v1 Workbench, v2 Paired ledger and v3 Flow. Each opens the latest live version: v1 is the homepage, v2 is `/v2`, v3 is `/v3`. They're live, so each card shows a "Live" label where the historical cards show a time, and there's no commit hash.
+
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 07:47 ET
+
+there's enough room on there now we dont need the code and vector sepaearation just out the six vector cards on the same page. code and vector tags are sugfficient, dont need the nav for those two
+
+
+**Claude** · Sep 29 07:47 ET
+
+Checking the Code view:
+
+- `Bash`
+- `Read`
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 07:48 ET
+
+Now the imports, and rewriting the shared nav without the Code / Vector switch:
+
+- `Bash`
+
+**Claude** · Sep 29 07:48 ET
+
+Checking desktop and phone for version control, plus References:
+
+- `Bash`
+- `Read`
+- `Read`
+- `Read`
+- `Bash`
