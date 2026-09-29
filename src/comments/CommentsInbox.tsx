@@ -8,6 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { shallowEqual, useDB } from "@/data/store"
 import { reconUi, useRecon, useReconUi } from "@/recon/useRecon"
@@ -22,6 +23,7 @@ export function CommentsInbox() {
   const messages = useDB((value) => Object.values(value.messages), shallowEqual)
   const [tab, setTab] = useState("open")
   const [query, setQuery] = useState("")
+  const [searching, setSearching] = useState(false)
   const threads = Object.values(state.threads)
     .filter((thread) => {
       if (thread.resolved !== (tab === "resolved")) return false
@@ -63,33 +65,50 @@ export function CommentsInbox() {
         aria-describedby={undefined}
         className="w-[min(100vw,380px)]! max-w-none! border-l-hair border-line bg-surface p-0"
       >
-        <SheetHeader className="h-12 justify-center border-b-hair border-line px-4 py-0">
-          <SheetTitle className="flex items-center gap-2">
-            <MessageSquare className="size-4 text-fg-3" />
-            <span className="min-w-0 truncate">Comments</span>
-          </SheetTitle>
-        </SheetHeader>
         <Tabs
           value={tab}
           onValueChange={setTab}
           className="min-h-0 flex-1 gap-0"
         >
-          <div className="flex flex-col gap-3 border-b-hair border-line p-3">
-            <TabsList>
-              <TabsTrigger value="open">Open</TabsTrigger>
-              <TabsTrigger value="resolved">Resolved</TabsTrigger>
-            </TabsList>
-            <div className="relative">
-              <Search className="pointer-events-none absolute top-2 left-2 size-4 text-fg-4" />
+          {/* One row: icon, Open/Resolved (or the search field), search toggle; the sheet's ✕ sits at the right. */}
+          <SheetHeader className="h-11 flex-row items-center gap-2 border-b-hair border-line py-0 pr-12 pl-4">
+            <SheetTitle className="sr-only">Comments</SheetTitle>
+            <MessageSquare className="size-4 shrink-0 text-fg-3" />
+            {searching ? (
               <Input
+                autoFocus
                 aria-label="Search comments"
                 placeholder="Search comments…"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                className="h-8 pl-8 text-sm"
+                onKeyDown={(event) => {
+                  if (event.key === "Escape" && !query) {
+                    event.stopPropagation()
+                    setSearching(false)
+                  }
+                }}
+                className="h-8 min-w-0 flex-1 text-sm"
               />
-            </div>
-          </div>
+            ) : (
+              <TabsList>
+                <TabsTrigger value="open">Open</TabsTrigger>
+                <TabsTrigger value="resolved">Resolved</TabsTrigger>
+              </TabsList>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={searching ? "Close search" : "Search comments"}
+              aria-pressed={searching}
+              onClick={() => {
+                if (searching) setQuery("")
+                setSearching(!searching)
+              }}
+              className="ml-auto text-fg-3"
+            >
+              <Search />
+            </Button>
+          </SheetHeader>
           <TabsContent value={tab} className="min-h-0 overflow-y-auto">
             {threads.length === 0 && (
               <div className="px-4 py-10 text-center text-xs text-fg-4">

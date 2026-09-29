@@ -4784,3 +4784,26 @@ Checking that the label moves and the card doesn't:
 Now only the label moves, about 2px each way; the card stays still. Committing:
 
 - `Bash`
+
+**Claude** · Sep 28 22:48 ET
+
+Fixed and live: now only the "Suggestion 1 of 1" label shakes, about 2px each way and over in about a fifth of a second. The card stays completely still. I measured it in the browser to confirm: the label moved and the card didn't.
+
+
+**Vibhas** · Sep 28 22:51 ET
+
+[Image #62] I'm pretty sure you can just combine these three into one line, man. Just open comments icon, then open resolved, and the search icon you can put next to the X and then if you click it you can expand search we don't need three rows for this
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+- `Read`
+
+**Claude** · Sep 28 22:52 ET
+
+The panel header is now one row. Search opens in place and filters: typing "notion" left just the Notion thread. Committing:
+
+- `Bash`
