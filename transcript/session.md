@@ -6273,3 +6273,37 @@ Reordering the toast to: check, "Accepted · …", Undo, then the Training Ember
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 12:18 ET
+
+The toast now reads: ✓ Accepted · Google Workspace alias, Undo, then the orange grid with "Training Ember" at the far end, still on one line. I checked it in a local build, and it's pushed; Netlify is building it now.
+
+Netlify builds are working again. The sheet header / tabs / Ask Ember spacing and the scrollbar are both live, each finishing in about 40 seconds after the push. One old deploy still shows as "uploading": that's the local upload I stopped. It's harmless, since newer deploys have already replaced it.
+
+
+**Vibhas** · Sep 29 12:19 ET
+
+Actually just give me undo icon instead of the word undo.
+
+
+**Claude** · Sep 29 12:19 ET
+
+Swapping the "Undo" text for an undo icon. Hovering it will still show "Undo" in the instant tooltip. Checking whether toasts use any action other than Undo:
+
+- `Bash`
+
+**Claude** · Sep 29 12:19 ET
+
+Every toast uses Undo except one "Ask Ember" action, which stays as text. The icon swap applies to every Undo, so they all match:
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 29 12:19 ET
+
+[Image #94] I don't think we need that much padding between the heading and the review transaction thing.
+
+- `Bash`
+- `Read`
+- `Bash`
+- `Read`
+- `Bash`

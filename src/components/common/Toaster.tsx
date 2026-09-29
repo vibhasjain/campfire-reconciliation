@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react"
 import { AnimatePresence, motion } from "motion/react"
-import { CircleAlert, CircleCheck, Info } from "lucide-react"
+import { CircleAlert, CircleCheck, Info, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { dismissToast, items, listeners } from "./toast"
 import { EmberTraining } from "./EmberTraining"
@@ -36,12 +36,15 @@ export function Toaster() {
               {t.action && (
                 <Button
                   className="-my-1"
+                  // Undo reads as an icon (label in its tooltip); other actions keep their words.
+                  size={t.action.label === "Undo" ? "icon-sm" : undefined}
+                  aria-label={t.action.label}
                   onClick={() => {
                     t.action!.onClick()
                     dismissToast(t.id)
                   }}
                 >
-                  {t.action.label}
+                  {t.action.label === "Undo" ? <Undo2 /> : t.action.label}
                 </Button>
               )}
               {t.training && <EmberTraining />}

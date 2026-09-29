@@ -223,7 +223,7 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
   if (!item) return null
   return (
     <div
-      className="wb-detail flex min-h-full flex-col gap-sheet-section pt-sheet-header-gap"
+      className="wb-detail flex min-h-full flex-col gap-sheet-section"
       data-workbench-detail
       onTouchStart={(event) => {
         const touch = event.touches[0]
