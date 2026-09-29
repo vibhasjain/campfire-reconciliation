@@ -5799,3 +5799,32 @@ S jumps to Story and R to References. That works from version control and Refere
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 08:07 ET
+
+S and R shortcuts are live, and I tested them in the browser:
+
+| Key | From | Goes to |
+|---|---|---|
+| S | Version control or References | Story |
+| R | Version control, Story, or References | References |
+| Esc | Story or References | Version control |
+
+S and R do nothing while you're typing or while a lightbox is open.
+
+Hovering Story or References in the nav shows the key in the same instant tooltip the prototype uses, for example "Story S".
+
+I took "keys" to mean showing the keys; if you meant something else, tell me.
+
+
+**Vibhas** · Sep 29 08:08 ET
+
+on reference page home tag is version control, not home
+
+
+**Claude** · Sep 29 08:08 ET
+
+On References, the top-left tag will say "Version control" and link there. Version control itself keeps "Home". I'll give the shared header a setting for that tag:
+
+- `Bash`
+- `Bash`

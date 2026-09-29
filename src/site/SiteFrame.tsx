@@ -7,9 +7,12 @@ import { prefetch } from "./loaders"
 export default function SiteFrame({
   title,
   toolbar,
+  back = "home",
   children,
 }: {
   title: string
+  /** The top-left tag: Home (the live prototype) or back to version control. */
+  back?: "home" | "versions"
   /** The page's own controls, spaced evenly between Home and GitHub. */
   toolbar?: ReactNode
   children: ReactNode
@@ -23,12 +26,17 @@ export default function SiteFrame({
         <header className="mb-6 flex items-center gap-6 max-sm:gap-3">
           <h1 className="sr-only">{title}</h1>
           <a
-            href="/"
-            onMouseEnter={() => prefetch("/")}
-            onFocus={() => prefetch("/")}
+            href={back === "home" ? "/" : "/version-control"}
+            onMouseEnter={() =>
+              prefetch(back === "home" ? "/" : "/version-control")
+            }
+            onFocus={() => prefetch(back === "home" ? "/" : "/version-control")}
             className="rounded-[7px] outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
-            <CampfireTag label="Home" size="lg" />
+            <CampfireTag
+              label={back === "home" ? "Home" : "Version control"}
+              size="lg"
+            />
           </a>
           {toolbar}
           <a
