@@ -8,7 +8,7 @@ export type DialogRequest =
   | { kind: "confirm"; props: ConfirmDialogProps }
   | { kind: "custom"; render: () => ReactNode }
 
-export type HalfSheetTarget = { title?: string; content: ReactNode }
+export type HalfSheetTarget = { title?: string; content: ReactNode; aside?: ReactNode }
 export type UIState = {
   dialog: DialogRequest | null
   halfSheet: HalfSheetTarget | null

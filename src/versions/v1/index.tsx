@@ -195,13 +195,28 @@ function SelectionPill() {
   )
 }
 
+/** Phones and narrow screens (the sheet covers the list): "3 of 14" beside the close button. */
+function Position({ ids }: { ids: string[] }) {
+  const id = useReconUi((s) => s.selectedItemId)
+  const index = id ? ids.indexOf(id) : -1
+  if (index < 0) return null
+  return (
+    <span className="mr-1 text-xs whitespace-nowrap text-fg-4 tabular-nums lg:hidden">
+      {index + 1} of {ids.length}
+    </span>
+  )
+}
+
 function Detail({ move }: { move: (delta: -1 | 1) => void }) {
+  // Phones: swipe sideways between transactions (not while typing).
+  const swipe = useRef<{ x: number; y: number } | null>(null)
   const id = useReconUi((s) => s.selectedItemId)
   const item = useItem(id)
   const heading = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      if (!document.activeElement?.closest(".wb-thread")) heading.current?.focus()
+      if (!document.activeElement?.closest(".wb-thread"))
+        heading.current?.focus()
     }, 50)
     return () => clearTimeout(timer)
   }, [id])
@@ -210,6 +225,24 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
     <div
       className="wb-detail flex min-h-full flex-col gap-sheet-section pt-sheet-header-gap"
       data-workbench-detail
+      onTouchStart={(event) => {
+        const touch = event.touches[0]
+        swipe.current = (event.target as HTMLElement).closest(
+          '[contenteditable="true"], input, textarea'
+        )
+          ? null
+          : { x: touch.clientX, y: touch.clientY }
+      }}
+      onTouchEnd={(event) => {
+        const start = swipe.current
+        swipe.current = null
+        if (!start) return
+        const touch = event.changedTouches[0]
+        const dx = touch.clientX - start.x
+        const dy = touch.clientY - start.y
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5)
+          move(dx < 0 ? 1 : -1)
+      }}
     >
       <div className="flex items-center gap-sheet-group">
         <h2
@@ -319,8 +352,20 @@ function Balance() {
   const [open, setOpen] = useState(false)
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "d" || event.metaKey || event.ctrlKey || event.altKey || event.defaultPrevented) return
-      if ((event.target as HTMLElement | null)?.closest('input, textarea, [contenteditable="true"]')) return
+      if (
+        event.key !== "d" ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        event.defaultPrevented
+      )
+        return
+      if (
+        (event.target as HTMLElement | null)?.closest(
+          'input, textarea, [contenteditable="true"]'
+        )
+      )
+        return
       event.preventDefault()
       setOpen((current) => !current)
     }
@@ -459,6 +504,7 @@ export default function Workbench() {
       openHalfSheet({
         title: "Review transaction",
         content: <Detail move={navigate} />,
+        aside: <Position ids={items.map((row) => row.id)} />,
       })
     requestAnimationFrame(() =>
       document
@@ -472,6 +518,7 @@ export default function Workbench() {
       openHalfSheet({
         title: "Review transaction",
         content: <Detail move={move} />,
+        aside: <Position ids={itemsRef.current.map((row) => row.id)} />,
       })
     },
     [move]
@@ -502,26 +549,59 @@ export default function Workbench() {
     if (thread) focusComposer(thread, true)
   }, [enter])
   const scrollSheet = useCallback((delta: -1 | 1) => {
-    const scroller = document.querySelector<HTMLElement>('[data-slot="half-sheet"] [data-slot="half-sheet-scroll"]')
+    const scroller = document.querySelector<HTMLElement>(
+      '[data-slot="half-sheet"] [data-slot="half-sheet-scroll"]'
+    )
     if (!scroller) return false
     scroller.scrollBy({
       top: delta * scroller.clientHeight * 0.8,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
     })
     return true
   }, [])
-  useReconKeys({ move, enter, cycle, selectTab, toggleSidebar, comment, ember, scrollSheet })
+  useReconKeys({
+    move,
+    enter,
+    cycle,
+    selectTab,
+    toggleSidebar,
+    comment,
+    ember,
+    scrollSheet,
+  })
   // O opens the current suggestion's attachments one by one (wrapping); Esc closes the preview.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "o" || event.metaKey || event.ctrlKey || event.altKey || event.defaultPrevented) return
-      if ((event.target as HTMLElement | null)?.closest('input, textarea, [contenteditable="true"]')) return
-      const chips = [...document.querySelectorAll<HTMLElement>('[data-slot="half-sheet"] [data-suggestion-id] [aria-label^="View "]')]
+      if (
+        event.key !== "o" ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        event.defaultPrevented
+      )
+        return
+      if (
+        (event.target as HTMLElement | null)?.closest(
+          'input, textarea, [contenteditable="true"]'
+        )
+      )
+        return
+      const chips = [
+        ...document.querySelectorAll<HTMLElement>(
+          '[data-slot="half-sheet"] [data-suggestion-id] [aria-label^="View "]'
+        ),
+      ]
       if (!chips.length) return
       event.preventDefault()
-      const open = chips.findIndex((chip) => chip.getAttribute("data-state") === "open")
+      const open = chips.findIndex(
+        (chip) => chip.getAttribute("data-state") === "open"
+      )
       const next = chips[(open + 1) % chips.length]
-      const preview = document.querySelector('[data-recon-evidence][data-state="open"]')
+      const preview = document.querySelector(
+        '[data-recon-evidence][data-state="open"]'
+      )
       if (!preview) return next.click()
       // Close the open preview first; a click alone would only dismiss it.
       preview.dispatchEvent(new Event("recon-close"))
@@ -537,7 +617,10 @@ export default function Workbench() {
       open((event as CustomEvent<string>).detail)
       // After the sheet's own focus-on-open (its title), move focus into the conversation.
       setTimeout(
-        () => document.querySelector<HTMLElement>(".wb-thread .ProseMirror")?.focus(),
+        () =>
+          document
+            .querySelector<HTMLElement>(".wb-thread .ProseMirror")
+            ?.focus(),
         250
       )
     }
@@ -718,7 +801,10 @@ export default function Workbench() {
                       onKeyDown={(event) => {
                         if (
                           !event.defaultPrevented &&
-                          !event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey &&
+                          !event.metaKey &&
+                          !event.ctrlKey &&
+                          !event.altKey &&
+                          !event.shiftKey &&
                           event.target === event.currentTarget &&
                           (event.key === "Enter" || event.key === " ")
                         ) {

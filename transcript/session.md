@@ -5896,3 +5896,38 @@ My test script had a bug: it read a property off the image's position data inste
 - `Read`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 29 10:06 ET
+
+Both changes are live:
+
+- **Vector canvases start at the top left.** The version cards linked to `…/#r2`, which jumped straight to the round-2 frames. They now open at the top left at 60% zoom. Adding `#r2` to the address by hand still jumps to round 2.
+- **Phone lightbox on References:** the image now fills the screen's height, and you swipe sideways to pan across it. The title, count, ✕, description and company tag stay put while you pan, and nothing else on the page scrolls sideways. On desktop the whole image still fits the screen, as before. ← → still step between references.
+
+I tested the lightbox at iPhone and desktop widths in a local build, but I didn't open a canvas to confirm the top-left start.
+
+
+**Vibhas** · Sep 29 10:39 ET
+
+On mobile, on this view, let me swipe between the transactions. Also, since we can't see the left index on mobile, right? So you got to display like one of 14 somewhere. Uh, why don't you try right under view transactions, smaller size. Uh, sorry, smaller size. Or actually to the left of the cross
+
+
+**Claude** · Sep 29 10:39 ET
+
+On phones the review sheet covers the list, so two additions:
+- **Swipe:** swipe left or right on the sheet to move to the next or previous transaction, the same as the ‹ › arrows.
+- **Position:** a small "3 of 14" just left of the ✕, shown only when the sheet covers the list.
+
+Looking at how the sheet header and item order are wired:
+
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 10:40 ET
+
+It typechecks. Checking at phone width: the "1 of 14" beside ✕, then a simulated swipe left, then a swipe right:
+
+- `Bash`
+- `Read`
+- `Bash`
