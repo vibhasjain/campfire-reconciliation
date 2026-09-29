@@ -5003,3 +5003,54 @@ Reading that as: drop the "All" option, leaving Code, Brilliant, Paper | Story, 
 - `Bash`
 - `Read`
 - `Bash`
+
+**Claude** · Sep 28 23:27 ET
+
+The version-control filters are updated and live:
+
+- **"All" is gone.** The filters are now Code, Brilliant and Paper, with Code selected by default so the prototypes show first.
+- **Story and References** sit in their own group at the right end of the same row.
+
+I read "get rid of the all" as removing just the "All" option. If you meant removing the filter switches entirely, say so and I'll take them out.
+
+One loose end: on the "1.5 Round 4 polish" card, the links run together as "v1 v2 v3 Live v1 v2 v3", with nothing separating the two sets. That was already there before today; want me to fix it?
+
+
+**Vibhas** · Sep 28 23:29 ET
+
+[Image #72] Yeah, we can just consolidate the whole thing into one row. The home GitHub and the Code Brilliant Paper Story References all of it. So code brilliant paper story references move them to the top row and then whatever. Just you can just space all these out equally like home, then space, code, brilliant paper, space, story references, space, space, github, home, and github or write a line, and everything else is like equal. spaces in between the clusters kind of
+
+
+**Claude** · Sep 28 23:29 ET
+
+Everything goes in one row: Home, the Code / Brilliant / Paper group, the Story / References group, then GitHub, with equal space between the four. The header is shared, so it gets a slot for the page's own controls. The References page just shows Home and GitHub.
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 28 23:30 ET
+
+Also you forgot a keyboard shortcut for me to see the difference, the dropdown, or did you already put it in there?
+
+
+**Vibhas** (while Claude was working) · Sep 28 23:31 ET
+
+[Image #73] No, what did you do? The circles were clustering up behind each other nicely. I actually meant the gray hover state behind the circles. Did you see that?
+
+
+**Claude** · Sep 28 23:31 ET
+
+That shortcut isn't there yet; I'll add D to open and close the Difference breakdown. First, retrying the screenshot with a longer timeout: the browser starts slowly after sitting idle.
+
+- `Bash`
+- `Read`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 28 23:31 ET
+
+The circles were cozied up nicely.
+
+- `Bash`

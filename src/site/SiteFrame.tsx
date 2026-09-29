@@ -6,9 +6,12 @@ import { prefetch } from "./loaders"
 
 export default function SiteFrame({
   title,
+  toolbar,
   children,
 }: {
   title: string
+  /** The page's own controls, spaced evenly between Home and GitHub. */
+  toolbar?: ReactNode
   children: ReactNode
 }) {
   useEffect(() => {
@@ -27,6 +30,7 @@ export default function SiteFrame({
           >
             <CampfireTag label="Home" size="lg" />
           </a>
+          {toolbar}
           <a
             href={REPO}
             className="rounded-[7px] outline-none focus-visible:ring-2 focus-visible:ring-focus"

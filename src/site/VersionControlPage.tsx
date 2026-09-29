@@ -8,13 +8,7 @@ import { REPO, VERSIONS, type Medium } from "./versions"
 import { CARD_COPY } from "./cardCopy"
 import { prefetch } from "./loaders"
 
-const MEDIA = [
-  "Code",
-  "Brilliant",
-  "Paper",
-  "Story",
-  "References",
-] as const
+const MEDIA = ["Code", "Brilliant", "Paper", "Story", "References"] as const
 const APPEARANCE: Record<Medium, { icon: typeof Code2; tone: ChipTone }> = {
   Code: { icon: Code2, tone: "green" },
   Brilliant: { icon: Diamond, tone: "blue" },
@@ -106,12 +100,13 @@ export default function VersionControlPage() {
   }
 
   return (
-    <SiteFrame title="Version control">
-      <div className="mb-5 flex flex-wrap items-center gap-3">
+    <SiteFrame
+      title="Version control"
+      toolbar={
         <div
           role="group"
           aria-label="Medium"
-          className="flex max-w-full min-w-0 flex-1 [scrollbar-width:none] gap-3 overflow-x-auto"
+          className="contents"
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault()
@@ -134,10 +129,10 @@ export default function VersionControlPage() {
           {[
             MEDIA.filter((m) => m !== "Story" && m !== "References"),
             MEDIA.filter((m) => m === "Story" || m === "References"),
-          ].map((cluster, index) => (
+          ].map((cluster) => (
             <div
               key={cluster[0]}
-              className={`flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 ${index ? "ml-auto" : ""}`}
+              className={`flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1`}
             >
               {cluster.map((value) => (
                 <button
@@ -147,9 +142,7 @@ export default function VersionControlPage() {
                   aria-pressed={medium === value}
                   onClick={() => {
                     flushSync(() => setMedium(value))
-                    const first = sorted.find(
-                      (v) => value === v.medium
-                    )
+                    const first = sorted.find((v) => value === v.medium)
                     if (first) cards.current.get(first.id)?.focus()
                   }}
                 >
@@ -159,7 +152,8 @@ export default function VersionControlPage() {
             </div>
           ))}
         </div>
-      </div>
+      }
+    >
       <div
         ref={grid}
         className="grid grid-cols-1 gap-3 min-[700px]:grid-cols-2 min-[1100px]:grid-cols-3"
