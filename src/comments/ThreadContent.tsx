@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react"
-import { MessageSquare } from "lucide-react"
 import { Composer } from "@/components/composer"
 import { AskUserQuestion } from "@/features/agent"
 import { setViewing, useRun } from "@/agent/engine"
@@ -67,35 +66,31 @@ export function ThreadView({
       <div
         ref={scroller}
         className={cn(
-          "min-h-24 flex-1",
-          // Inline threads use their container's gutter; floating variants pad themselves.
-          // Inline threads grow with the sheet, which does the scrolling; floating ones scroll themselves.
-          variant === "inline" ? "px-0" : "[scrollbar-width:thin] overflow-y-auto overscroll-contain px-4",
+          "flex-1",
+          // No empty-state prompt: an empty thread is just the composer.
+          messages.length > 0 && "min-h-24",
+          // Inline threads use their container's gutter and grow with the sheet, which does the scrolling; floating ones scroll themselves.
+          variant === "inline"
+            ? "px-0"
+            : "[scrollbar-width:thin] overflow-y-auto overscroll-contain px-4",
           variant === "popover" && "max-h-[min(50vh,360px)]"
         )}
       >
-        {messages.length === 0 ? (
-          <div className="flex min-h-28 items-center justify-center gap-2 text-xs text-fg-4">
-            <MessageSquare className="size-4" />
-            {itemId
-              ? "Start a conversation"
-              : "Ask Ember about this reconciliation"}
-          </div>
-        ) : (
-          messages.map((message) => (
-            <ThreadMessage
-              key={message.id}
-              message={message}
-              run={run?.messageId === message.id ? run : undefined}
-            />
-          ))
-        )}
+        {messages.map((message) => (
+          <ThreadMessage
+            key={message.id}
+            message={message}
+            run={run?.messageId === message.id ? run : undefined}
+          />
+        ))}
       </div>
       <div
         className={cn(
           "flex shrink-0 flex-col gap-2",
           // Inline threads live in a scrolling sheet: the composer stays pinned to its bottom.
-          variant === "inline" ? "sticky bottom-0 z-10 mt-auto bg-surface pt-2 pb-sheet-gutter" : "border-t-hair border-line p-3"
+          variant === "inline"
+            ? "sticky bottom-0 z-10 mt-auto bg-surface pt-2 pb-sheet-gutter"
+            : "border-t-hair border-line p-3"
         )}
       >
         {question && <AskUserQuestion chatId={chatId} q={question} />}

@@ -62,15 +62,19 @@ export function activeSuggestion(itemId: string) {
   )
   return item.suggestions[index]
 }
+/** Steps through suggestions, wrapping at the ends; with a lone suggestion the card nudges instead. */
 export function cycleSuggestion(itemId: string, direction: number) {
   const count = recon.getState().items[itemId]?.suggestions.length ?? 0
   if (!count) return
+  if (count === 1) {
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("recon:suggestion-edge", { detail: itemId }))
+    return
+  }
   reconUi.set((state) => ({
     ...state,
     suggestionIndex: {
       ...state.suggestionIndex,
-      [itemId]:
-        ((state.suggestionIndex[itemId] ?? 0) + direction + count) % count,
+      [itemId]: ((state.suggestionIndex[itemId] ?? 0) + direction + count) % count,
     },
   }))
 }

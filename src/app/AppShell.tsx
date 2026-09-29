@@ -1,7 +1,7 @@
 import { ActionTooltip } from "@/components/ui/tooltip"
 import { lazy, Suspense, type ReactNode } from "react"
 import {
-  Bell,
+  MessageSquare,
   House,
   Keyboard,
   ChevronRight,
@@ -106,7 +106,7 @@ function PageHeader({ showMenu }: { showMenu: boolean }) {
           onClick={toggleInbox}
           className="relative text-fg-3"
         >
-          <Bell className="size-[17px]" />
+          <MessageSquare className="size-[17px]" />
           {unread > 0 && (
             <span className="absolute top-1.5 right-2 size-1.5 rounded-full bg-flame" />
           )}

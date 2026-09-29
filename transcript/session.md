@@ -4665,3 +4665,83 @@ Now driving it all from the keyboard in the browser:
 The dialog's close button no longer shows a ring. Committing everything:
 
 - `Bash`
+
+**Claude** · Sep 28 22:26 ET
+
+All of this is live, and I drove every key in the browser before committing.
+
+**Arrow keys:** on the full-width list, ↑/↓ just move the highlight. Enter opens the sheet, and ↑/↓ then move through items with the sheet following. Esc closes it and the arrows go back to just moving the highlight.
+
+**New shortcuts:**
+
+| Key | Does |
+|---|---|
+| 1 / 2 | Pending / Reconciled tabs |
+| [ | Collapse or expand the left nav |
+| C | Comment box, when the sheet is open |
+| E | Opens the sheet and types "@Ember " in the comment box, the fast path for your demo |
+| Space / Shift+Space, PageDown / PageUp | Scroll the sheet |
+| Esc | Leaves the comment box first, then closes the sheet |
+
+They're all in the ? dialog, grouped as Navigate, Review, Talk and View, and in the relevant tooltips.
+
+**Also:**
+- The resize handles on the review sheet and the left nav are gone, along with their drag code.
+- Opening the ? dialog with the keyboard no longer draws a ring on its close button.
+
+
+**Vibhas** · Sep 28 22:37 ET
+
+if I go right or left and there's only one suggestion or if I reach the end of it, you can give it a little buzz or something like that. You know what I mean? Tiny little subtle animation.
+
+
+**Claude** · Sep 28 22:37 ET
+
+A small sideways shake on the suggestion card when there's nowhere left to go. Checking how cycling works now: whether it wraps around at the ends, and where the card is drawn:
+
+- `Bash`
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 22:38 ET
+
+Ah I guess we just cycle through them. So only in the case that there's only one suggestion. That's the only case.
+
+
+**Vibhas** (while Claude was working) · Sep 28 22:38 ET
+
+No, no, it's okay. Keep the rap.
+
+- `Bash`
+
+**Claude** · Sep 28 22:38 ET
+
+Keeping the wrap-around, then: the shake only happens when there's a single suggestion.
+
+- `Bash`
+
+**Vibhas** (while Claude was working) · Sep 28 22:38 ET
+
+[Image #60] Don't need that.
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 28 22:39 ET
+
+Checking Ask Ember's chat panel and the quick popover empty, then committing:
+
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 28 22:39 ET
+
+[Image #61] these are comments so I guess make it a comment icon
+
+
+**Claude** · Sep 28 22:40 ET
+
+The Ask Ember panel opens clean now, with no prompt. Swapping the bell for a comment icon, keeping the unread dot:
+
+- `Bash`
+- `Read`
+- `Bash`

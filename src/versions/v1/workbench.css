@@ -74,9 +74,6 @@
 .wb-detail [class*="text-[10px]"] {
   font-size: 12px;
 }
-.wb-thread > div:first-child:has(> .min-h-28) {
-  display: none;
-}
 body:has(.wb-page) [data-testid="toast"]:not(:last-child) {
   display: none;
 }
