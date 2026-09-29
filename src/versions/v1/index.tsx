@@ -636,7 +636,7 @@ export default function Workbench() {
               <col />
               <col className="w-32" />
               <col className="wb-suggestion w-40" />
-              <col className="wb-pin w-24" />
+              <col className="wb-pin w-28" />
             </colgroup>
             <thead>
               <tr>
@@ -780,7 +780,7 @@ export default function Workbench() {
                               aria-label={`Unreconcile ${item.title}`}
                               tooltip="Unreconcile"
                               shortcut="U"
-                              className="wb-unreconcile h-7 px-1.5 text-fg-3"
+                              className="wb-unreconcile h-8 px-2 text-fg-3"
                               onClick={(event) => {
                                 event.stopPropagation()
                                 unreconcileItem(item.id)

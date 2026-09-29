@@ -53,7 +53,7 @@ export function ThreadPin({
           reconUi.set((state) => ({ ...state, selectedItemId: itemId }))
         }}
         className={cn(
-          "relative h-7 gap-1.5 px-1.5 text-fg-3",
+          "relative h-8 gap-1.5 px-2 text-fg-3",
           !messages.length &&
             "opacity-100 group-focus-within:opacity-100 group-hover:opacity-100 hover:opacity-100 focus-visible:opacity-100 sm:opacity-0",
           className

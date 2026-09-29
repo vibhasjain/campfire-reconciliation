@@ -5075,3 +5075,54 @@ D opens and closes the breakdown. The avatars overlap again. To confirm the hove
 All seven avatar stacks now fit inside their buttons, so the hover box covers them fully. Committing:
 
 - `Bash`
+
+**Claude** · Sep 28 23:35 ET
+
+All three are live, and I checked each in a local build:
+
+- **Avatars:** they overlap again as before. The gray box was my doing: when I added padding at the table's right edge, the comment column got too narrow for two avatars plus the count. They spilled outside the button, so its hover background only covered part of them. The column is wider now, and all seven stacks fit inside their buttons.
+- **D shortcut:** press D to open or close the Difference breakdown. It's listed in the ? dialog, and it does nothing while you're typing.
+- **Version control:** the header is now one row, spread evenly: Home, then Code / Brilliant / Paper, then Story / References, then GitHub. The References page shows just Home and GitHub.
+
+
+**Vibhas** · Sep 28 23:36 ET
+
+[Image #74] Yeah, but what is that weird shadow around them man? Don't need that.
+
+
+**Claude** · Sep 28 23:36 ET
+
+Checking where that outline comes from; the base avatar may draw its own:
+
+- `Bash`
+
+**Claude** · Sep 28 23:36 ET
+
+The base avatar draws a thin gray outline ring around every circle, and the stack adds a white ring on top. Together they read as a shadow. Removing both for these avatars, and keeping the overlap:
+
+- `Bash`
+- `Read`
+
+**Vibhas** (while Claude was working) · Sep 28 23:36 ET
+
+[Image #75] I'm okay with the little rectangular hover state behind them, but why doesn't it have sufficient padding is my only problem. Inside.
+
+
+**Claude** · Sep 28 23:37 ET
+
+The avatars are clean now: no outline and no ring. Next, more room inside that hover box: 8px on each side instead of 6px, and a slightly taller box. The comment column grows to fit.
+
+- `Bash`
+
+**Claude** · Sep 28 23:37 ET
+
+The undo button sits next to it and should match, so it gets the same size:
+
+- `Bash`
+- `Read`
+
+**Claude** · Sep 28 23:37 ET
+
+Every stack now has about 9px of padding on the sides and 6px top and bottom inside its hover box, and all seven fit. Committing:
+
+- `Bash`

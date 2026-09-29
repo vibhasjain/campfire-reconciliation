@@ -20,7 +20,7 @@ export function ParticipantAvatar({
   const teammate = recon.getState().teammates[actor]
   return (
     // Tints are translucent; the solid base keeps stacked avatars from showing through each other.
-    <Avatar size="sm" className={cn("size-6 overflow-hidden bg-surface", className)}>
+    <Avatar size="sm" className={cn("size-6 overflow-hidden bg-surface after:hidden", className)}>
       <AvatarFallback className={cn("text-[9px] font-medium", colors[actor])}>
         {actor === "ember" ? (
           <EmberIcon className="size-4" />
@@ -33,9 +33,9 @@ export function ParticipantAvatar({
 }
 export function ParticipantStack({ actors }: { actors: Actor[] }) {
   return (
-    <AvatarGroup className="-space-x-0.5">
+    <AvatarGroup className="-space-x-0.5 *:data-[slot=avatar]:ring-0">
       {[...new Set(actors)].slice(0, 3).map((actor) => (
-        <ParticipantAvatar key={actor} actor={actor} className="size-5 ring-2 ring-surface" />
+        <ParticipantAvatar key={actor} actor={actor} className="size-5" />
       ))}
     </AvatarGroup>
   )
