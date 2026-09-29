@@ -5126,3 +5126,29 @@ The undo button sits next to it and should match, so it gets the same size:
 Every stack now has about 9px of padding on the sides and 6px top and bottom inside its hover box, and all seven fit. Committing:
 
 - `Bash`
+
+**Claude** · Sep 28 23:38 ET
+
+Both are fixed and live:
+
+- **The "shadow":** it was two things stacked. The base avatar draws a thin gray outline around every circle, and I'd added a white ring on top. Both are gone for these avatars. The circles still overlap snugly, with nothing around them.
+- **Hover padding:** the comment button is now slightly bigger, with about 9px of space on the sides and 6px above and below the avatars. The unreconcile button next to it got the same size so the pair matches, and the comment column widened a little to fit.
+
+I measured all seven avatar stacks in the browser, and each fits inside its hover box with that padding.
+
+
+**Vibhas** · Sep 28 23:41 ET
+
+[Image #77] No, that looks crazy. Code brilliant and paper can be to the left, you know, after a little space after home and story and references can be to the right. You know, a little space between them and GitHub.
+
+
+**Claude** · Sep 28 23:41 ET
+
+Got it: Home, a small gap, Code / Brilliant / Paper on the left; Story / References on the right, a small gap before GitHub. Your screenshot also shows a native browser tooltip ("9/27/2026, 3:48:00 PM") coming from a card's time label, so I'll remove that too.
+
+- `Bash`
+- `Bash`
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`

@@ -129,10 +129,10 @@ export default function VersionControlPage() {
           {[
             MEDIA.filter((m) => m !== "Story" && m !== "References"),
             MEDIA.filter((m) => m === "Story" || m === "References"),
-          ].map((cluster) => (
+          ].map((cluster, index) => (
             <div
               key={cluster[0]}
-              className={`flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1`}
+              className={`flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 ${index ? "ml-auto" : ""}`}
             >
               {cluster.map((value) => (
                 <button
@@ -190,9 +190,6 @@ export default function VersionControlPage() {
                 </Chip>
                 <time
                   dateTime={version.at}
-                  title={new Date(version.at).toLocaleString("en-US", {
-                    timeZone: "America/New_York",
-                  })}
                   className="ml-auto shrink-0 text-xs whitespace-nowrap text-fg-4 tabular-nums"
                 >
                   {time.format(new Date(version.at))}
