@@ -147,6 +147,7 @@ export function acceptSuggestion(
       : `Accepted · ${item.title}`,
     {
       tone: "success",
+      training: true,
       action: {
         label: "Undo",
         onClick: () => {
@@ -169,6 +170,7 @@ export function rejectSuggestion(
   const result = recon.reject(itemId, suggestion, actor)
   if (result.ok)
     show("Suggestion rejected", {
+      training: true,
       action: {
         label: "Undo",
         onClick: () => {

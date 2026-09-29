@@ -3,6 +3,8 @@ import type { ReactNode } from "react"
 export type ToastOptions = {
   tone?: "info" | "success" | "error"
   action?: { label: string; onClick: () => void }
+  /** Adds a "Training Ember" line: the action taught Ember something. */
+  training?: boolean
   /** ms; default 5000 */
   duration?: number
 }

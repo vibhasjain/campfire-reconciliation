@@ -450,3 +450,18 @@
 @utility sheet-edge-end {
   margin-inline-end: calc(-1 * var(--spacing-sheet-icon-padding));
 }
+
+/* Training Ember: Drive pixel-grid wave and a shimmering orange label (EmberTraining). */
+.ember-pixel { opacity: .15; animation: ember-pixel 650ms ease-in-out infinite; }
+@keyframes ember-pixel { 0%, 100% { opacity: .15 } 35% { opacity: 1 } }
+.ember-shimmer {
+  background-image: linear-gradient(90deg, var(--c-ai-ink) 35%, var(--c-flame) 50%, var(--c-ai-ink) 65%);
+  background-size: 200% 100%;
+  background-clip: text;
+  color: transparent;
+  animation: ember-shimmer 1.4s linear infinite;
+}
+@keyframes ember-shimmer { from { background-position: 100% 0 } to { background-position: -100% 0 } }
+@media (prefers-reduced-motion: reduce) {
+  .ember-pixel, .ember-shimmer { animation: none; }
+}
