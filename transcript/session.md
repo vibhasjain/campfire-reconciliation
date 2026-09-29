@@ -5054,3 +5054,24 @@ That shortcut isn't there yet; I'll add D to open and close the Difference break
 The circles were cozied up nicely.
 
 - `Bash`
+
+**Claude** · Sep 28 23:32 ET
+
+Now the D shortcut: I'll make the Difference breakdown open and close from state that a D keypress can flip, ignored while you're typing.
+
+- `Bash`
+- `Bash`
+- `Read`
+- `Read`
+
+**Claude** · Sep 28 23:33 ET
+
+D opens and closes the breakdown. The avatars overlap again. To confirm the hover box now covers them, checking that the button actually contains its contents:
+
+- `Bash`
+
+**Claude** · Sep 28 23:35 ET
+
+All seven avatar stacks now fit inside their buttons, so the hover box covers them fully. Committing:
+
+- `Bash`

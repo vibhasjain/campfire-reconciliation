@@ -315,6 +315,18 @@ function Detail({ move }: { move: (delta: -1 | 1) => void }) {
 
 function Balance() {
   const s = useSummary()
+  // D toggles the difference breakdown (ignored while typing).
+  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "d" || event.metaKey || event.ctrlKey || event.altKey || event.defaultPrevented) return
+      if ((event.target as HTMLElement | null)?.closest('input, textarea, [contenteditable="true"]')) return
+      event.preventDefault()
+      setOpen((current) => !current)
+    }
+    addEventListener("keydown", onKey)
+    return () => removeEventListener("keydown", onKey)
+  }, [])
   const lines: [string, number][] = [
     ["Statement ending", s.statementEnding],
     ["In transit", s.inTransit],
@@ -325,7 +337,7 @@ function Balance() {
     ["Adjusted book", s.adjustedBook],
   ]
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
           aria-label="Reconciliation bridge"
@@ -624,7 +636,7 @@ export default function Workbench() {
               <col />
               <col className="w-32" />
               <col className="wb-suggestion w-40" />
-              <col className="wb-pin w-20" />
+              <col className="wb-pin w-24" />
             </colgroup>
             <thead>
               <tr>

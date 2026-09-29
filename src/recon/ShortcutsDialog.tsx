@@ -33,7 +33,7 @@ export function ShortcutsDialog({ workbench = false }: { workbench?: boolean }) 
       ["⌘E / Ctrl+E", "Ask Ember"],
     ]],
     ["View", [
-      ...(workbench ? [["Space / ⇧Space", "Scroll sheet"], ["PageDown / PageUp", "Scroll sheet"]] : []),
+      ...(workbench ? [["D", "Difference breakdown"], ["Space / ⇧Space", "Scroll sheet"], ["PageDown / PageUp", "Scroll sheet"]] : []),
       ["?", "Show shortcuts"],
     ]],
   ] as const
