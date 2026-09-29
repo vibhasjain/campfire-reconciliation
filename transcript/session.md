@@ -6221,3 +6221,55 @@ Yeah, just make it more subtle.
 Don't move its position.
 
 - `Bash`
+
+**Claude** · Sep 29 12:15 ET
+
+Keeping the position; only making it lighter:
+
+- `Bash`
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 12:15 ET
+
+The scrollbar is lighter and stays where it was. Its thumb now uses the same light line color as the borders.
+
+Deploys are back on Netlify's own builds:
+- **Why the commit was slow:** after each commit, the hook built the site on your machine and then uploaded it to Netlify. The upload got a lot heavier once the rebuilt old versions added about 9MB. I stopped that local deploy.
+- **Now:** Netlify builds are on again, so a push builds and deploys there, and commits return in seconds.
+- **Transcript:** each commit still carries the latest session transcript.
+- **Local fallback:** `scripts/deploy.sh` is kept for deploying by hand if Netlify builds ever get paused, and CLAUDE.md is updated to match.
+
+Four pushes are building on Netlify now: the one-line Training Ember toast, the sheet header / tabs / Ask Ember spacing, and the scrollbar, all in that queue. I'm watching them and will tell you when they're live, or if a build fails.
+
+
+**Vibhas** · Sep 29 12:15 ET
+
+Obviously both you're not just editing one scroll bar right?
+
+
+**Claude** · Sep 29 12:15 ET
+
+The change is to one global rule that applies to every scrolling area. Checking that nothing overrides it with its own scrollbar style:
+
+- `Bash`
+
+**Claude** · Sep 29 12:16 ET
+
+Yes, it's all of them. The subtler scrollbar is a single rule applied to every element in the app, and nothing else in the code sets its own scrollbar style. So the list, the review sheet, the comments panel, Ask Ember, popovers and the version control and References pages all get the same light thumb.
+
+The only exceptions are the story deck and the vector canvases, which are standalone pages outside the app's stylesheet and still show the browser's default scrollbar. Want me to match those too?
+
+
+**Vibhas** · Sep 29 12:17 ET
+
+Try putting the undo button in between the training ember and the accept it.
+
+
+**Claude** · Sep 29 12:17 ET
+
+Reordering the toast to: check, "Accepted · …", Undo, then the Training Ember grid at the end:
+
+- `Bash`
+- `Read`
+- `Bash`

@@ -33,7 +33,6 @@ export function Toaster() {
             >
               <Icon className={`size-4 shrink-0 ${ICON_COLOR[tone]}`} />
               <span className="min-w-0 flex-1 truncate">{t.message}</span>
-              {t.training && <EmberTraining />}
               {t.action && (
                 <Button
                   className="-my-1"
@@ -45,6 +44,7 @@ export function Toaster() {
                   {t.action.label}
                 </Button>
               )}
+              {t.training && <EmberTraining />}
             </motion.div>
           )
         })}
