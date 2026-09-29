@@ -167,7 +167,7 @@ export const VERSIONS: Version[] = [
     title: "Concept A: Workpaper, restraint pass",
     medium: "Brilliant",
     at: "2026-09-27T16:30:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper/#r2" }],
+    links: [{ label: "Open the canvas", href: "/concepts/a-workpaper/" }],
     changes: [
       "About two-thirds fewer words; routine items signed in one batch; the bridge carries the numbers.",
     ],
@@ -179,7 +179,7 @@ export const VERSIONS: Version[] = [
     medium: "Brilliant",
     at: "2026-09-27T15:52:00-04:00",
     links: [
-      { label: "Open the canvas", href: "/concepts/b-balance-bridge/#r2" },
+      { label: "Open the canvas", href: "/concepts/b-balance-bridge/" },
     ],
     changes: [
       "54% fewer words; confidence only on the open suggestion; the keystone holds the difference.",
@@ -191,7 +191,7 @@ export const VERSIONS: Version[] = [
     title: "Concept D: Timeline, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:55:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/d-timeline/#r2" }],
+    links: [{ label: "Open the canvas", href: "/concepts/d-timeline/" }],
     changes: [
       "Labels only on the selected mark; the difference becomes the headline; timing called out once at the cutoff.",
     ],
@@ -202,7 +202,7 @@ export const VERSIONS: Version[] = [
     title: "Concept C: Thread inbox, restraint pass",
     medium: "Paper",
     at: "2026-09-27T14:51:00-04:00",
-    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox/#r2" }],
+    links: [{ label: "Open the canvas", href: "/concepts/c-thread-inbox/" }],
     changes: [
       "Half the text; one-line inbox rows; the proposal's ledger lines behind a “3 lines” disclosure.",
     ],

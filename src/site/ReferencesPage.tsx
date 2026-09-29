@@ -119,7 +119,10 @@ export default function ReferencesPage() {
           <DialogContent
             showCloseButton={false}
             // The box is exactly as wide as the image; header and caption line up with its edges.
-            className="w-max gap-3 p-4 [--dialog-w:calc(100vw-2rem)]"
+            style={{
+              ["--lightbox-ratio" as string]: shown.width / shown.height,
+            }}
+            className="w-max gap-3 p-4 [--dialog-w:calc(100vw-2rem)] [--lightbox-w:min(calc(100vw-4rem),calc((100vh-9rem)*var(--lightbox-ratio)),1400px)] max-sm:[--lightbox-w:calc((100dvh-9rem)*var(--lightbox-ratio))]"
             onKeyDown={(event) => {
               if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
                 event.preventDefault()
@@ -146,19 +149,19 @@ export default function ReferencesPage() {
                 </Button>
               </DialogClose>
             </div>
-            <img
-              key={shown.src}
-              src={shown.src}
-              alt={shown.title}
-              width={shown.width}
-              height={shown.height}
-              decoding="async"
-              className="block h-auto rounded-md"
-              // As large as the screen allows (width or height), keeping the image's proportions.
-              style={{
-                width: `min(calc(100vw - 4rem), calc((100vh - 9rem) * ${shown.width / shown.height}), 1400px)`,
-              }}
-            />
+            {/* Phones: the image takes the full height and pans sideways; larger screens fit it whole. */}
+            <div className="max-w-full overflow-x-auto overscroll-x-contain rounded-md">
+              <img
+                key={shown.src}
+                src={shown.src}
+                alt={shown.title}
+                width={shown.width}
+                height={shown.height}
+                decoding="async"
+                className="block h-auto max-w-none"
+                style={{ width: "var(--lightbox-w)" }}
+              />
+            </div>
             <div className="flex w-0 min-w-full items-end gap-3">
               <DialogDescription className="min-w-0 flex-1 text-xs">
                 {shown.note}

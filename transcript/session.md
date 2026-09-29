@@ -5846,3 +5846,53 @@ i guess escape on version control takes you back home
 The test passed: Esc on version control went to `/`. The commit failed only because my command was still in the temp folder. Re-running it from the repo:
 
 - `Bash`
+
+**Claude** · Sep 29 08:13 ET
+
+Esc on the version control page now takes you home to the live prototype. It's live, and I tested it in the browser.
+
+That makes Esc a consistent "back" key everywhere:
+
+| Page | Esc goes to |
+|---|---|
+| Story, References, any vector canvas | Version control |
+| Version control | Home (the live prototype) |
+
+If the phone-width menu is open, Esc closes the menu first.
+
+
+**Vibhas** (while Claude was working) · Sep 29 10:04 ET
+
+So when I open the vector canvas, all will start at the top left. And secondly, when we light box uh, mobile, right, and the references, go full vertical height. Let me pan horizontally.
+
+
+**Vibhas** · Sep 29 10:04 ET
+
+So when I open the vector canvas, all will start at the top left. And secondly, when we light box uh, mobile, right, and the references, go full vertical height. Let me pan horizontally.
+
+
+**Claude** · Sep 29 10:04 ET
+
+Two changes:
+
+1. **Canvases start at the top left.** The version cards link to `…/#r2`, which jumps to the round-2 frames on open. I'll drop that from the links. The jump still works if you type `#r2` yourself.
+2. **Mobile lightbox on References:** on phones the image will fill the screen's height, and you swipe sideways to pan across it. Desktop stays as it is.
+
+- `Bash`
+- `Bash`
+
+**Claude** · Sep 29 10:05 ET
+
+One mistake: the width formula lives on the dialog but reads the image's aspect ratio from the image element, and CSS resolves variables where they're declared. Moving the ratio up to the dialog:
+
+- `Bash`
+- `Read`
+
+**Claude** · Sep 29 10:05 ET
+
+My test script had a bug: it read a property off the image's position data instead of the element. Fixing and re-running:
+
+- `Bash`
+- `Read`
+- `Read`
+- `Bash`
