@@ -8,7 +8,7 @@ const PAGES = [
 ] as const
 
 const item = (active: boolean) =>
-  `cursor-pointer rounded px-3 py-1 text-sm outline-none ${active ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`
+  `cursor-pointer rounded px-3 py-1 text-sm whitespace-nowrap outline-none max-sm:px-2 max-sm:text-xs ${active ? "bg-segment-active font-medium text-fg" : "text-fg-3"}`
 
 /** Site sections: Code/Brilliant/Paper filter the version cards; Story and References go straight to their page. */
 export function SiteNav({
@@ -45,7 +45,7 @@ export function SiteNav({
       className="contents"
       onKeyDown={onKeyDown}
     >
-      <div className="flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1">
+      <div className="flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 max-sm:order-2">
         {FILTERS.map((filter) =>
           onFilter ? (
             <button
@@ -69,7 +69,7 @@ export function SiteNav({
           )
         )}
       </div>
-      <div className="ml-auto flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1">
+      <div className="ml-auto flex shrink-0 gap-0.5 rounded-md border-hair border-line bg-segment p-1 max-sm:order-3">
         {PAGES.map(([label, href]) => (
           <a
             key={label}

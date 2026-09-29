@@ -5296,3 +5296,35 @@ There are 18: six versions, each published three times. Deleting all of them, th
 - `Bash`
 - `Bash`
 - `Bash`
+
+**Claude** · Sep 29 00:00 ET
+
+I deleted the old subdomains. There were 18 separate Netlify deploys (versions 1.0 to 1.5, each published three times), and they're all gone. The `code-1-x--campfiredesign.netlify.app` addresses now return "not found". Nothing in the site or repo points to them anymore, and I removed the note in CLAUDE.md that said they were being kept.
+
+Every older Code version now lives only at `campfiredesign.netlify.app/code/<version>/…`. Any links you'd already shared to the old subdomains no longer work.
+
+
+**Vibhas** (while Claude was working) · Sep 29 00:00 ET
+
+Make the new version control top nav work on mobile figure it out it’s overflowing right now
+
+
+**Vibhas** · Sep 29 00:00 ET
+
+Make the new version control top nav work on mobile figure it out it’s overflowing right now
+
+
+**Claude** · Sep 29 00:00 ET
+
+On a phone the row can't fit everything, so I'll split it over two lines: Home and GitHub on top, and the two filter groups underneath (Code / Brilliant / Paper on the left, Story / References on the right), with slightly tighter buttons. Desktop stays as it is.
+
+- `Bash`
+- `Read`
+- `Read`
+- `Read`
+
+**Claude** · Sep 29 00:02 ET
+
+It fits at both phone widths (393px and 360px) with no sideways scroll, and desktop is unchanged. The References page doesn't overflow either. Committing:
+
+- `Bash`
