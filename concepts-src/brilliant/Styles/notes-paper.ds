@@ -1,0 +1,18 @@
+modes {
+  theme: [light, dark]
+}
+primary: boldness(color(#8B5A3C))
+secondary: boldness(color(#C1452E))
+neutral: boldness(color(oklch(40%, 0.012, 70)))
+font.family: Inter
+font.family.serif: "Cormorant Garamond"
+color.surface: neutral.hint
+color.surface.container: neutral.faint
+color.on-surface: neutral.intense
+color.text.primary: neutral.intense
+color.text.secondary: neutral.mid
+color.text.disabled: neutral.soft
+color.outline: neutral.subtle
+color.outline.variant: neutral.faint
+color.text.display: neutral.intense
+color.text.display.alt: primary.firm

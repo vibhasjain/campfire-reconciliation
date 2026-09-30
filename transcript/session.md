@@ -6536,3 +6536,21 @@ Now one browser pass over everything pending:
 - `Read`
 - `Bash`
 - `Bash`
+
+**Claude** · Sep 29 12:32 ET
+
+All of this is pushed and will be live in about 40 seconds. I checked each item in a local build.
+
+**Ember cycle:** press E then Enter on any item, and each press gives the next kind of reply, looping and carrying on across items. On Duplicate Datadog journal, four presses gave:
+1. **New suggestion:** "Here's a new suggestion: Keep the Datadog bill and offset the duplicate in clearing. It's up top." The card pops in as Suggestion 1 of 3.
+2. **Answer:** "Chase's September statement lists it once, on 9/12; the second $6,840 is JE-7712 in the GL."
+3. **Teammate:** "@Priya Shah can you confirm the Datadog bill ID?" A couple of seconds later Priya replies: "The bill is DD-2026-08-3912; I posted JE-7712 before that bill synced."
+4. **History:** "In August, Datadog's $6,840 payment was matched to the synced bill, and the manual duplicate was reversed."
+
+All 14 pending items have their own content. "Got it." now only starts the new-suggestion reply when you've typed some context; a bare "@Ember" gets straight to it. A refresh starts the cycle over at suggestion.
+
+**Other changes:**
+- **Toast:** now reads undo (back in its bordered square), then the check, the message and Training Ember. Other toast actions still sit at the end.
+- **Tooltips:** they appear on hover only, everywhere. Opening a document preview, or any dialog that focuses a button when it opens, no longer pops a tooltip like "Close document".
+- **Sheet heading:** "Review transaction" sits closer to the item title, and still has room from the card's top edge.
+- **Nav and loops:** the Story / References words and the dark tags can't be text-selected. The References grid's arrow keys loop like version control's.
